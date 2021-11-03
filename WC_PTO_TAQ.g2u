@@ -1,0 +1,366 @@
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+
+Program.Sub.Main.End
+
+Program.Sub.TAUpdate.Start
+'This sub takes care of inserting a new record into the time and attendance table so that the PTO actually gets tracked in payroll.
+V.Local.sSQL.Declare
+V.Local.lCount.Declare
+V.Local.bSkip.Declare
+V.Local.sTADate.Declare
+V.Local.sYear.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.dTAOut.Declare
+V.Local.lTAOutHr.Declare
+V.Local.lPTOInHr.Declare
+V.Local.lFloorHr.Declare
+V.Local.fModMin.Declare
+V.Local.lOutHr.Declare
+V.Local.lOutMin.Declare
+V.Local.sOutHr.Declare
+V.Local.sOutMin.Declare
+V.Local.fFloorMin.Declare
+V.Local.sTimeOut.Declare
+V.Local.sPTOInHr.Declare
+V.Local.sPTOInMin.Declare
+V.Local.lPTOInMin.Declare
+V.Local.sTimeIn.Declare
+V.Local.sRetVar.Declare
+V.Local.sWarn.Declare
+V.Local.sCrit.Declare
+V.Local.sReturn.Declare
+V.Local.sChgDate.Declare
+V.Local.sChgTime.Declare
+V.Local.sHour.Declare
+V.Local.sMinute.Declare
+V.Local.lHLen.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+V.Local.sRetTime.Declare
+V.Local.sRetReg.Declare
+V.Local.bTimeForm.Declare
+V.Local.sInsTADate.Declare
+V.Local.sExcused.Declare
+
+V.Local.bSkip.Set(False)
+
+F.Intrinsic.Variable.ArgToVar("lCount",V.Local.lCount)
+
+F.Intrinsic.Date.Year(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sYear)
+F.Intrinsic.Date.Month(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sMonth)
+F.Intrinsic.Date.Day(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sDay)
+
+F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.String.Build("{0}{1}{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sTADate)
+F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sInsTADate)
+
+F.Intrinsic.Control.If(V.DataTable.dtTime.Exists)
+	F.Data.DataTable.Close("dtTime")
+F.Intrinsic.Control.EndIf
+
+'Checks if the current employee has worked on their requested date off
+F.Intrinsic.String.Build("SELECT * FROM TIME_ATTENDANCE WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}' ORDER BY TIME_IN DESC",V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sTADate,V.Local.sSQL)
+F.Data.DataTable.CreateFromSQL("dtTime","con",V.Local.sSQL)
+
+'If they have...
+F.Intrinsic.Control.If(V.DataTable.dtTime.RowCount,>,0)
+
+	'Are they still clocked in?
+	F.Intrinsic.Control.If(V.DataTable.dtTime(0).CLOCKED_IN!FieldVal,=,"Y")
+	
+		'Warning in case they are still logged in
+		F.Intrinsic.String.Build("{0} is still clocked in, are you sure you want to continue with applying PTO for this request?",V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sWarn)
+		F.Intrinsic.UI.Msgbox(V.Local.sWarn,"Continue?",1,V.Local.sRetVar)
+		
+		F.Intrinsic.Control.If(V.Local.sRetVar,=,1)
+		
+			V.Local.bTimeForm.Set(False)
+			V.Local.sRetTime.Set("08:00:AM")
+			
+			F.Intrinsic.Control.DoUntil(V.Local.bTimeForm)
+			
+				F.Intrinsic.UI.Inputbox("Manual Clock-In Time","Please enter a Clock-In time for this PTO request. (HH:MM:AM)",V.Local.sRetTime,V.Local.sRetTime)
+				
+				F.Intrinsic.String.RegExMatch(V.Local.sRetTime,"\d{2}:\d{2}:(A|P)M",FALSE,V.Local.sRetReg)
+	
+				'Returns the skipping variable as true to make sure the rest of the process is skipped and nothing is changed (Essentially canceling)
+				F.Intrinsic.Control.If(V.Local.sRetTime,=,"***CANCEL***")
+					F.Intrinsic.UI.Msgbox("Skipping!")
+					V.Local.bTimeForm.Set(True)
+					V.Local.bSkip.Set(True)
+					F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
+					F.Intrinsic.Control.ExitSub
+				F.Intrinsic.Control.ElseIf(V.Local.sRetReg,=,"")
+					F.Intrinsic.UI.Msgbox("The entered time does not match the requested format, please enter again!")
+				F.Intrinsic.Control.Else
+					V.Local.bTimeForm.Set(True)
+				F.Intrinsic.Control.EndIf
+				
+			F.Intrinsic.Control.Loop
+			
+			'Reformats the entered manual time
+			F.Intrinsic.String.Split(V.Local.sRetTime,":",V.Local.sRetTime)
+			F.Intrinsic.Control.If(V.Local.sRetTime(2),=,"PM")
+				V.Local.lPTOInHr.Set(V.Local.sRetTime(0))
+				F.Intrinsic.Math.Add(V.Local.lPTOInHr,12,V.Local.lPTOInHr)
+				V.Local.sPTOInHr.Set(V.Local.lPTOInHr)
+			F.Intrinsic.Control.Else
+				V.Local.lPTOInHr.Set(V.Local.sRetTime(0))
+				V.Local.sPTOInHr.Set(V.Local.sRetTime(0))
+			F.Intrinsic.Control.EndIf
+			
+			V.Local.sPTOInMin.Set(V.Local.sRetTime(1))
+			V.Local.lPTOInMin.Set(V.Local.sRetTime(1))
+			
+			F.Intrinsic.String.Build("{0}{1}00",V.Local.sPTOInHr,V.Local.sPTOInMin,V.Local.sTimeIn)
+			
+			'HOURS_HH built from the grid control
+			F.Intrinsic.Math.Floor(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),V.Local.lFloorHr)
+			
+			'HOURS_MM built from the grid control
+			F.Intrinsic.Math.Mod(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),1,V.Local.fModMin)
+			F.Intrinsic.Math.Mult(V.Local.fModMin,60,V.Local.fModMin)
+			F.Intrinsic.Math.Round(V.Local.fModMin,0,V.Local.fFloorMin)
+			
+			'This calculates the "out" time
+			F.Intrinsic.Math.Add(V.Local.fFloorMin,V.Local.lPTOInMin,V.Local.fFloorMin)
+			
+			'If the minutes value is over 60, adds one to the hours value and subtracts 60 from the minutes
+			F.Intrinsic.Control.If(V.Local.fFloorMin,>,60)
+			
+				F.Intrinsic.Math.Add(V.Local.lPTOInHr,V.Local.lFloorHr,1,V.Local.lOutHr)
+				F.Intrinsic.Math.Sub(V.Local.fFloorMin,60,V.Local.lOutMin)
+				
+				F.Intrinsic.String.ConvertToString(V.Local.lOutHr,V.Local.sOutHr)
+				F.Intrinsic.String.ConvertToString(V.Local.lOutMin,V.Local.sOutMin)
+				F.Intrinsic.Control.If(V.Local.sOutHr.Length,=,1)
+					F.Intrinsic.String.Build("0{0}",V.Local.sOutHr,V.Local.sOutHr)
+				F.Intrinsic.Control.EndIf
+				F.Intrinsic.Control.If(V.Local.sOutMin.Length,=,1)
+					F.Intrinsic.String.Build("0{0}",V.Local.sOutMin,V.Local.sOutMin)
+				F.Intrinsic.Control.EndIf
+				F.Intrinsic.String.Build("{0}{1}00",V.Local.sOutHr,V.Local.sOutMin,V.Local.sTimeOut)
+				
+			F.Intrinsic.Control.Else
+					
+				F.Intrinsic.Math.Add(V.Local.lPTOInHr,V.Local.lFloorHr,V.Local.lOutHr)
+				F.Intrinsic.String.ConvertToString(V.Local.lOutHr,V.Local.sOutHr)
+				F.Intrinsic.String.ConvertToString(V.Local.lOutMin,V.Local.sOutMin)
+				F.Intrinsic.Control.If(V.Local.sOutHr.Length,=,1)
+					F.Intrinsic.String.Build("0{0}",V.Local.sOutHr,V.Local.sOutHr)
+				F.Intrinsic.Control.EndIf
+				F.Intrinsic.Control.If(V.Local.sOutMin.Length,=,1)
+					F.Intrinsic.String.Build("0{0}",V.Local.sOutMin,V.Local.sOutMin)
+				F.Intrinsic.Control.EndIf
+				F.Intrinsic.String.Build("{0}{1}00",V.Local.sOutHr,V.Local.sOutMin,V.Local.sTimeOut)
+			
+			F.Intrinsic.Control.EndIf
+			
+			'Getting data for filling in DEPT and SHIFT for the insert into TA
+			F.Intrinsic.String.Build("EMPLOYEE = '{0}'",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount),V.Local.sCrit)
+			F.Data.DataTable.Select("dtEmpMstr",V.Local.sCrit,V.Local.sReturn)
+			
+			'Changed Date (Current Date)
+			F.Intrinsic.Date.Year(V.Ambient.Now,V.Local.sYear)
+			F.Intrinsic.Date.Month(V.Ambient.Now,V.Local.sMonth)
+			F.Intrinsic.Date.Day(V.Ambient.Now,V.Local.sDay)
+			F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+			F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+			F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+				F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+				F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.String.Build("{0}{1}{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sChgDate)
+			
+			'Changed Time (Current Time)
+			F.Intrinsic.Date.Hour(V.Ambient.Now,V.Local.sHour)
+			F.Intrinsic.Date.Minute(V.Ambient.Now,V.Local.sMinute)
+			F.Intrinsic.String.Len(V.Local.sHour,V.Local.lHLen)
+			F.Intrinsic.String.Len(V.Local.sMinute,V.Local.lMLen)
+			F.Intrinsic.Control.If(V.Local.lHLen,=,1)
+				F.Intrinsic.String.Build("0{0}",V.Local.sHour,V.Local.sHour)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.Control.If(V.Local.lMLen,=,1)
+				F.Intrinsic.String.Build("0{0}",V.Local.sMinute,V.Local.sMinute)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.String.Build("{0}{1}0000",V.Local.sHour,V.Local.sMinute,V.Local.sChgTime)
+			
+			F.Intrinsic.Control.If(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",8,V.Local.lCount))
+				V.Local.sExcused.Set("Y")
+			F.Intrinsic.Control.Else
+				V.Local.sExcused.Set("N")
+			F.Intrinsic.Control.EndIf
+			
+			F.Intrinsic.String.Build("INSERT INTO TIME_ATTENDANCE (EMPLOYEE, CHARGE_DATE, DATE_IN, TIME_IN, DATE_OUT, TIME_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{2}', '{1}', '{3}', '{4}', '{5}', '{6}', '{5}', 'A', '05', 'Y', '{7}', '00000000', '{8}', '{9}', '{10}', 'ZZPTOHR', '{11}', '{12}', '0', '{1}', '0')",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount), V.Local.sTADate, V.Local.sTimeIn, V.Local.sTimeOut, gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",2,V.Local.lCount), V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.lOutMin,V.Local.sInsTADate, V.Local.sSQL)
+			
+			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+			
+		F.Intrinsic.Control.Else
+			
+			F.Intrinsic.UI.Msgbox("Skipping!")
+			V.Local.bSkip.Set(True)
+			F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
+			F.Intrinsic.Control.ExitSub
+		
+		F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.Else
+	
+		'Finds the Time and Attendance out time and adds an hour to it
+		F.Intrinsic.Date.ConvertTString(V.DataTable.dtTime(0).TIME_OUT!FieldVal,"HHNNSS",V.Local.dTAOut)
+		F.Intrinsic.Date.Hour(V.Local.dTAOut,V.Local.lPTOInHr)
+		F.Intrinsic.Math.Add(V.Local.lPTOInHr,1,V.Local.lPTOInHr)
+		
+		'HOURS_HH built from grid control
+		F.Intrinsic.Math.Floor(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),V.Local.lFloorHr)
+		
+		'HOURS_MM built from grid control
+		F.Intrinsic.Math.Mod(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),1,V.Local.fModMin)
+		F.Intrinsic.Math.Mult(V.Local.fModMin,60,V.Local.fModMin)
+		F.Intrinsic.Math.Round(V.Local.fModMin,0,V.Local.lOutMin)
+		
+		'TIME_IN 
+		F.Intrinsic.String.ConvertToString(V.Local.lPTOInHr,V.Local.sPTOInHr)
+		F.Intrinsic.Control.If(V.Local.sPTOInHr.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sPTOInHr,V.Local.sPTOInHr)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}0000",V.Local.sPTOInHr,V.Local.sTimeIn)
+		
+		'TIME_OUT
+		F.Intrinsic.Math.Add(V.Local.lPTOInHr,V.Local.lFloorHr,V.Local.lOutHr)
+		F.Intrinsic.String.ConvertToString(V.Local.lOutHr,V.Local.sOutHr)
+		F.Intrinsic.String.ConvertToString(V.Local.lOutMin,V.Local.sOutMin)
+		F.Intrinsic.Control.If(V.Local.sOutHr.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sOutHr,V.Local.sOutHr)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.If(V.Local.sOutMin.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sOutMin,V.Local.sOutMin)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}{1}00",V.Local.sOutHr,V.Local.sOutMin,V.Local.sTimeOut)
+		
+		'Getting data for filling in DEPT and SHIFT for the insert into TA
+		F.Intrinsic.String.Build("EMPLOYEE = '{0}'",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount),V.Local.sCrit)
+		F.Data.DataTable.Select("dtEmpMstr",V.Local.sCrit,V.Local.sReturn)
+		
+		'Changed Date (Current Date)
+		F.Intrinsic.Date.Year(V.Ambient.Now,V.Local.sYear)
+		F.Intrinsic.Date.Month(V.Ambient.Now,V.Local.sMonth)
+		F.Intrinsic.Date.Day(V.Ambient.Now,V.Local.sDay)
+		F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+		F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+		F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}{1}{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sChgDate)
+		
+		'Changed Time (Current Time)
+		F.Intrinsic.Date.Hour(V.Ambient.Now,V.Local.sHour)
+		F.Intrinsic.Date.Minute(V.Ambient.Now,V.Local.sMinute)
+		F.Intrinsic.String.Len(V.Local.sHour,V.Local.lHLen)
+		F.Intrinsic.String.Len(V.Local.sMinute,V.Local.lMLen)
+		F.Intrinsic.Control.If(V.Local.lHLen,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sHour,V.Local.sHour)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.If(V.Local.lMLen,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sMinute,V.Local.sMinute)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}{1}0000",V.Local.sHour,V.Local.sMinute,V.Local.sChgTime)
+		
+		F.Intrinsic.Control.If(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",8,V.Local.lCount))
+			V.Local.sExcused.Set("Y")
+		F.Intrinsic.Control.Else
+			V.Local.sExcused.Set("N")
+		F.Intrinsic.Control.EndIf
+		
+		F.Intrinsic.String.Build("INSERT INTO TIME_ATTENDANCE (EMPLOYEE, CHARGE_DATE, DATE_IN, TIME_IN, DATE_OUT, TIME_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{2}', '{1}', '{3}', '{4}', '{5}', '{6}', '{5}', 'A', '05', 'Y', '{7}', '00000000', '{8}', '{9}', '{10}', 'ZZPTOHR', '{11}', '{12}', '0', '{13}', '0')",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount), V.Local.sTADate, V.Local.sTimeIn, V.Local.sTimeOut, gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",2,V.Local.lCount), V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.lOutMin,V.Local.sInsTADate, V.Local.sSQL)
+		
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Else
+
+	'HOURS_HH
+	F.Intrinsic.Math.Floor(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),V.Local.lFloorHr)
+	
+	'HOURS_MM
+	F.Intrinsic.Math.Mod(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),1,V.Local.fModMin)
+	F.Intrinsic.Math.Mult(V.Local.fModMin,60,V.Local.fModMin)
+	F.Intrinsic.Math.Round(V.Local.fModMin,0,V.Local.lOutMin)
+	
+	'TIME_IN
+	V.Local.sTimeIn.Set("080000")
+
+	'TIME_OUT
+	F.Intrinsic.Math.Add(8,V.Local.lFloorHr,V.Local.lOutHr)
+	F.Intrinsic.String.ConvertToString(V.Local.lOutHr,V.Local.sOutHr)
+	F.Intrinsic.String.ConvertToString(V.Local.lOutMin,V.Local.sOutMin)
+	F.Intrinsic.Control.If(V.Local.sOutHr.Length,=,1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sOutHr,V.Local.sOutHr)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.Local.sOutMin.Length,=,1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sOutMin,V.Local.sOutMin)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.Build("{0}{1}00",V.Local.sOutHr,V.Local.sOutMin,V.Local.sTimeOut)
+	
+	'Getting data for filling in DEPT and SHIFT for the insert into TA
+	F.Intrinsic.String.Build("EMPLOYEE = '{0}'",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount),V.Local.sCrit)
+	F.Data.DataTable.Select("dtEmpMstr",V.Local.sCrit,V.Local.sReturn)
+	
+	'Changed Date (Current Date)
+	F.Intrinsic.Date.Year(V.Ambient.Now,V.Local.sYear)
+	F.Intrinsic.Date.Month(V.Ambient.Now,V.Local.sMonth)
+	F.Intrinsic.Date.Day(V.Ambient.Now,V.Local.sDay)
+	F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+	F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+	F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.Build("{0}{1}{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sChgDate)
+	
+	'Changed Time (Current Time)
+	F.Intrinsic.Date.Hour(V.Ambient.Now,V.Local.sHour)
+	F.Intrinsic.Date.Minute(V.Ambient.Now,V.Local.sMinute)
+	F.Intrinsic.String.Len(V.Local.sHour,V.Local.lHLen)
+	F.Intrinsic.String.Len(V.Local.sMinute,V.Local.lMLen)
+	F.Intrinsic.Control.If(V.Local.lHLen,=,1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sHour,V.Local.sHour)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.Local.lMLen,=,1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sMinute,V.Local.sMinute)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.Build("{0}{1}0000",V.Local.sHour,V.Local.sMinute,V.Local.sChgTime)
+	
+	F.Intrinsic.Control.If(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",8,V.Local.lCount))
+		V.Local.sExcused.Set("Y")
+	F.Intrinsic.Control.Else
+		V.Local.sExcused.Set("N")
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.String.Build("INSERT INTO TIME_ATTENDANCE (EMPLOYEE, CHARGE_DATE, DATE_IN, TIME_IN, DATE_OUT, TIME_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{2}', '{1}', '{3}', '{4}', '{5}', '{6}', '{5}', 'A', '05', 'Y', '{7}', '00000000', '{8}', '{9}', '{10}', 'ZZPTOHR', '{11}', '{12}', '0', '{13}', '0')",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount), V.Local.sTADate, V.Local.sTimeIn, V.Local.sTimeOut, gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",2,V.Local.lCount), V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.lOutMin,V.Local.sInsTADate, V.Local.sSQL)
+	
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+F.Intrinsic.Control.EndIf
+
+Program.Sub.TAUpdate.End
