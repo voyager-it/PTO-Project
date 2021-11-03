@@ -17,7 +17,7 @@ F.Data.DataTable.CreateFromSQL("dtTAQ","con","SELECT * FROM ZZ_PTO_TAQ",True)
 
 Program.Sub.loadDT.End
 
-Program.Sub.TAInsert.Start
+Program.Sub.TAReference.Start
 'This sub takes care of inserting a new record into the time and attendance table so that the PTO actually gets tracked in payroll.
 V.Local.sSQL.Declare
 V.Local.lCount.Declare
@@ -62,9 +62,9 @@ V.Local.bSkip.Set(False)
 
 F.Intrinsic.Variable.ArgToVar("lCount",V.Local.lCount)
 
-F.Intrinsic.Date.Year(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sYear)
-F.Intrinsic.Date.Month(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sMonth)
-F.Intrinsic.Date.Day(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sDay)
+F.Intrinsic.Date.Year(V.DataTable.dtTAQ(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sYear)
+F.Intrinsic.Date.Month(V.DataTable.dtTAQ(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sMonth)
+F.Intrinsic.Date.Day(V.DataTable.dtTAQ(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sDay)
 
 F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
 F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
@@ -82,7 +82,7 @@ F.Intrinsic.Control.If(V.DataTable.dtTime.Exists)
 F.Intrinsic.Control.EndIf
 
 'Checks if the current employee has worked on their requested date off
-F.Intrinsic.String.Build("SELECT * FROM TIME_ATTENDANCE WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}' ORDER BY TIME_IN DESC",V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sTADate,V.Local.sSQL)
+F.Intrinsic.String.Build("SELECT * FROM TIME_ATTENDANCE WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}' ORDER BY TIME_IN DESC",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sTADate,V.Local.sSQL)
 F.Data.DataTable.CreateFromSQL("dtTime","con",V.Local.sSQL)
 
 'If they have...
@@ -92,7 +92,7 @@ F.Intrinsic.Control.If(V.DataTable.dtTime.RowCount,>,0)
 	F.Intrinsic.Control.If(V.DataTable.dtTime(0).CLOCKED_IN!FieldVal,=,"Y")
 	
 		'Warning in case they are still logged in
-		F.Intrinsic.String.Build("{0} is still clocked in, are you sure you want to continue with applying PTO for this request?",V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sWarn)
+		F.Intrinsic.String.Build("{0} is still clocked in, are you sure you want to continue with applying PTO for this request?",V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.Local.sWarn)
 		F.Intrinsic.UI.Msgbox(V.Local.sWarn,"Continue?",1,V.Local.sRetVar)
 		
 		F.Intrinsic.Control.If(V.Local.sRetVar,=,1)
@@ -374,5 +374,128 @@ F.Intrinsic.Control.Else
 	F.ODBC.Connection!con.Execute(V.Local.sSQL)
 
 F.Intrinsic.Control.EndIf
+
+Program.Sub.TAReference.End
+
+Program.Sub.TAInsert.Start
+V.Local.lCount.Declare
+V.Local.lRowCount.Declare
+V.Local.sSQL.Declare
+V.Local.dTAOUt.Declare
+V.Local.lPTOInHr.Declare
+V.Local.sPTOInHr.Declare
+V.Local.sTimeIn.Declare
+V.Local.lOutHr.Declare
+V.Local.sOutHr.Declare
+V.Local.sOutMin.Declare
+V.Local.sTimeOut.Declare
+V.Local.sYear.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+V.Local.sInsTADate.Declare
+V.Local.lOutMin.Declare
+
+F.Intrinsic.Math.Sub(V.DataTable.dtTAQ.RowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
+
+	F.Intrinsic.Control.If(V.DataTable.dtTime.Exists)
+		F.Data.DataTable.Close("dtTime")
+	F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.String.Build("SELECT * FROM TIME_ATTENDANCE WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}' ORDER BY TIME_IN DESC",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sSQL)
+	
+	F.Data.DataTable.CreateFromSQL("dtTime","con",V.Local.sSQL,True)
+	
+	F.Intrinsic.Control.If(V.DataTable.dtTime.RowCount,>,0)
+	
+		'Finding clock out time and adding an hour to it
+		F.Intrinsic.Date.ConvertTString(V.DataTable.dtTime(0).TIME_OUT!FieldVal,"HHNNSS",V.Local.dTAOut)
+		F.Intrinsic.Date.Hour(V.Local.dTAOut,V.Local.lPTOInHr)
+		F.Intrinsic.Math.Add(V.Local.lPTOInHr,1,V.Local.lPTOInHr)
+		
+		'TIME_IN 
+		F.Intrinsic.String.ConvertToString(V.Local.lPTOInHr,V.Local.sPTOInHr)
+		F.Intrinsic.Control.If(V.Local.sPTOInHr.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sPTOInHr,V.Local.sPTOInHr)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}0000",V.Local.sPTOInHr,V.Local.sTimeIn)
+		
+		'TIME_OUT
+		F.Intrinsic.Math.Add(V.Local.lPTOInHr,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.Local.lOutHr)
+		F.Intrinsic.String.ConvertToString(V.Local.lOutHr,V.Local.sOutHr)
+		F.Intrinsic.String.ConvertToString(V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sOutMin)
+		F.Intrinsic.Control.If(V.Local.sOutHr.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sOutHr,V.Local.sOutHr)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.If(V.Local.sOutMin.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sOutMin,V.Local.sOutMin)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}{1}00",V.Local.sOutHr,V.Local.sOutMin,V.Local.sTimeOut)
+		
+		'CONVERT ACTUAL DATE BECAUSE PERVASIVE IS A WHINY LITTLE BABY
+		F.Intrinsic.Date.Year(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sYear)
+		F.Intrinsic.Date.Month(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sMonth)
+		F.Intrinsic.Date.Day(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sDay)
+		
+		F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+		F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+		F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sInsTADate)
+		
+		F.Intrinsic.String.Build("INSERT INTO TIME_ATTENDANCE (EMPLOYEE, CHARGE_DATE, DATE_IN, TIME_IN, DATE_OUT, TIME_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', '{23}');",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).CHARGE_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sTimeIn,V.DataTable.dtTAQ(V.Local.lCount).DATE_OUT!FieldVal,V.Local.sTimeOut,V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DEPT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).SHIFT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_GROUP!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_TYPE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EARNINGS_CODE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).PAID!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EXCUSED!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).BAL_AS_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).TIME_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_BY!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_PROG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DOLLAR_AMT!FieldVal,V.Local.sInsTADate,0,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+		
+		F.Intrinsic.String.Build("DELETE FROM ZZ_PTO_TAQ WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}'",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.Control.Else
+	
+		'TIME_IN
+		V.Local.sTimeIn.Set("080000")
+	
+		'TIME_OUT
+		F.Intrinsic.Math.Add(8,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.Local.lOutHr)
+		F.Intrinsic.String.ConvertToString(V.Local.lOutHr,V.Local.sOutHr)
+		F.Intrinsic.String.ConvertToString(V.Local.lOutMin,V.Local.sOutMin)
+		F.Intrinsic.Control.If(V.Local.sOutHr.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sOutHr,V.Local.sOutHr)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.If(V.Local.sOutMin.Length,=,1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sOutMin,V.Local.sOutMin)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}{1}00",V.Local.sOutHr,V.Local.sOutMin,V.Local.sTimeOut)
+		
+		'CONVERT ACTUAL DATE BECAUSE PERVASIVE IS A WHINY LITTLE BABY
+		F.Intrinsic.Date.Year(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sYear)
+		F.Intrinsic.Date.Month(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sMonth)
+		F.Intrinsic.Date.Day(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sDay)
+		
+		F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+		F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+		F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+			F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sInsTADate)
+		
+		F.Intrinsic.String.Build("INSERT INTO TIME_ATTENDANCE (EMPLOYEE, CHARGE_DATE, DATE_IN, TIME_IN, DATE_OUT, TIME_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', '{23}');",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).CHARGE_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sTimeIn,V.DataTable.dtTAQ(V.Local.lCount).DATE_OUT!FieldVal,V.Local.sTimeOut,V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DEPT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).SHIFT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_GROUP!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_TYPE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EARNINGS_CODE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).PAID!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EXCUSED!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).BAL_AS_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).TIME_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_BY!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_PROG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DOLLAR_AMT!FieldVal,V.Local.sInsTADate,0,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+		
+		F.Intrinsic.String.Build("DELETE FROM ZZ_PTO_TAQ WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}'",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Next(V.Local.lCount)
 
 Program.Sub.TAInsert.End
