@@ -1064,7 +1064,7 @@ F.Intrinsic.Control.EndIf
 
 F.Data.DataTable.CreateFromSQL("dtDenied","con","SELECT * FROM ZZ_PTO_HR_DENIED;",True)
 F.Data.DataTable.CreateFromSQL("dtEmployees","con","SELECT EMPLOYEE, AVAILABLE FROM ZZ_PTO_EMPLOYEES",True)
-F.Data.DataTable.CreateFromSQL("dtEmpMstr","con","SELECT EMPLOYEE, DEPT_EMPLOYEE, SHIFT FROM EMPLOYEE_MSTR;",True)
+F.Data.DataTable.CreateFromSQL("dtEmpMstr","con","SELECT EMPLOYEE, DEPT_EMPLOYEE, SHIFT, NAME FROM EMPLOYEE_MSTR;",True)
 
 F.Data.DataTable.AddColumn("dtDenied","APPLY","boolean",False)
 
@@ -2092,7 +2092,7 @@ F.Intrinsic.Control.Else
 	V.Local.sExcused.Set("N")
 F.Intrinsic.Control.EndIf
 
-F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '05', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount), V.Local.sTADate, gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",2,V.Local.lCount), V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.fFloorMin,V.Local.sInsTADate, V.Local.sSQL)
+F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '05', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount), V.Local.sTADate, V.DataTable.dtEmpMstr(V.Local.sReturn).NAME!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.fFloorMin,V.Local.sInsTADate, V.Local.sSQL)
 			
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
 
@@ -2197,7 +2197,7 @@ F.Intrinsic.Control.Else
 	V.Local.sExcused.Set("N")
 F.Intrinsic.Control.EndIf
 
-F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '05', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",1,V.Local.lCount), V.Local.sTADate,  gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",2,V.Local.lCount), V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.lOutMin,V.Local.sInsTADate, V.Local.sSQL)
+F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '05', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",1,V.Local.lCount), V.Local.sTADate, V.DataTable.dtEmpMstr(V.Local.sReturn).NAME!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.lOutMin,V.Local.sInsTADate, V.Local.sSQL)
 
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
 

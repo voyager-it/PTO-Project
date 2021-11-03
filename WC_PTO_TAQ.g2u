@@ -1,11 +1,23 @@
 Program.Sub.Preflight.Start
+F.ODBC.Connection!con.OpenCompanyConnection
+
 Program.Sub.Preflight.End
 
 Program.Sub.Main.Start
 
+F.Intrinsic.Control.CallSub("loadDT")
+
+F.Intrinsic.Control.CallSub("TAInsert")
+
 Program.Sub.Main.End
 
-Program.Sub.TAUpdate.Start
+Program.Sub.loadDT.Start
+
+F.Data.DataTable.CreateFromSQL("dtTAQ","con","SELECT * FROM ZZ_PTO_TAQ",True)
+
+Program.Sub.loadDT.End
+
+Program.Sub.TAInsert.Start
 'This sub takes care of inserting a new record into the time and attendance table so that the PTO actually gets tracked in payroll.
 V.Local.sSQL.Declare
 V.Local.lCount.Declare
@@ -363,4 +375,4 @@ F.Intrinsic.Control.Else
 
 F.Intrinsic.Control.EndIf
 
-Program.Sub.TAUpdate.End
+Program.Sub.TAInsert.End
