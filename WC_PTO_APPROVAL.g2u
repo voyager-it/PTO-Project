@@ -1,0 +1,552 @@
+Program.Sub.ScreenSU.Start
+Gui.frmLogin..Create
+Gui.frmLogin..Caption("Login")
+Gui.frmLogin..Size(3765,2730)
+Gui.frmLogin..MinX(0)
+Gui.frmLogin..MinY(0)
+Gui.frmLogin..Position(0,0)
+Gui.frmLogin..BackColor(-2147483633)
+Gui.frmLogin..MousePointer(0)
+Gui.frmLogin..Event(UnLoad,frmLogin_UnLoad)
+Gui.frmLogin.lblUser.Create(Label,"Username: ",True,990,255,0,345,525,True,0,"Arial",8,-2147483633,0)
+Gui.frmLogin.lblPassword.Create(Label,"Password: ",True,1080,255,0,375,900,True,0,"Arial",8,-2147483633,0)
+Gui.frmLogin.txtUser.Create(TextBox,"",True,1650,300,0,1440,450,True,0,"Arial",8,-2147483643,1)
+Gui.frmLogin.txtUser.TabStop(True)
+Gui.frmLogin.txtUser.TabIndex(1)
+Gui.frmLogin.txtPwd.Create(TextBox,"",True,1650,300,0,1440,825,True,0,"Arial",8,-2147483643,1)
+Gui.frmLogin.txtPwd.PasswordChar("*")
+Gui.frmLogin.txtPwd.TabStop(True)
+Gui.frmLogin.txtPwd.TabIndex(2)
+Gui.frmLogin.cmdSubmit.Create(Button)
+Gui.frmLogin.cmdSubmit.Size(1230,375)
+Gui.frmLogin.cmdSubmit.Position(405,1260)
+Gui.frmLogin.cmdSubmit.Caption("Login")
+Gui.frmLogin.cmdSubmit.Event(Click,cmdSubmit_Click)
+Gui.frmLogin.cmdSubmit.TabStop(True)
+Gui.frmLogin.cmdSubmit.TabIndex(3)
+Gui.frmLogin.cmdCancel.Create(Button)
+Gui.frmLogin.cmdCancel.Size(1185,375)
+Gui.frmLogin.cmdCancel.Position(1815,1245)
+Gui.frmLogin.cmdCancel.Caption("Cancel")
+Gui.frmLogin.cmdCancel.Event(Click,cmdCancel_Click)
+Gui.frmLogin.cmdCancel.TabStop(True)
+Gui.frmLogin.cmdCancel.TabIndex(4)
+Gui.frmLogin.cmdNew.Create(Button)
+Gui.frmLogin.cmdNew.Size(1485,375)
+Gui.frmLogin.cmdNew.Position(1095,1680)
+Gui.frmLogin.cmdNew.Caption("New User")
+Gui.frmLogin.cmdNew.Event(Click,cmdNew_Click)
+Gui.frmLogin.cmdNew.TabStop(True)
+Gui.frmLogin.cmdNew.TabIndex(5)
+Gui.frmNewUser..Create
+Gui.frmNewUser..Size(3750,4260)
+Gui.frmNewUser..MinX(0)
+Gui.frmNewUser..MinY(0)
+Gui.frmNewUser..Position(0,0)
+Gui.frmNewUser..BackColor(-2147483633)
+Gui.frmNewUser..MousePointer(0)
+Gui.frmNewUser..Event(UnLoad,frmNewUser_UnLoad)
+Gui.frmNewUser..Caption("New User")
+Gui.frmNewUser.txtNewUser.Create(TextBox,"",True,1215,300,0,1995,420,True,0,"Arial",8,-2147483643,1)
+Gui.frmNewUser.txtNewUser.TabStop(True)
+Gui.frmNewUser.txtNewUser.TabIndex(7)
+Gui.frmNewUser.txtNewPwd.Create(TextBox,"",True,1200,300,0,1995,1785,True,0,"Arial",8,-2147483643,1)
+Gui.frmNewUser.txtNewPwd.PasswordChar("*")
+Gui.frmNewUser.txtNewPwd.TabStop(True)
+Gui.frmNewUser.txtNewPwd.TabIndex(10)
+Gui.frmNewUser.txtNewID.Create(TextBox,"",True,1215,300,0,1995,900,True,0,"Arial",8,-2147483643,1)
+Gui.frmNewUser.txtNewID.TabStop(True)
+Gui.frmNewUser.txtNewID.TabIndex(8)
+Gui.frmNewUser.txtAdmin.Create(TextBox,"",True,1215,300,0,1995,2685,True,0,"Arial",8,-2147483643,1)
+Gui.frmNewUser.txtAdmin.PasswordChar("*")
+Gui.frmNewUser.txtAdmin.TabStop(True)
+Gui.frmNewUser.txtAdmin.TabIndex(12)
+Gui.frmNewUser.lbl1.Create(Label,"Username",True,1650,255,0,0,510,True,1,"Arial",8,-2147483633,0)
+Gui.frmNewUser.txtRptPwd.Create(TextBox,"",True,1215,300,0,1995,2220,True,0,"Arial",8,-2147483643,1)
+Gui.frmNewUser.txtRptPwd.PasswordChar("*")
+Gui.frmNewUser.txtRptPwd.TabStop(True)
+Gui.frmNewUser.txtRptPwd.TabIndex(11)
+Gui.frmNewUser.lbl2.Create(Label,"Employee ID",True,1650,255,0,0,990,True,1,"Arial",8,-2147483633,0)
+Gui.frmNewUser.lbl3.Create(Label,"Password",True,1650,255,0,0,1860,True,1,"Arial",8,-2147483633,0)
+Gui.frmNewUser.lbl4.Create(Label,"Repeat Password",True,1650,255,0,0,2310,True,1,"Arial",8,-2147483633,0)
+Gui.frmNewUser.lbl5.Create(Label,"Admin Approval",True,1650,255,0,0,2775,True,1,"Arial",8,-2147483633,0)
+Gui.frmNewUser.cmdNewConfirm.Create(Button)
+Gui.frmNewUser.cmdNewConfirm.Size(1140,375)
+Gui.frmNewUser.cmdNewConfirm.Position(330,3150)
+Gui.frmNewUser.cmdNewConfirm.Caption("Confirm")
+Gui.frmNewUser.cmdNewConfirm.Event(Click,cmdNewConfirm_Click)
+Gui.frmNewUser.cmdNewConfirm.TabStop(True)
+Gui.frmNewUser.cmdNewConfirm.TabIndex(13)
+Gui.frmNewUser.cmdNewCancel.Create(Button)
+Gui.frmNewUser.cmdNewCancel.Size(1275,375)
+Gui.frmNewUser.cmdNewCancel.Position(1950,3150)
+Gui.frmNewUser.cmdNewCancel.Caption("Cancel")
+Gui.frmNewUser.cmdNewCancel.Event(Click,cmdNewCancel_Click)
+Gui.frmNewUser.cmdNewCancel.TabStop(True)
+Gui.frmNewUser.cmdNewCancel.TabIndex(14)
+Gui.frmNewUser.lbl6.Create(Label,"Email",True,1650,255,0,0,1440,True,1,"Arial",8,-2147483633,0)
+Gui.frmNewUser.txtNewEmail.Create(TextBox,"",True,1215,300,0,1995,1350,True,0,"Arial",8,-2147483643,1)
+Gui.frmNewUser.txtNewEmail.TabStop(True)
+Gui.frmNewUser.txtNewEmail.TabIndex(9)
+Gui.frmApproval..Create
+Gui.frmApproval..Caption("PTO Approval")
+Gui.frmApproval..Size(17610,7065)
+Gui.frmApproval..MinX(0)
+Gui.frmApproval..MinY(0)
+Gui.frmApproval..Position(0,0)
+Gui.frmApproval..BackColor(-2147483633)
+Gui.frmApproval..MousePointer(0)
+Gui.frmApproval..Event(UnLoad,frmApproval_UnLoad)
+Gui.frmApproval.gsgcApproval.Create(GsGridControl)
+Gui.frmApproval.gsgcApproval.Size(16905,5775)
+Gui.frmApproval.gsgcApproval.Position(210,555)
+Gui.frmApproval.gsgcApproval.Anchor(15)
+Gui.frmApproval.cmdSave.Create(Button)
+Gui.frmApproval.cmdSave.Size(1470,375)
+Gui.frmApproval.cmdSave.Position(15645,75)
+Gui.frmApproval.cmdSave.Caption("Save Changes")
+Gui.frmApproval.cmdSave.Event(Click,cmdSave_Click)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+F.ODBC.Connection!con.OpenCompanyConnection
+
+V.Global.sEmpID.Declare
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+gui.frmLogin..Show
+
+Program.Sub.Main.End
+
+Program.Sub.cmdCancel_Click.Start
+F.Intrinsic.Control.End
+
+Program.Sub.cmdCancel_Click.End
+
+Program.Sub.frmLogin_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.frmLogin_UnLoad.End
+
+Program.Sub.cmdSubmit_Click.Start
+V.Local.sSQL.Declare
+V.Local.sRet.Declare
+V.Local.sDecPwd.Declare
+
+F.Intrinsic.Control.If(V.Screen.frmLogin!txtUser.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter a username.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmLogin!txtPwd.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter a password.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_LOGIN WHERE USERNAME = '{0}';",V.Screen.frmLogin!txtUser.Value,V.Local.sSQL)
+F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,"<>","")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	
+	V.Global.sEmpID.Set(V.Local.sRet(2))
+	
+	F.Intrinsic.String.WeakDecryption(V.Local.sRet(1),V.Local.sDecPwd)
+	
+	F.Intrinsic.Control.If(V.Screen.frmLogin!txtPwd.Value,"<>",V.Local.sDecPwd)
+		F.Intrinsic.UI.Msgbox("The entered username or password do not match anything in the system. Please try again.")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.Else
+		F.Intrinsic.Control.CallSub("buildGrid")
+	F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("The entered username or password do not match anything in the system. Please try again.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+
+Program.Sub.cmdSubmit_Click.End
+
+Program.Sub.cmdNew_Click.Start
+gui.frmNewUser..Show
+gui.frmLogin..Visible(False)
+
+Program.Sub.cmdNew_Click.End
+
+Program.Sub.cmdNewConfirm_Click.Start
+V.Local.sPassword.Declare
+V.Local.sSQL.Declare
+
+F.Intrinsic.Control.If(V.Screen.frmNewUser!txtAdmin.Value,"<>","MeineWeld")
+	F.Intrinsic.UI.Msgbox("Please seek proper admin approval before creating a new user.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmNewUser!txtNewID.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter an employee ID.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmNewUser!txtNewUser.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter a username.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmNewUser!txtNewPwd.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter a password.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmNewUser!txtRptPwd.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please repeat your password.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmNewUser!txtNewPwd.Value,"<>",V.Screen.frmNewUser!txtRptPwd.Value)
+	F.Intrinsic.UI.Msgbox("Please make sure your passwords match.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmNewUser!txtNewEmail.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter an email address.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.WeakEncryption(V.Screen.frmNewUser!txtNewPwd.Value,V.Local.sPassword)
+
+F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_LOGIN (USERNAME, PASSWD, SUP_ID, EMAIL) VALUES ('{0}', '{1}', '{2}', '{3}');",V.Screen.frmNewUser!txtNewUser.Value,V.Local.sPassword,V.Screen.frmNewUser!txtNewID.Value,V.Screen.frmNewUser!txtNewEmail.Value,V.Local.sSQL)
+
+F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+F.Intrinsic.UI.Msgbox("New User Added!")
+
+Program.Sub.cmdNewConfirm_Click.End
+
+Program.Sub.cmdNewCancel_Click.Start
+gui.frmNewUser..Visible(False)
+gui.frmLogin..Visible(True)
+
+Program.Sub.cmdNewCancel_Click.End
+
+Program.Sub.frmNewUser_UnLoad.Start
+gui.frmNewUser..Visible(False)
+gui.frmLogin..Visible(True)
+
+Program.Sub.frmNewUser_UnLoad.End
+
+Program.Sub.buildGrid.Start
+V.Local.sSQL.Declare
+
+F.Intrinsic.Control.If(V.DataTable.dtQueue.Exists)
+	F.Data.DataTable.Close("dtQueue")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("SELECT QUEUE.UNIQID, QUEUE.EMPLOYEE, QUEUE.NAME, QUEUE.REQUEST_DATE, QUEUE.PTO_AMOUNT, QUEUE.REASON, QUEUE.FILL_TO_40, QUEUE.SUPERVSR, QUEUE.EXPLANATION, EMPLOYEES.AVAILABLE FROM ZZ_PTO_APPROVAL AS QUEUE LEFT JOIN ZZ_PTO_EMPLOYEES AS EMPLOYEES ON QUEUE.EMPLOYEE = EMPLOYEES.EMPLOYEE WHERE QUEUE.SUPERVSR = '{0}'",V.Global.sEmpID,V.Local.sSQL)
+F.Data.DataTable.CreateFromSQL("dtQueue","con",V.Local.sSQL,True)
+
+F.Data.DataTable.AddColumn("dtQueue","Approve","Boolean",False)
+F.Data.DataTable.AddColumn("dtQueue","Deny","Boolean",False)
+F.Data.DataTable.AddColumn("dtQueue","Excused","Boolean",False)
+F.Data.DataTable.AddColumn("dtQueue","Denial_Reason","String","")
+
+F.Data.DataView.Create("dtQueue","dvQueue")
+
+gui.frmApproval.gsgcApproval.AddGridviewFromDataview("gsgvQueue","dtQueue","dvQueue")
+
+F.Intrinsic.Control.CallSub("formatGrid")
+
+gui.frmApproval.gsgcApproval.MainView("gsgvQueue")
+
+gui.frmLogin..Visible(False)
+gui.frmApproval..Show
+
+Program.Sub.buildGrid.End
+
+Program.Sub.frmApproval_UnLoad.Start
+F.Intrinsic.Control.End
+
+Program.Sub.frmApproval_UnLoad.End
+
+Program.Sub.formatGrid.Start
+gui.frmApproval.gsgcApproval.SetGridviewProperty("gsgvQueue","Enableappearanceoddrow",True)
+gui.frmApproval.gsgcAproval.SetGridviewProperty("gsgvQueue","ReadOnly",True)
+
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","UNIQID","Visible",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EMPLOYEE","Visible",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","SUPERVSR","Visible",False)
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","NAME","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REASON","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","FILL_TO_40","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","AVAILABLE","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","HeaderFontBold",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","HeaderFontBold",True)
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","HeaderHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","HeaderHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","FILL_TO_40","HeaderHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","AVAILABLE","HeaderHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","HeaderHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","HeaderHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","HeaderHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","HeaderHAlignment","Center")
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","CellHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","CellHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","FILL_TO_40","CellHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","AVAILABLE","CellHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","CellHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","CellHAlignment","Center")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","CellHAlignment","Center")
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","CellWordWrap","Wrap")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","CellWordWrap","Wrap")
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","NAME","Caption","Name")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","Caption","Requested Date")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","Caption","PTO Amount")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REASON","Caption","Reason")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","FILL_TO_40","Caption","Fill to 40")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","AVAILABLE","Caption","Available PTO")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","Caption","Denial Reason")
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","Caption","Explanation")
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","NAME","ReadOnly",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","ReadOnly",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","ReadOnly",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REASON","ReadOnly",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","FILL_TO_40","ReadOnly",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","AVAILABLE","ReadOnly",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","ReadOnly",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","ReadOnly",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","ReadOnly",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","ReadOnly",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","ReadOnly",True)
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","NAME","AllowEdit",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","AllowEdit",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","AllowEdit",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REASON","AllowEdit",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","FILL_TO_40","AllowEdit",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","AVAILABLE","AllowEdit",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","AllowEdit",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","AllowEdit",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","AllowEdit",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","AllowEdit",True)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","AllowEdit",False)
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","NAME","Width",30)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","Width",25)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","Width",3)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REASON","Width",20)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","FILL_TO_40","Width",5)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","AVAILABLE","Width",15)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","Width",50)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","Width",3)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","Width",3)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","Width",3)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","Width",50)
+
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","DisplayCustomDatetime","d")
+
+Program.Sub.formatGrid.End
+
+Program.Sub.cmdSave_Click.Start
+F.Intrinsic.Control.If(V.DataTable.dtApproved.Exists)
+	F.Data.DataTable.Close("dtApproved")
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.If(V.DataTable.dtDenied.Exists)
+	F.Data.DataTable.Close("dtDenied")
+F.Intrinsic.Control.EndIf
+F.Data.DataView.SetFilter("dtQueue","dvQueue","Approve = TRUE")
+F.Data.DataView.ToDataTable("dtQueue","dvQueue","dtApproved",True)
+F.Data.DataView.SetFilter("dtQueue","dvQueue","Deny = TRUE")
+F.Data.DataView.ToDataTable("dtQueue","dvQueue","dtDenied",True)
+
+F.Intrinsic.Control.CallSub("Approved")
+F.Intrinsic.Control.CallSub("Denied")
+F.Intrinsic.Control.CallSub("ReloadTable")
+
+Program.Sub.cmdSave_Click.End
+
+Program.Sub.Approved.Start
+V.Local.lRowCount.Declare
+V.Local.lCount.Declare
+V.Local.sSupervsr.Declare
+V.Local.sSQL.Declare
+V.Local.sRet.Declare
+V.Local.sYear.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.sDate.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+V.Local.lFill.Declare
+V.Local.lExcused.Declare
+V.Local.sExplanation.Declare
+V.Local.lRet.Declare
+
+V.Local.lRowCount.Set(V.DataTable.dtApproved.RowCount)
+F.Intrinsic.Control.If(V.Local.lRowCount,"=",0)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Math.Sub(V.Local.lRowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
+
+	F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE EMPLOYEE = '{0}';",V.DataTable.dtApproved(V.Local.lCount).SUPERVSR!FieldVal,V.Local.sSQL)
+	F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	
+	F.Intrinsic.Date.Year(V.DataTable.dtApproved(V.Local.lCount).REQUEST_DATE!Fieldval,V.Local.sYear)
+	F.Intrinsic.Date.Month(V.DataTable.dtApproved(V.Local.lCount).REQUEST_DATE!Fieldval,V.Local.sMonth)
+	F.Intrinsic.Date.Day(V.DataTable.dtApproved(V.Local.lCount).REQUEST_DATE!Fieldval,V.Local.sDay)
+	F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+	F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+	F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sDate)
+	
+	F.Intrinsic.Control.If(V.DataTable.dtApproved(V.Local.lCount).FILL_TO_40!FieldVal)
+		V.Local.lFill.Set(1)
+	F.Intrinsic.Control.Else
+		V.Local.lFill.Set(0)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.DataTable.dtApproved(V.Local.lCount).Excused!FieldVal)
+		V.Local.lExcused.Set(1)
+	F.Intrinsic.Control.Else
+		V.Local.lExcused.Set(0)
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.String.Split(V.Local.sRet(1),",",V.Local.sSupervsr)
+	F.Intrinsic.String.Trim(V.Local.sSupervsr(1),V.Local.sSupervsr(1))
+	F.Intrinsic.String.Build("{0} {1}",V.Local.sSupervsr(1),V.Local.sSupervsr(0),V.Local.sSupervsr)
+	
+	V.Local.sExplanation.Set(V.Screen.frmPTO!txtExplanation.Value)
+	
+	F.Intrinsic.String.Occurs(V.Local.sExplanation,"'",V.Local.lRet)
+	F.Intrinsic.Control.If(V.Local.lRet,>,0)
+		F.Intrinsic.String.Replace(V.Local.sExplanation,"'","''",V.Local.sExplanation)
+	F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_HR_APPROVED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, AVAILABLE, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');",V.DataTable.dtApproved(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtApproved(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtApproved(V.Local.lCount).NAME!FieldVal,V.Local.sDate,V.DataTable.dtApproved(V.Local.lCount).PTO_AMOUNT!FieldVal,V.DataTable.dtApproved(V.Local.lCount).REASON!FieldVal,V.Local.lFill,V.Local.sSupervsr,V.Local.lExcused,V.DataTable.dtApproved(V.Local.lCount).AVAILABLE!FieldVal,V.Local.sExplanation,V.Local.sSQL)
+	
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_HISTORY (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, AVAILABLE, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');",V.DataTable.dtApproved(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtApproved(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtApproved(V.Local.lCount).NAME!FieldVal,V.Local.sDate,V.DataTable.dtApproved(V.Local.lCount).PTO_AMOUNT!FieldVal,V.DataTable.dtApproved(V.Local.lCount).REASON!FieldVal,V.Local.lFill,V.Local.sSupervsr,V.Local.lExcused,V.DataTable.dtApproved(V.Local.lCount).AVAILABLE!FieldVal,V.Local.sExplanation,V.Local.sSQL)
+	
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.String.Build("DELETE FROM ZZ_PTO_APPROVAL WHERE UNIQID = '{0}';",V.DataTable.dtApproved(V.Local.lCount).UNIQID!FieldVal,V.Local.sSQL)
+	
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.UI.Msgbox("Changes Saved!")
+
+Program.Sub.Approved.End
+
+Program.Sub.Denied.Start
+V.Local.lRowCount.Declare
+V.Local.lCount.Declare
+V.Local.sSupervsr.Declare
+V.Local.sSQL.Declare
+V.Local.sRet.Declare
+V.Local.sYear.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.sDate.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+V.Local.lFill.Declare
+V.Local.lExcused.Declare
+V.Local.sExplanation.Declare
+V.Local.lRet.Declare
+
+V.Local.lRowCount.Set(V.DataTable.dtDenied.RowCount)
+F.Intrinsic.Control.If(V.Local.lRowCount,"=",0)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Math.Sub(V.Local.lRowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
+
+	F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE EMPLOYEE = '{0}';",V.DataTable.dtDenied(V.Local.lCount).SUPERVSR!FieldVal,V.Local.sSQL)
+	F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	
+	F.Intrinsic.Date.Year(V.DataTable.dtDenied(V.Local.lCount).REQUEST_DATE!Fieldval,V.Local.sYear)
+	F.Intrinsic.Date.Month(V.DataTable.dtDenied(V.Local.lCount).REQUEST_DATE!Fieldval,V.Local.sMonth)
+	F.Intrinsic.Date.Day(V.DataTable.dtDenied(V.Local.lCount).REQUEST_DATE!Fieldval,V.Local.sDay)
+	F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+	F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+	F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sDate)
+	
+	F.Intrinsic.Control.If(V.DataTable.dtDenied(V.Local.lCount).FILL_TO_40!FieldVal)
+		V.Local.lFill.Set(1)
+	F.Intrinsic.Control.Else
+		V.Local.lFill.Set(0)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.DataTable.dtDenied(V.Local.lCount).Excused!FieldVal)
+		V.Local.lExcused.Set(1)
+	F.Intrinsic.Control.Else
+		V.Local.lExcused.Set(0)
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.String.Split(V.Local.sRet(1),",",V.Local.sSupervsr)
+	F.Intrinsic.String.Build("{0} {1}",V.Local.sSupervsr(1),V.Local.sSupervsr(0),V.Local.sSupervsr)
+	
+	V.Local.sExplanation.Set(V.Screen.frmPTO!txtExplanation.Value)
+	
+	F.Intrinsic.String.Occurs(V.Local.sExplanation,"'",V.Local.lRet)
+	F.Intrinsic.Control.If(V.Local.lRet,>,0)
+		F.Intrinsic.String.Replace(V.Local.sExplanation,"'","''",V.Local.sExplanation)
+	F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_HR_DENIED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, AVAILABLE, DENIAL_REASON, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}');",V.DataTable.dtDenied(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtDenied(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtDenied(V.Local.lCount).NAME!FieldVal,V.Local.sDate,V.DataTable.dtDenied(V.Local.lCount).PTO_AMOUNT!FieldVal,V.DataTable.dtDenied(V.Local.lCount).REASON!FieldVal,V.Local.lFill,V.Local.sSupervsr,V.Local.lExcused,V.DataTable.dtDenied(V.Local.lCount).AVAILABLE!FieldVal,V.DataTable.dtDenied(V.Local.lCount).Denial_Reason!FieldVal,V.Local.sExplanation,V.Local.sSQL)
+	
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.String.Build("DELETE FROM ZZ_PTO_APPROVAL WHERE UNIQID = '{0}';",V.DataTable.dtDenied(V.Local.lCount).UNIQID!FieldVal,V.Local.sSQL)
+	
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.UI.Msgbox("Changes Saved!")
+
+Program.Sub.Denied.End
+
+Program.Sub.ReloadTable.Start
+gui.frmApproval..Visible(False)
+
+V.Local.sSQL.Declare
+
+F.Intrinsic.Control.If(V.DataTable.dtQueue.Exists)
+	F.Data.DataTable.Close("dtQueue")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("SELECT QUEUE.UNIQID, QUEUE.EMPLOYEE, QUEUE.NAME, QUEUE.REQUEST_DATE, QUEUE.PTO_AMOUNT, QUEUE.REASON, QUEUE.FILL_TO_40, QUEUE.SUPERVSR, QUEUE.EXPLANATION, EMPLOYEES.AVAILABLE FROM ZZ_PTO_APPROVAL AS QUEUE LEFT JOIN ZZ_PTO_EMPLOYEES AS EMPLOYEES ON QUEUE.EMPLOYEE = EMPLOYEES.EMPLOYEE WHERE QUEUE.SUPERVSR = '{0}'",V.Global.sEmpID,V.Local.sSQL)
+F.Data.DataTable.CreateFromSQL("dtQueue","con",V.Local.sSQL,True)
+
+F.Data.DataTable.AddColumn("dtQueue","Approve","Boolean",False)
+F.Data.DataTable.AddColumn("dtQueue","Deny","Boolean",False)
+F.Data.DataTable.AddColumn("dtQueue","Excused","Boolean",False)
+F.Data.DataTable.AddColumn("dtQueue","Denial_Reason","String","")
+
+F.Data.DataView.Create("dtQueue","dvQueue")
+
+gui.frmApproval.gsgcApproval.AddGridviewFromDataview("gsgvQueue","dtQueue","dvQueue")
+
+F.Intrinsic.Control.CallSub("formatGrid")
+
+gui.frmApproval.gsgcApproval.MainView("gsgvQueue")
+
+gui.frmApproval..Visible(True)
+
+Program.Sub.ReloadTable.End

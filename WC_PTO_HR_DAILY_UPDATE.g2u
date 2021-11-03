@@ -1,0 +1,102 @@
+Program.Sub.Preflight.Start
+V.Global.lApp.Declare
+V.Global.lDen.Declare
+V.Global.lFill.Declare
+
+F.ODBC.Connection!con.OpenCompanyConnection
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+V.Local.lWeekday.Declare
+
+F.Intrinsic.Date.Weekday(V.Ambient.Now,V.Local.lWeekday)
+F.Intrinsic.Control.If(V.Local.lWeekday,=,7)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.ElseIf(V.Local.lWeekday,=,1)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub("LoadDT")
+
+V.Global.lApp.Set(V.DataTable.dtApproved.RowCount)
+V.Global.lDen.Set(V.DataTable.dtDenied.RowCount)
+V.Global.lFill.Set(V.DataTable.dtFill.RowCount)
+
+F.Intrinsic.Control.CallSub("SendMsg")
+
+Program.Sub.Main.End
+
+Program.Sub.LoadDT.Start
+V.Local.dSunday.Declare
+V.Local.lWkdayCount.Declare
+V.Local.dCurDay.Declare
+V.Local.sDates.Declare
+V.Local.sDay.Declare
+V.Local.sMonth.Declare
+V.Local.sYear.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+V.Local.sSQL.Declare
+V.Local.dSaturday.Declare
+
+F.Intrinsic.Control.If(V.DataTable.dtApproved.Exists)
+	F.Data.DataTable.Close("dtApproved")
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.CreateFromSQL("dtApproved","con","SELECT * FROM ZZ_PTO_HR_APPROVED ORDER BY EMPLOYEE ASC, REQUEST_DATE ASC;",True)
+
+F.Intrinsic.Control.If(V.DataTable.dtDenied.Exists)
+	F.Data.DataTable.Close("dtDenied")
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.CreateFromSQL("dtDenied","con","SELECT * FROM ZZ_PTO_HR_DENIED;",True)
+
+F.Intrinsic.Control.If(V.DataTable.dtFill.Exists)
+	F.Data.DataTable.Close("dtFill")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Date.BeginningOfWeek(V.Ambient.Date,V.Local.dSunday)
+F.Intrinsic.Date.DateAdd("D",7,V.Local.dSunday,V.Local.dSaturday)
+
+F.Intrinsic.Date.Day(V.Local.dSaturday,V.Local.sDay)
+F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Date.Month(V.Local.dSaturday,V.Local.sMonth)
+F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Date.Year(V.Local.dSaturday,V.Local.sYear)
+
+F.Intrinsic.String.Build("REQUEST_DATE <= '{0}-{1}-{2}'",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sDates)
+
+F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_FILL WHERE {0};",V.Local.sDates,V.Local.sSQL)
+
+F.Data.DataTable.CreateFromSQL("dtFill","con",V.Local.sSQL,True)
+
+Program.Sub.LoadDT.End
+
+Program.Sub.SendMsg.Start
+V.Local.sMsg.Declare
+V.Local.sEmail.Declare
+V.Local.sName.Declare
+V.Local.sRecipient.Declare
+V.Local.sSender.Declare
+
+V.Local.sEmail.Set("naomis@voyager-industries.com")
+V.Local.sName.Set("PTO System")
+
+F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sEmail,V.Local.sName,V.Local.sSender)
+F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sName,V.Local.sEmail,V.Local.sRecipient)
+
+F.Intrinsic.String.Build("Current PTO Request Queue: {0}Approved: {1}{0}Denied: {2}{0}Fill to 40: {3}",V.Ambient.NewLine,V.Global.lApp,V.Global.lDen,V.Global.lFill,V.Local.sMsg)
+
+'Old messaging system bork bork like a viking ship hitting the titanic's corpse
+'F.Global.Messaging.CreateEMMessage(V.Local.sEmail,"HR",V.Local.sEmail,"PTO System","Daily PTO Queue Update",V.Local.sMsg)
+
+F.Global.Messaging.QueueMessage("VSF","05008","ZZ_PTO_HR_DAILY_UPDATE","Daily PTO Queue Update",V.Local.sSender,V.Local.sRecipient,V.Local.sMsg)
+
+Program.Sub.SendMsg.End
+

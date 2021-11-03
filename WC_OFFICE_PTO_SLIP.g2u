@@ -1,0 +1,682 @@
+Program.Sub.ScreenSU.Start
+Gui.frmPTO..Create
+Gui.frmPTO..Caption("Submit PTO Request")
+Gui.frmPTO..Size(7215,7650)
+Gui.frmPTO..MinX(0)
+Gui.frmPTO..MinY(0)
+Gui.frmPTO..Position(0,0)
+Gui.frmPTO..BackColor(-2147483633)
+Gui.frmPTO..MousePointer(0)
+Gui.frmPTO..Event(UnLoad,frmPTO_UnLoad)
+Gui.frmPTO.dtpStart.Create(DatePicker)
+Gui.frmPTO.dtpStart.Size(1935,285)
+Gui.frmPTO.dtpStart.Position(930,1815)
+Gui.frmPTO.dtpStart.Event(Change,dtpStart_Change)
+Gui.frmPTO.dtpStart.TabStop(True)
+Gui.frmPTO.dtpStart.TabIndex(2)
+Gui.frmPTO.dtpEnd.Create(DatePicker)
+Gui.frmPTO.dtpEnd.Size(1935,285)
+Gui.frmPTO.dtpEnd.Position(930,2295)
+Gui.frmPTO.dtpEnd.TabStop(True)
+Gui.frmPTO.dtpEnd.TabIndex(3)
+Gui.frmPTO.lblRange.Create(Label,"Requested Date Range",True,1935,255,0,930,1545,True,2,"Arial",8,-2147483633,0)
+Gui.frmPTO.txtHours.Create(TextBox,"",True,1770,300,0,1020,3180,True,0,"Arial",8,-2147483643,1)
+Gui.frmPTO.txtHours.TabStop(True)
+Gui.frmPTO.txtHours.TabIndex(4)
+Gui.frmPTO.txtHours.ToolTip("For the date range selected, enter the total number of hours for which you would like to request PTO.")
+Gui.frmPTO.lblHours.Create(Label,"Amount of Hours Requested:",True,2220,255,0,795,2925,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.cmdSubmit.Create(Button)
+Gui.frmPTO.cmdSubmit.Size(1740,375)
+Gui.frmPTO.cmdSubmit.Position(1020,6360)
+Gui.frmPTO.cmdSubmit.Caption("Submit")
+Gui.frmPTO.cmdSubmit.Event(Click,cmdSubmit_Click)
+Gui.frmPTO.cmdSubmit.TabStop(True)
+Gui.frmPTO.cmdSubmit.TabIndex(7)
+Gui.frmPTO.cmdSubmit.FontStyle(True,False,False,False,False)
+Gui.frmPTO.ddlReason.Create(DropDownList)
+Gui.frmPTO.ddlReason.Size(1785,330)
+Gui.frmPTO.ddlReason.Position(990,4365)
+Gui.frmPTO.ddlReason.TabStop(True)
+Gui.frmPTO.ddlReason.TabIndex(6)
+Gui.frmPTO.ddlReason.AddItem("Vacation")
+Gui.frmPTO.ddlReason.AddItem("Sick")
+Gui.frmPTO.ddlReason.AddItem("Funeral")
+Gui.frmPTO.ddlReason.AddItem("Arrived Late")
+Gui.frmPTO.ddlReason.AddItem("Left Early")
+Gui.frmPTO.ddlReason.AddItem("Other")
+Gui.frmPTO.lblReason.Create(Label,"Reason for Time Off:",True,1695,255,0,1050,4095,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.chkFill.Create(CheckBox)
+Gui.frmPTO.chkFill.Size(1005,360)
+Gui.frmPTO.chkFill.Position(1365,3570)
+Gui.frmPTO.chkFill.Caption("Fill to 40")
+Gui.frmPTO.chkFill.Event(Click,chkFill_Click)
+Gui.frmPTO.chkFill.TabStop(True)
+Gui.frmPTO.chkFill.TabIndex(5)
+Gui.frmPTO.lblName.Create(Label,"",True,3015,405,0,390,285,True,2,"Arial",12,-2147483633,0)
+Gui.frmPTO.lblAvail.Create(Label,"PTO Available: ",True,2385,255,0,690,870,True,2,"Arial",9,-2147483633,0)
+Gui.frmPTO.lblAvail.DefaultValue("PTO Available: ")
+Gui.frmPTO.lblAvail.FontStyle(True,False,False,False,False)
+Gui.frmPTO.gsgcSched.Create(GsGridControl)
+Gui.frmPTO.gsgcSched.Size(3165,5820)
+Gui.frmPTO.gsgcSched.Position(3480,375)
+Gui.frmPTO.txtExplanation.Create(TextboxM)
+Gui.frmPTO.txtExplanation.Size(2895,915)
+Gui.frmPTO.txtExplanation.Position(450,5280)
+Gui.frmPTO.txtExplanation.MaxLength(300)
+Gui.frmPTO.lbl1.Create(Label,"Explanation for Time Off",True,1890,255,0,945,5010,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.cmdViewAll.Create(Button)
+Gui.frmPTO.cmdViewAll.Size(1875,375)
+Gui.frmPTO.cmdViewAll.Position(4140,6360)
+Gui.frmPTO.cmdViewAll.Caption("View All Requests")
+Gui.frmPTO.cmdViewAll.Event(Click,cmdViewAll_Click)
+Gui.frmPTO.lblMax.Create(Label,"Max PTO:",True,1935,255,0,930,1170,True,2,"Arial",9,-2147483633,0)
+Gui.frmPTO.lblMax.DefaultValue("Max PTO:")
+Gui.frmPTO.lblMax.FontStyle(True,False,False,False,False)
+Gui.frmAll..Create
+Gui.frmAll..Caption("All Requests")
+Gui.frmAll..Size(9795,8115)
+Gui.frmAll..MinX(0)
+Gui.frmAll..MinY(0)
+Gui.frmAll..Position(0,0)
+Gui.frmAll..BackColor(-2147483633)
+Gui.frmAll..MousePointer(0)
+Gui.frmAll..Event(UnLoad,frmAll_UnLoad)
+Gui.frmAll.gsgcAll.Create(GsGridControl)
+Gui.frmAll.gsgcAll.Size(9225,7230)
+Gui.frmAll.gsgcAll.Position(180,150)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+F.ODBC.Connection!con.OpenCompanyConnection
+
+V.Global.bAll.Declare
+V.Global.bAll.Set(False)
+
+V.Global.fMax.Declare
+V.Global.fMax.Set(0)
+
+V.Global.sEmpID.Declare
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.CallSub("dtLoad")
+
+gui.frmPTO..Show
+
+F.Intrinsic.Control.CallSub("findID")
+
+Program.Sub.Main.End
+
+Program.Sub.findID.Start
+V.Local.sCrit.Declare
+V.Local.sRet.Declare
+V.Local.sID.Declare
+
+F.Intrinsic.String.Build("PR_USER_ID = '{0}'",V.Caller.User,V.Local.sCrit)
+F.Data.DataTable.Select("dtEmpMstr",V.Local.sCrit,V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,=,"***NORETURN***")
+
+	F.Intrinsic.UI.Msgbox("You have not been set up in the PTO slip system yet. Please contact IT to have them set you up!")
+	F.Intrinsic.Control.End
+
+F.Intrinsic.Control.Else
+
+	V.Global.sEmpID.Set(V.DataTable.dtEmpMstr(V.Local.sRet).EMPLOYEE!FieldVal)
+
+	V.Local.sID.Set(V.DataTable.dtEmpMstr(V.Local.sRet).EMPLOYEE!FieldVal)
+	
+	F.Intrinsic.Control.CallSub("popName","ID",V.Local.sID)
+	F.Intrinsic.Control.CallSub("popHours","ID",V.Local.sID)
+	F.Intrinsic.Control.CallSub("popSched","ID",V.Local.sID)
+	F.Intrinsic.Control.CallSub("popAll","ID",V.Local.sID)
+
+F.Intrinsic.Control.EndIf
+
+Program.Sub.findID.End
+
+Program.Sub.dtLoad.Start
+F.Data.DataTable.CreateFromSQL("dtEmpMstr","con","SELECT EMPLOYEE, NAME, PR_USER_ID FROM EMPLOYEE_MSTR WHERE DATE_TERMINATION = '000000';",True)
+
+F.Data.DataTable.CreateFromSQL("dtPTO","con","SELECT * FROM ZZ_PTO_EMPLOYEES;",True)
+
+F.Data.DataTable.CreateFromSQL("dtSup","con","SELECT * FROM ZZ_PTO_LOGIN;", True)
+
+Program.Sub.dtLoad.End
+
+Program.Sub.buildHoliday.Start
+V.Local.sHolidayStr.Declare
+V.Local.sHolArr.Declare
+V.Local.lCount.Declare
+V.Local.lArrLen.Declare
+V.Local.sHolidays.Declare
+V.Local.dHolidays.Declare
+
+F.ODBC.Connection!con.ExecuteAndReturn("SELECT * FROM V_HOLIDAY_SCHED;",V.Local.sHolidayStr)
+F.Intrinsic.String.Split(V.Local.sHolidayStr,"*!*",V.Local.sHolArr)
+
+V.Local.lArrLen.Set(V.Local.sHolArr.UBound)
+
+F.Intrinsic.Control.For(V.Local.lCount,3,V.Local.lArrLen,1)
+
+	F.Intrinsic.Control.If(V.Local.sHolArr(V.Local.lCount),"<>","1/1/1900")
+	
+		F.Intrinsic.Control.If(V.Local.sHolidays,"=","")
+			V.Local.sHolidays.Set(V.Local.sHolArr(V.Local.lCount))
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sHolidays,V.Local.sHolArr(V.Local.lCount),V.Local.sHolidays)
+		F.Intrinsic.Control.EndIf
+		
+	F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.String.Split(V.Local.sHolidays,"*!*",V.Local.dHolidays)
+
+F.Intrinsic.Variable.AddRV("dHolidays",V.Local.dHolidays)
+
+Program.Sub.buildHoliday.End
+
+Program.Sub.popName.Start
+F.Intrinsic.Control.Try
+
+V.Local.sID.Declare
+V.Local.sCriteria.Declare
+V.Local.sName.Declare
+V.Local.lRowLoc.Declare
+V.Local.sRChar.Declare
+V.Local.sSQL.Declare
+V.Local.sType.Declare
+V.Local.sRet.Declare
+V.Local.sCaption.Declare
+
+V.Local.sID.Set(V.Args.ID)
+
+gui.frmPTO.dtpStart.SetFocus
+
+gui.frmPTO.txtID.Text(" ")
+
+F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.Local.sID,V.Local.sCriteria)
+F.Data.DataTable.Select("dtEmpMstr",V.Local.sCriteria,V.Local.lRowLoc)
+
+F.Intrinsic.Control.If(V.Local.lRowLoc,"=","***NORETURN***")
+	F.Intrinsic.UI.Msgbox("Please contact IT and note down this error code: ERR103")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Split(V.DataTable.dtEmpMstr(V.Local.lRowLoc).NAME!FieldVal,",",V.Local.sName)
+F.Intrinsic.String.Trim(V.Local.sName(0),V.Local.sName(0))
+F.Intrinsic.String.Trim(V.Local.sName(1),V.Local.sName(1))
+
+F.Intrinsic.String.Build("{0} {1}",V.Local.sName(1),V.Local.sName(0),V.Local.sName)
+
+gui.frmPTO.lblName.Caption(V.Local.sName)
+
+F.Data.DataTable.Select("dtPTO",V.Local.sCriteria,V.Local.lRowLoc)
+
+F.Intrinsic.Control.If(V.Local.lRowLoc,"=","***NORETURN***")
+	F.Intrinsic.UI.Msgbox("Please contact IT and note down this error code: ERR104")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.DataTable.dtPTO(V.Local.lRowLoc).PAY_TYPE!FieldVal,=,"H")
+	V.Local.sType.Set("HOURLY")
+F.Intrinsic.Control.Else
+	V.Local.sType.Set("SALARY")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("SELECT MAX_PTO FROM ZZ_PTO_ACCRUAL_STEPS WHERE PTO_STEP = '{0}' AND TYPE = '{1}';",V.DataTable.dtPTO(V.Local.lRowLoc).PTO_STEP!FieldVal,V.Local.sType,V.Local.sSQL)
+F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+
+F.Intrinsic.String.Build("Max PTO: {0}",V.Local.sRet,V.Local.sCaption)
+V.Global.fMax.Set(V.Local.sRet)
+
+gui.frmPTO.lblMax.Caption(V.Local.sCaption)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.UI.Msgbox("Please try scanning your card again")
+	gui.frmPTO.txtID.Text(" ")
+F.Intrinsic.Control.EndTry
+
+Program.Sub.popName.End
+
+Program.Sub.popSched.Start
+V.Local.sID.Declare
+V.Local.sSQL.Declare
+V.Local.sYear.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.sDate.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+
+V.Local.sID.Set(V.Args.ID)
+
+F.Intrinsic.Date.Day(V.Ambient.Now,V.Local.sDay)
+F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Date.Month(V.Ambient.Now,V.Local.sMonth)
+F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Date.Year(V.Ambient.Now,V.Local.sYear)
+F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sDate)
+
+F.Intrinsic.Control.If(V.DataTable.dtRequests.Exists)
+	F.Data.DataTable.Close("dtRequests")
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Try
+	gui.frmPTO.gsgcSched.ClearGrouping("gsgvRequests")
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.ClearErrors
+F.Intrinsic.Control.EndTry
+
+F.Intrinsic.String.Build("SELECT REQUEST_DATE, PTO_AMOUNT FROM ZZ_PTO_CONFIRMED WHERE EMPLOYEE = '{0}' AND REQUEST_DATE > '{1}' ORDER BY REQUEST_DATE;",V.Local.sID,V.Local.sDate,V.Local.sSQL)
+F.Data.DataTable.CreateFromSQL("dtRequests","con",V.Local.sSQL, True)
+
+F.Intrinsic.Control.If(V.DataView.dtRequests!dvRequests.Exists)
+	F.Data.DataView.Close("dtRequests","dvRequests")
+F.Intrinsic.Control.EndIf
+
+F.Data.DataView.Create("dtRequests","dvRequests")
+
+gui.frmPTO.gsgcSched.AddGridviewFromDataview("gsgvRequests","dtRequests","dvRequests")
+
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","REQUEST_DATE","caption","Date")
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","PTO_AMOUNT","caption","Amount")
+
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","REQUEST_DATE","DisplayCustomDateTime","d")
+
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","REQUEST_DATE","HeaderFontBold",True)
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","PTO_AMOUNT","HeaderFontBold",True)
+
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","REQUEST_DATE","HeaderHAlignment","Center")
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","PTO_AMOUNT","HeaderHAlignment","Center")
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","REQUEST_DATE","CellHAlignment","Center")
+gui.frmPTO.gsgcSched.SetColumnProperty("gsgvRequests","PTO_AMOUNT","CellHAlignment","Center")
+
+gui.frmPTO.gsgcSched.SetGridviewProperty("gsgvRequests",EnableAppearanceOddRow,True)
+gui.frmPTO.gsgcSched.SetGridviewProperty("gsgvRequests",Editable,False)
+
+gui.frmPTO.gsgcSched.MainView("gsgvRequests")
+
+Program.Sub.popSched.End
+
+Program.Sub.popHours.Start
+V.Local.sID.Declare
+V.Local.sCriteria.Declare
+V.Local.sHours.Declare
+V.Local.lRowLoc.Declare
+V.Local.fMaxClose.Declare
+
+V.Local.sID.Set(V.Args.ID)
+
+F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.Local.sID,V.Local.sCriteria)
+F.Data.DataTable.Select("dtPTO",V.Local.sCriteria,V.Local.lRowLoc)
+
+F.Intrinsic.Control.If(V.Local.lRowLoc,"=","***NORETURN***")
+	F.Intrinsic.UI.Msgbox("Uh oh")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("PTO Available: {0}",V.DataTable.dtPTO(V.Local.lRowLoc).AVAILABLE!FieldVal,V.Local.sHours)
+
+F.Intrinsic.Math.Add(V.DataTable.dtPTO(V.Local.lRowLoc).AVAILABLE!FieldVal,20,V.Local.fMaxClose)
+F.Intrinsic.Control.If(V.Local.fMaxClose,>=,V.Global.fMax)
+	gui.frmPTO.lblMax.ForeColor("red")
+F.Intrinsic.Control.Else
+	gui.frmPTO.lblMax.ForeColor("black")
+F.Intrinsic.Control.EndIf
+
+gui.frmPTO.lblAvail.Caption(V.Local.sHours)
+
+Program.Sub.popHours.End
+
+Program.Sub.popAll.Start
+V.Local.sID.Declare
+V.Local.sSQL.Declare
+
+V.Local.sID.Set(V.Args.ID)
+
+F.Intrinsic.String.Build("SELECT REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, EXCUSED, EXPLANATION FROM ZZ_PTO_HISTORY WHERE EMPLOYEE = '{0}' ORDER BY REQUEST_DATE ASC",V.Local.sID,V.Local.sSQL)
+F.Data.DataTable.CreateFromSQL("dtAll","con",V.Local.sSQL,True)
+F.Data.DataView.Create("dtAll","dvAll")
+
+gui.frmAll.gsgcAll.AddGridviewFromDataview("gsgvAll","dtAll","dvAll")
+
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REQUEST_DATE","caption","Date")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","PTO_AMOUNT","caption","PTO")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REASON","caption","Reason")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","FILL_TO_40","caption","Fill")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXCUSED","caption","Excused")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXPLANATION","caption","Explanation")
+
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REQUEST_DATE","HeaderFontBold",True)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","PTO_AMOUNT","HeaderFontBold",True)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REASON","HeaderFontBold",True)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","FILL_TO_40","HeaderFontBold",True)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXCUSED","HeaderFontBold",True)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXPLANATION","HeaderFontBold",True)
+
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REQUEST_DATE","HeaderHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","PTO_AMOUNT","HeaderHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REASON","HeaderHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","FILL_TO_40","HeaderHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXCUSED","HeaderHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXPLANATION","HeaderHAlignment","center")
+
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REQUEST_DATE","CellHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","PTO_AMOUNT","CellHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REASON","CellHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","FILL_TO_40","CellHAlignment","center")
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXCUSED","CellHAlignment","center")
+
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REQUEST_DATE","DisplayCustomDateTime","d")
+
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REQUEST_DATE","width",75)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","PTO_AMOUNT","width",75)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","REASON","width",75)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","FILL_TO_40","width",75)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXCUSED","width",75)
+gui.frmAll.gsgcAll.SetColumnProperty("gsgvAll","EXPLANATION","width",175)
+
+gui.frmAll.gsgcAll.SetGridviewProperty("gsgvAll",OptionsViewColumnAutoWidth,False)
+
+gui.frmAll.gsgcAll.MainView("gsgvAll")
+
+Program.Sub.popAll.End
+
+Program.Sub.dtpStart_Change.Start
+gui.frmPTO.dtpEnd.Value(V.Screen.frmPTO!dtpStart.Value)
+
+Program.Sub.dtpStart_Change.End
+
+Program.Sub.cmdSubmit_Click.Start
+V.Local.lDayRange.Declare
+V.Local.lDayCount.Declare
+V.Local.lCount.Declare
+V.Local.fHourSplit.Declare
+V.Local.dCurDay.Declare
+V.Local.sMsg.Declare
+V.Local.dHolidays.Declare
+V.Local.lHolCount.Declare
+V.Local.sPTODays.Declare
+V.Local.dPTODays.Declare
+V.Local.bIsHoliday.Declare
+V.Local.lWeekday.Declare
+V.Local.bWeekday.Declare
+V.Local.sSQL.Declare
+V.Local.sDay.Declare
+V.Local.sMonth.Declare
+V.Local.sYear.Declare
+V.Local.lMLen.Declare
+V.Local.lDLen.Declare
+V.Local.sUniqID.Declare
+V.Local.sDate.Declare
+V.Local.sRet.Declare
+V.Local.sSupervsr.Declare
+V.Local.sCrit.Declare
+V.Local.sBody.Declare
+V.Local.sHeader.Declare
+V.Local.sEmail.Declare
+V.Local.lEmDayCount.Declare
+V.Local.sEmDays.Declare
+V.Local.sEmDayStr.Declare
+V.Local.sSupName.Declare
+V.Local.sSubject.Declare
+V.Local.sRecipient.Declare
+V.Local.sExplanation.Declare
+V.Local.lRet.Declare
+V.Local.sEmSender.Declare
+V.Local.sEmRecipient.Declare
+
+V.Local.lEmDayCount.Set(-1)
+V.Local.sEmDays.Set("")
+
+F.Intrinsic.Control.If(V.Screen.frmPTO!lblName.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please Scan Your ID Card")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmPTO!txtHours.Value,"=","")
+	F.Intrinsic.Control.If(V.Screen.frmPTO!chkFill.Value,"=",0)
+		F.Intrinsic.UI.Msgbox("Please enter the total hours you are requesting")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.ElseIf(V.Screen.frmPTO!ddlReason.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please select a reason for your request.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.CallSub("buildHoliday")
+F.Intrinsic.Variable.ArgToVar("dHolidays",V.Local.dHolidays)
+
+F.Intrinsic.Date.DateDiff("d",V.Screen.frmPTO!dtpStart.Value,V.Screen.frmPTO!dtpEnd.Value,V.Local.lDayRange)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lDayRange,1)
+
+	F.Intrinsic.Date.DateAdd("d",V.Local.lCount,V.Screen.frmPTO!dtpStart.Value,V.Local.dCurDay)
+	
+	F.Intrinsic.Control.For(V.Local.lHolCount,0,V.Local.dHolidays.UBound,1)
+	
+		F.Intrinsic.Control.If(V.Local.dHolidays(V.Local.lHolCount),"<>",V.Local.dCurDay)
+		
+			V.Local.bIsHoliday.Set(False)
+			
+		F.Intrinsic.Control.Else
+		
+			V.Local.bIsHoliday.Set(True)
+			
+			F.Intrinsic.Control.ExitFor(V.Local.lHolCount)
+			
+		F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.Next(V.Local.lHolCount)
+	
+	F.Intrinsic.Control.If(V.Local.bIsHoliday,"!=",True)
+	
+		F.Intrinsic.Date.Weekday(V.Local.dCurDay,V.Local.lWeekday)
+		
+		F.Intrinsic.Control.CallSub("isWeekday","Weekday",V.Local.lWeekday)
+		
+		F.Intrinsic.Variable.ArgToVar("bWeekday",V.Local.bWeekday)
+			
+		F.Intrinsic.Control.If(V.Local.bWeekday)
+
+			F.Intrinsic.Math.Add(V.Local.lDayCount,1,V.Local.lDayCount)
+			
+			F.Intrinsic.Control.If(V.Local.sPTODays,"=","")
+			
+				V.Local.sPTODays.Set(V.Local.dCurDay)
+	
+			F.Intrinsic.Control.Else
+			
+				F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sPTODays,V.Local.dCurDay,V.Local.sPTODays)
+			
+			F.Intrinsic.Control.EndIf
+		
+		F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+
+F.Intrinsic.String.Split(V.Local.sPTODays,"*!*",V.Local.dPTODays)
+F.Intrinsic.Math.Div(V.Screen.frmPTO!txtHours.Value,V.Local.lDayCount,V.Local.fHourSplit)
+F.Intrinsic.Math.Round(V.Local.fHourSplit,1,V.Local.fHourSplit)
+
+F.Intrinsic.Control.If(V.Local.fHourSplit,">",8)
+	F.Intrinsic.UI.Msgbox("Please make sure you have the right amount of hours, it looks like you have requested more hours than you need for the date range selected.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.dPTODays.UBound,1)
+
+	F.Intrinsic.Date.Year(V.Local.dPTODays(V.Local.lCount),V.Local.sYear)
+	F.Intrinsic.Date.Month(V.Local.dPTODays(V.Local.lCount),V.Local.sMonth)
+	F.Intrinsic.Date.Day(V.Local.dPTODays(V.Local.lCount),V.Local.sDay)
+	
+	F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+	F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+	
+	F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.String.Build("{0}{1}{2}{3}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Global.sEmpID,V.Local.sUniqID)
+	F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sDate)
+	
+	F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_APPROVAL WHERE UNIQID = '{0}';",V.Local.sUniqID,V.Local.sSQL)
+	F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet,"<>","")
+		F.Intrinsic.UI.Msgbox("This employee has already requested time off for this date range, please contact your supervisor or HR to make adjustments. Duplicate dates have been skipped but new dates have been added.")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_HR_APPROVED WHERE UNIQID = '{0}';",V.Local.sUniqID,V.Local.sSQL)
+	F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet,"<>","")
+		F.Intrinsic.UI.Msgbox("This employee has already requested time off for this date range, please contact your supervisor or HR to make adjustments. Duplicate dates have been skipped but new dates have been added.")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+	
+	V.Local.sRet.Set("")
+	
+	F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_HISTORY WHERE UNIQID = '{0}';",V.Local.sUniqID,V.Local.sSQL)
+	F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet,"<>","")
+		F.Intrinsic.UI.Msgbox("This employee has already requested time off for this date range, please contact your supervisor or HR to make adjustments. Duplicate dates have been skipped but new dates have been added.")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.EndIf
+	
+	V.Local.sRet.Set("")
+	
+	F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE EMPLOYEE = '{0}';",V.Global.sEmpID,V.Local.sSQL)
+	F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet,"<>","")
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+		V.Local.sSupervsr.Set(V.Local.sRet(3))
+	F.Intrinsic.Control.EndIf
+	
+	V.Local.sExplanation.Set(V.Screen.frmPTO!txtExplanation.Value)
+	
+	F.Intrinsic.String.Occurs(V.Local.sExplanation,"'",V.Local.lRet)
+	F.Intrinsic.Control.If(V.Local.lRet,>,0)
+		F.Intrinsic.String.Replace(V.Local.sExplanation,"'","''",V.Local.sExplanation)
+	F.Intrinsic.Control.EndIf
+
+	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_APPROVAL (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');",V.Local.sUniqID,V.Global.sEmpID,V.Screen.frmPTO!lblName.Value,V.Local.sDate,V.Local.fHourSplit,V.Screen.frmPTO!ddlReason.Value,V.Screen.frmPTO!chkFill.Value,V.Local.sSupervsr,V.Local.sExplanation,V.Local.sSQL)
+	
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.Math.Add(V.Local.lEmDayCount,1,V.Local.lEmDayCount)
+	F.Intrinsic.Control.If(V.Local.sEmDays,=,"")
+		V.Local.sEmDays.Set(V.Local.sDate)
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sEmDays,V.Local.sDate,V.Local.sEmDays)
+	F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.UI.Msgbox("PTO Request Submitted!")
+
+V.Local.lCount.Set(0)
+F.Intrinsic.Control.If(V.Local.lEmDayCount,=,0)
+	V.Local.sEmDayStr.Set(V.Local.sEmDays)
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Split(V.Local.sEmDays,"*!*",V.Local.sEmDays)
+	F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lEmDayCount,1)
+		F.Intrinsic.Control.If(V.Local.sEmDayStr,=,"")
+			V.Local.sEmDayStr.Set(V.Local.sEmDays(V.Local.lCount))
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Build("{0}, {1}",V.Local.sEmDayStr,V.Local.sEmDays(V.Local.lCount),V.Local.sEmDayStr)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Next(V.Local.lCount)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("SUP_ID = '{0}'",V.Local.sSupervsr,V.Local.sCrit)
+F.Data.DataTable.Select("dtSup",V.Local.sCrit,V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,=,"***NORETURN***")
+	F.Intrinsic.UI.Msgbox("Your supervisor has not been set up yet. Your request has gone through, but please notify HR and your Supervisor that they need to be set up and that you submitted a PTO slip.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+F.Intrinsic.String.Trim(V.DataTable.dtSup(V.Local.sRet).EMAIL!FieldVal,V.Local.sEmail)
+
+F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.Local.sSupervsr,V.Local.sCrit)
+F.Data.DataTable.Select("dtPTO",V.Local.sCrit,V.Local.sRet)
+F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+F.Intrinsic.String.Split(V.DataTable.dtPTO(V.Local.sRet).NAME!FieldVal,",",V.Local.sSupName)
+F.Intrinsic.String.Trim(V.Local.sSupName(1),V.Local.sSupName(1))
+F.Intrinsic.String.Build("{0} {1}",V.Local.sSupName(1),V.Local.sSupName(0),V.Local.sRecipient)
+
+F.Intrinsic.String.Build("{0} has submitted a new PTO request for {1}.",V.Screen.frmPTO!lblName.Value,V.Local.sEmDayStr,V.Local.sBody)
+F.Intrinsic.String.Build("New PTO Request from {0}",V.Screen.frmPTO!lblName.Value,V.Local.sSubject)
+
+'BRRRRRRRRRRRRRRRROKAEN. Gotta use the new QueueMessage function apparently
+'F.Global.Messaging.CreateEMMessage(V.Local.sEmail,V.Local.sRecipient,V.Local.sEmail,"PTO System",V.Local.sSubject,V.Local.sBody)
+
+F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sEmail,"PTO System",V.Local.sEmSender)
+F.Intrinsic.String.Build("{0}*!*{1}","PTO System",V.Local.sEmail,V.Local.sEmRecipient)
+F.Global.Messaging.QueueMessage("VSF",V.Local.sSupervsr,"ZZ_OFFICE_PTO_SLIP",V.Local.sSubject,V.Local.sEmSender,V.Local.sEmRecipient,V.Local.sBody)
+
+Program.Sub.cmdSubmit_Click.End
+
+Program.Sub.isWeekday.Start
+V.Local.lWeekday.Declare
+V.Local.bWeekday.Declare
+
+V.Local.lWeekday.Set(V.Args.Weekday)
+F.Intrinsic.Control.If(V.Local.lWeekday,"=",7)
+	V.Local.bWeekday.Set(False)
+F.Intrinsic.Control.ElseIf(V.Local.lWeekday,"=",1)
+	V.Local.bWeekday.Set(False)
+F.Intrinsic.Control.Else
+	V.Local.bWeekday.Set(True)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Variable.AddRV("bWeekday",V.Local.bWeekday)
+
+Program.Sub.isWeekday.End
+
+Program.Sub.frmPTO_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.frmPTO_UnLoad.End
+
+Program.Sub.chkFill_Click.Start
+F.Intrinsic.Control.If(V.Screen.frmPTO!chkFill.Value,"=",1)
+
+	Gui.frmPTO.txtHours.Enabled(False)
+
+F.Intrinsic.Control.Else
+
+	Gui.frmPTO.txtHours.Enabled(True)
+
+F.Intrinsic.Control.EndIf
+
+Program.Sub.chkFill_Click.End
+
+Program.Sub.cmdViewAll_Click.Start
+F.Intrinsic.Control.If(V.Global.bAll)
+	gui.frmAll..Visible(True)
+	gui.frmPTO..Visible(False)
+F.Intrinsic.Control.Else
+	gui.frmAll..Show
+	gui.frmPTO..Visible(False)
+	V.Global.bAll.Set(True)
+F.Intrinsic.Control.EndIf
+
+Program.Sub.cmdViewAll_Click.End
+
+Program.Sub.frmAll_UnLoad.Start
+gui.frmAll..Visible(False)
+gui.frmPTO..Visible(True)
+Program.Sub.frmAll_UnLoad.End
