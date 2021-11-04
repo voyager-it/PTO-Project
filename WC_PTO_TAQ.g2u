@@ -8,15 +8,38 @@ Program.Sub.Preflight.End
 
 Program.Sub.Main.Start
 
+'Loads the working data that needs to go from TAQ to the Time_Attendance table
 F.Intrinsic.Control.CallSub("loadDT")
 
+'Takes the data from the queue and formats it with proper time in/out values based on worked time
 F.Intrinsic.Control.CallSub("TAInsert")
+
+'Sends an email to it@voyager-industries.com for review in case something failed
+F.Intrinsic.Control.CallSub("SendReport")
 
 Program.Sub.Main.End
 
 Program.Sub.loadDT.Start
+V.Local.sSQL.Declare
+V.Local.sMonth.Declare
+V.Local.sYear.Declare
+V.Local.sDay.Declare
+V.Local.sCurDay.Declare
 
-F.Data.DataTable.CreateFromSQL("dtTAQ","con","SELECT * FROM ZZ_PTO_TAQ",True)
+F.Intrinsic.Date.Day(V.Ambient.Date,V.Local.sDay)
+F.Intrinsic.Control.If(V.Local.sDay.Length,=,1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Date.Month(V.Ambient.Date,V.Local.sMonth)
+F.Intrinsic.Control.If(V.Local.sMonth.Length,=,1)
+	F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Date.Year(V.Ambient.Date,V.Local.sYear)
+F.Intrinsic.String.Build("{0}{1}{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sCurDay)
+
+F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_TAQ WHERE DATE_IN < '{0}';",V.Local.sCurDay,V.Local.sSQL)
+
+F.Data.DataTable.CreateFromSQL("dtTAQ","con",V.Local.sSQL,True)
 
 Program.Sub.loadDT.End
 
@@ -40,6 +63,7 @@ V.Local.lMLen.Declare
 V.Local.sInsTADate.Declare
 V.Local.lOutMin.Declare
 V.Local.sReqStr.Declare
+V.Local.sName.Declare
 
 F.Intrinsic.Math.Sub(V.DataTable.dtTAQ.RowCount,1,V.Local.lRowCount)
 
@@ -50,11 +74,13 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		F.Intrinsic.Control.If(V.DataTable.dtTime.Exists)
 			F.Data.DataTable.Close("dtTime")
 		F.Intrinsic.Control.EndIf
-	
+		
+		'Finds if there are any TIME_ATTENDANCE records for the current employee and date
 		F.Intrinsic.String.Build("SELECT * FROM TIME_ATTENDANCE WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}' ORDER BY TIME_IN DESC",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sSQL)
 		
 		F.Data.DataTable.CreateFromSQL("dtTime","con",V.Local.sSQL,True)
 		
+		'If there are records...
 		F.Intrinsic.Control.If(V.DataTable.dtTime.RowCount,>,0)
 		
 			'Finding clock out time and adding an hour to it
@@ -99,7 +125,10 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			F.Intrinsic.String.Build("INSERT INTO TIME_ATTENDANCE (EMPLOYEE, CHARGE_DATE, DATE_IN, TIME_IN, DATE_OUT, TIME_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', '{23}');",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).CHARGE_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sTimeIn,V.DataTable.dtTAQ(V.Local.lCount).DATE_OUT!FieldVal,V.Local.sTimeOut,V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DEPT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).SHIFT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_GROUP!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_TYPE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EARNINGS_CODE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).PAID!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EXCUSED!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).BAL_AS_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).TIME_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_BY!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_PROG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DOLLAR_AMT!FieldVal,V.Local.sInsTADate,0,V.Local.sSQL)
 			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
-			F.Intrinsic.String.Build("NAME: {0}, DATE: {1}, HOURS: {2}:{3}",V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sReqStr)
+			F.Intrinsic.String.Trim(V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.Local.sName)
+			
+			'Adds the record to a global variable for the email report
+			F.Intrinsic.String.Build("NAME: {0} | DATE: {1} | HOURS: {2}:{3}",V.Local.sName,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sReqStr)
 			
 			F.Intrinsic.Control.If(V.Global.sSuccess,=,"")
 				V.Global.sSuccess.Set(V.Local.sReqStr)
@@ -110,6 +139,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			F.Intrinsic.String.Build("DELETE FROM ZZ_PTO_TAQ WHERE EMPLOYEE = '{0}' AND DATE_IN = '{1}'",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sSQL)
 			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
+		'If there aren't any records...
 		F.Intrinsic.Control.Else
 		
 			'TIME_IN
@@ -145,7 +175,10 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			F.Intrinsic.String.Build("INSERT INTO TIME_ATTENDANCE (EMPLOYEE, CHARGE_DATE, DATE_IN, TIME_IN, DATE_OUT, TIME_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', '{23}');",V.DataTable.dtTAQ(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).CHARGE_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.Local.sTimeIn,V.DataTable.dtTAQ(V.Local.lCount).DATE_OUT!FieldVal,V.Local.sTimeOut,V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DEPT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).SHIFT!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_GROUP!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).REC_TYPE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EARNINGS_CODE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).PAID!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).EXCUSED!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).BAL_AS_DATE!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).TIME_LAST_CHG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_BY!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).LAST_CHG_PROG!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DOLLAR_AMT!FieldVal,V.Local.sInsTADate,0,V.Local.sSQL)
 			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
-			F.Intrinsic.String.Build("NAME: {0}, DATE: {1}, HOURS: {2}:{3}",V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sReqStr)
+			F.Intrinsic.String.Trim(V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.Local.sName)
+			
+			'Adds the record to a global variable for the email report
+			F.Intrinsic.String.Build("NAME: {0} | DATE: {1} | HOURS: {2}:{3}",V.Local.sName,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sReqStr)
 			
 			F.Intrinsic.Control.If(V.Global.sSuccess,=,"")
 				V.Global.sSuccess.Set(V.Local.sReqStr)
@@ -157,9 +190,11 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
 		F.Intrinsic.Control.EndIf
-		
-	F.Intrinsic.Control.Catch
 	
+	'If there are any errors...
+	F.Intrinsic.Control.Catch
+		
+		'Add info of current record to failed global variable for email report
 		F.Intrinsic.String.Build("NAME: {0}, DATE: {1}, HOURS: {2}:{3}",V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sReqStr)
 	
 		F.Intrinsic.Control.If(V.Global.sFailure,=,"")
@@ -184,9 +219,11 @@ V.Local.sName.Declare
 V.Local.sRecipient.Declare
 V.Local.sSender.Declare
 
+'Creates the report arrays
 F.Intrinsic.String.Split(V.Global.sSuccess,"*!*",V.Global.sSuccess)
 F.Intrinsic.String.Split(V.Global.sFailure,"*!*",V.Global.sFailure)
 
+'Builds the formatting for the successes/failures with proper line breaks
 F.Intrinsic.Control.For(V.Local.lCount,0,V.Global.sSuccess.UBound,1)
 	F.Intrinsic.Control.If(V.Local.sSucMsg,=,"")
 		F.Intrinsic.String.Build("SUCCESSFUL RECORDS:{0}{1}{0}",V.Ambient.NewLine,V.Global.sSuccess(V.Local.lCount),V.Local.sSucMsg)
@@ -212,6 +249,5 @@ F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sEmail,V.Local.sName,V.Local.sSende
 F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sName,V.Local.sEmail,V.Local.sRecipient)
 
 F.Global.Messaging.QueueMessage("VSF","05008","ZZ_PTO_TAQ","DAILY TAQ REPORT",V.Local.sSender,V.Local.sRecipient,V.Local.sMsg)
-
 
 Program.Sub.SendReport.End
