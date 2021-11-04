@@ -15,19 +15,19 @@ Gui.frmPTO.gsgcPTO.Anchor(15)
 Gui.frmPTO.gsgcPTO.Event(RowCellClick,gsgcPTO_RowCellClick)
 Gui.frmDetail..Create
 Gui.frmDetail..Caption("PTO Details")
-Gui.frmDetail..Size(4365,5010)
+Gui.frmDetail..Size(4365,6675)
 Gui.frmDetail..MinX(0)
 Gui.frmDetail..MinY(0)
 Gui.frmDetail..Position(0,0)
 Gui.frmDetail..BackColor(-2147483633)
 Gui.frmDetail..MousePointer(0)
 Gui.frmDetail..Event(UnLoad,frmDetail_UnLoad)
-Gui.frmDetail.lblName.Create(Label,"Employee Name:",True,1710,255,0,-45,1320,True,0,"Arial",8,-2147483633,0)
+Gui.frmDetail.lblName.Create(Label,"Employee Name:",True,1710,255,0,-45,1320,True,1,"Arial",8,-2147483633,0)
 Gui.frmDetail.txtName.Create(TextBox,"",True,1995,300,0,1875,1230,True,0,"Arial",8,-2147483643,1)
 Gui.frmDetail.txtName.Locked(True)
 Gui.frmDetail.txtName.TabStop(True)
 Gui.frmDetail.txtName.TabIndex(3)
-Gui.frmDetail.lblID.Create(Label,"ID Number:",True,1170,255,0,495,360,True,0,"Arial",8,-2147483633,0)
+Gui.frmDetail.lblID.Create(Label,"ID Number:",True,1170,255,0,495,360,True,1,"Arial",8,-2147483633,0)
 Gui.frmDetail.txtIDNo.Create(TextBox,"",True,1215,300,0,1875,270,True,0,"Arial",8,-2147483643,1)
 Gui.frmDetail.txtIDNo.Locked(True)
 Gui.frmDetail.txtIDNo.TabStop(True)
@@ -36,24 +36,24 @@ Gui.frmDetail.txtReqDt.Create(TextBox,"",True,1215,300,0,1875,750,True,0,"Arial"
 Gui.frmDetail.txtReqDt.Locked(True)
 Gui.frmDetail.txtReqDt.TabStop(True)
 Gui.frmDetail.txtReqDt.TabIndex(2)
-Gui.frmDetail.lblReqDt.Create(Label,"Request Date:",True,1515,255,0,150,840,True,0,"Arial",8,-2147483633,0)
+Gui.frmDetail.lblReqDt.Create(Label,"Request Date:",True,1515,255,0,150,840,True,1,"Arial",8,-2147483633,0)
 Gui.frmDetail.txtPTOAmt.Create(TextBox,"",True,1215,300,0,1875,1710,True,0,"Arial",8,-2147483643,1)
 Gui.frmDetail.txtPTOAmt.Locked(True)
 Gui.frmDetail.txtPTOAmt.TabStop(True)
 Gui.frmDetail.txtPTOAmt.TabIndex(4)
-Gui.frmDetail.lbl1.Create(Label,"PTO Amount:",True,1380,255,0,285,1800,True,0,"Arial",8,-2147483633,0)
+Gui.frmDetail.lbl1.Create(Label,"PTO Amount:",True,1380,255,0,285,1800,True,1,"Arial",8,-2147483633,0)
 Gui.frmDetail.txtReason.Create(TextBox,"",True,1215,300,0,1875,2190,True,0,"Arial",8,-2147483643,1)
 Gui.frmDetail.txtReason.Locked(True)
 Gui.frmDetail.txtReason.TabStop(True)
 Gui.frmDetail.txtReason.TabIndex(5)
-Gui.frmDetail.lbl2.Create(Label,"Reason:",True,930,255,0,735,2280,True,0,"Arial",8,-2147483633,0)
+Gui.frmDetail.lbl2.Create(Label,"Reason:",True,930,255,0,735,2280,True,1,"Arial",8,-2147483633,0)
 Gui.frmDetail.txtSup.Create(TextBox,"",True,1995,300,0,1875,2670,True,0,"Arial",8,-2147483643,1)
 Gui.frmDetail.txtSup.Locked(True)
 Gui.frmDetail.txtSup.TabStop(True)
 Gui.frmDetail.txtSup.TabIndex(6)
-Gui.frmDetail.lblSup.Create(Label,"Supervisor:",True,1245,255,0,420,2760,True,0,"Arial",8,-2147483633,0)
-Gui.frmDetail.lbl3.Create(Label,"Fill to 40:",True,1020,255,0,645,3240,True,0,"Arial",8,-2147483633,0)
-Gui.frmDetail.lbl4.Create(Label,"Excused:",True,1020,255,0,645,3720,True,0,"Arial",8,-2147483633,0)
+Gui.frmDetail.lblSup.Create(Label,"Supervisor:",True,1245,255,0,420,2760,True,1,"Arial",8,-2147483633,0)
+Gui.frmDetail.lbl3.Create(Label,"Fill to 40:",True,1020,255,0,645,3240,True,1,"Arial",8,-2147483633,0)
+Gui.frmDetail.lbl4.Create(Label,"Excused:",True,1020,255,0,645,3720,True,1,"Arial",8,-2147483633,0)
 Gui.frmDetail.chkFill.Create(CheckBox)
 Gui.frmDetail.chkFill.Size(1560,360)
 Gui.frmDetail.chkFill.Position(1875,3120)
@@ -64,6 +64,10 @@ Gui.frmDetail.chkExc.Size(1560,360)
 Gui.frmDetail.chkExc.Position(1875,3600)
 Gui.frmDetail.chkExc.TabStop(True)
 Gui.frmDetail.chkExc.TabIndex(8)
+Gui.frmDetail.lbl5.Create(Label,"Explanation",True,1245,255,0,420,4860,True,1,"Arial",8,-2147483633,0)
+Gui.frmDetail.txtExplanation.Create(TextboxM)
+Gui.frmDetail.txtExplanation.Size(1995,1515)
+Gui.frmDetail.txtExplanation.Position(1890,4170)
 Program.Sub.ScreenSU.End
 
 Program.Sub.Preflight.Start
@@ -199,8 +203,6 @@ V.Local.lMLen.Declare
 V.Local.lWkday.Declare
 V.Local.bExit.Declare
 
-Function.Intrinsic.Debug.Stop
-
 F.Intrinsic.Control.If(V.DataView.dtPTO!dvPTO.Exists)
 	F.Data.DataView.Close("dtPTO","dvPTO")
 F.Intrinsic.Control.EndIf
@@ -231,6 +233,7 @@ F.Data.DataTable.Create("dtSched",True)
 
 F.Data.DataTable.AddColumn("dtSched","ID","string")
 F.Data.DataTable.AddColumn("dtSched","Employee","string")
+F.Data.DataTable.AddColumn("dtSched","Supervisor","string")
 
 F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lDays,1)
 
@@ -269,7 +272,7 @@ F.Intrinsic.Math.Sub(V.Local.lRowCount,1,V.Local.lRowCount)
 
 F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 
-	F.Data.DataTable.AddRow("dtSched","ID",V.DataTable.dtFltEmp(V.Local.lCount).EMPLOYEE!FieldVal,"Employee",V.DataTable.dtFltEmp(V.Local.lCount).NAME!FieldVal)
+	F.Data.DataTable.AddRow("dtSched","ID",V.DataTable.dtFltEmp(V.Local.lCount).EMPLOYEE!FieldVal,"Employee",V.DataTable.dtFltEmp(V.Local.lCount).NAME!FieldVal,"Supervisor",V.DataTable.dtFltEmp(V.Local.lCount).SUPERVSR!FieldVal)
 
 F.Intrinsic.Control.Next(V.Local.lCount)
 
@@ -344,6 +347,7 @@ gui.frmPTO.gsgcPTO.SetGridviewProperty("gsgvSched","OptionsViewColumnAutoWidth",
 
 gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","ID","Fixed","Left")
 gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Employee","Fixed","Left")
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Supervisor","Fixed","Left")
 
 gui.frmPTO.gsgcPTO.GetColumnCount("gsgvSched",V.Local.lColCount)
 F.Intrinsic.Math.Sub(V.Local.lColCount,1,V.Local.lColCount)
@@ -356,7 +360,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lColCount,1)
 	gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"ReadOnly",True)
 	gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"AllowEdit",False)
 	
-	F.Intrinsic.Control.If(V.Local.lCount,>=,2)
+	F.Intrinsic.Control.If(V.Local.lCount,>=,3)
 		gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"width",100)
 		gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"CellForeColor",V.Color.LtBlue)
 		gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"CellFontBold",True)
@@ -364,7 +368,8 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lColCount,1)
 	F.Intrinsic.Control.EndIf
 F.Intrinsic.Control.Next(V.Local.lCount)
 
-gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Employee","width",200)
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Employee","width",175)
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Supervisor","width",175)
 
 gui.frmPTO.gsgcPTO.MainView("gsgvSched")
 gui.frmPTO..Show
@@ -402,6 +407,7 @@ gui.frmDetail.txtReason.Text(V.DataTable.dtPTO(V.Local.sRowLoc).REASON!FieldVal)
 gui.frmDetail.txtSup.Text(V.DataTable.dtPTO(V.Local.sRowLoc).SUPERVSR!FieldVal)
 gui.frmDetail.chkFill.Value(V.DataTable.dtPTO(V.Local.sRowLoc).FILL_TO_40!FieldVal)
 gui.frmDetail.chkExc.Value(V.DataTable.dtPTO(V.Local.sRowLoc).EXCUSED!FieldVal)
+gui.frmDetail.txtExplanation.Text(V.DataTable.dtPTO(V.Local.sRowLoc).EXPLANATION!FieldVal)
 
 F.Intrinsic.Control.If(V.Global.bDetail)
 	gui.frmDetail..Visible(True)

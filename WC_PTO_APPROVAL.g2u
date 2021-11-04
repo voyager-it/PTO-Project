@@ -293,9 +293,6 @@ gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","CellHAlign
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","CellHAlignment","Center")
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","CellHAlignment","Center")
 
-gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","CellWordWrap","Wrap")
-gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","CellWordWrap","Wrap")
-
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","NAME","Caption","Name")
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","Caption","Requested Date")
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","PTO_AMOUNT","Caption","PTO Amount")
@@ -327,7 +324,7 @@ gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Denial_Reason","Allo
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Deny","AllowEdit",True)
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Approve","AllowEdit",True)
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","Excused","AllowEdit",True)
-gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","AllowEdit",False)
+gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EXPLANATION","AllowEdit",True)
 
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","NAME","Width",30)
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","REQUEST_DATE","Width",25)
