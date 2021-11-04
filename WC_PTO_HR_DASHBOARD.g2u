@@ -1925,7 +1925,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
 		'Builds and executes the query to ZZ_PTO_CONFIRMED to be used in the schedule matrix.
-		F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),1,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.Local.sSQL)
+		F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),1,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.DataTable.dtFiltered(V.Local.lCount).EXPLANATION!FieldVal,V.Local.sSQL)
 		
 		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
@@ -1959,7 +1959,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			F.Intrinsic.Control.EndIf
 			
 			'Builds and executes the query to ZZ_PTO_CONFIRMED to be used in the schedule matrix
-			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),0,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.Local.sSQL)
+			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),0,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.DataTable.dtFiltered(V.Local.lCount).EXPLANATION!FieldVal,V.Local.sSQL)
 
 			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
@@ -3167,7 +3167,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.dPTODays.UBound,1)
 		V.Local.lExcused.Set(0)
 	F.Intrinsic.Control.EndIf
 	
-	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');",V.Local.sUniqID,V.Screen.frmManual!txtEmployee.Value,V.Local.sEmpName,V.Local.sDate,V.Local.fHourSplit,V.Screen.frmManual!ddlReason.Value,0,V.Local.sSupName,V.Screen.frmManual!chkExcused.Value,V.Local.sSQL)
+	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.Local.sUniqID,V.Screen.frmManual!txtEmployee.Value,V.Local.sEmpName,V.Local.sDate,V.Local.fHourSplit,V.Screen.frmManual!ddlReason.Value,0,V.Local.sSupName,V.Screen.frmManual!chkExcused.Value,"",V.Local.sSQL)
 	F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
 	F.Intrinsic.Math.Sub(V.Local.sRet(2),V.Local.fHourSplit,V.Local.fAvail)
