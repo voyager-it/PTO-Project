@@ -173,3 +173,45 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 F.Intrinsic.Control.Next(V.Local.lCount)
 
 Program.Sub.TAInsert.End
+
+Program.Sub.SendReport.Start
+V.Local.lCount.Declare
+V.Local.sSucMsg.Declare
+V.Local.sFailMsg.Declare
+V.Local.sMsg.Declare
+V.Local.sEmail.Declare
+V.Local.sName.Declare
+V.Local.sRecipient.Declare
+V.Local.sSender.Declare
+
+F.Intrinsic.String.Split(V.Global.sSuccess,"*!*",V.Global.sSuccess)
+F.Intrinsic.String.Split(V.Global.sFailure,"*!*",V.Global.sFailure)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Global.sSuccess.UBound,1)
+	F.Intrinsic.Control.If(V.Local.sSucMsg,=,"")
+		F.Intrinsic.String.Build("SUCCESSFUL RECORDS:{0}{1}{0}",V.Ambient.NewLine,V.Global.sSuccess(V.Local.lCount),V.Local.sSucMsg)
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("{0}{1}{2}",V.Local.sSucMsg,V.Global.sSuccess(V.Local.lCount),V.Ambient.NewLine,V.Local.sSucMsg)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Global.sFailure.UBound,1)
+	F.Intrinsic.Control.If(V.Local.sFailMsg,=,"")
+		F.Intrinsic.String.Build("FAILED RECORDS:{0}{1}{0}",V.Ambient.NewLine,V.Global.sFailure(V.Local.lCount),V.Local.sFailMsg)
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("{0}{1}{2}",V.Local.sFailMsg,V.Global.sFailure(V.Local.lCount),V.Ambient.NewLine,V.Local.sFailMsg)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.String.Build("DAILY TIME_ATTENDANCE INSERT REPORT{0}{0}{1}{0}{2}",V.Ambient.NewLine,V.Local.sSucMsg,V.Local.sFailMsg,V.Local.sMsg)
+
+V.Local.sEmail.Set("it@voyager-industries.com")
+V.Local.sName.Set("PTO System")
+
+F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sEmail,V.Local.sName,V.Local.sSender)
+F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sName,V.Local.sEmail,V.Local.sRecipient)
+
+F.Global.Messaging.QueueMessage("VSF","05008","ZZ_PTO_TAQ","DAILY TAQ REPORT",V.Local.sSender,V.Local.sRecipient,V.Local.sMsg)
+
+
+Program.Sub.SendReport.End
