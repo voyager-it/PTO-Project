@@ -1,7 +1,7 @@
 Program.Sub.ScreenSU.Start
 Gui.frmPTO..Create
 Gui.frmPTO..Caption("Submit PTO Request")
-Gui.frmPTO..Size(4140,8130)
+Gui.frmPTO..Size(4140,8445)
 Gui.frmPTO..MinX(0)
 Gui.frmPTO..MinY(0)
 Gui.frmPTO..Position(0,0)
@@ -29,7 +29,7 @@ Gui.frmPTO.txtHours.ToolTip("For the date range selected, enter the total number
 Gui.frmPTO.lblHours.Create(Label,"Amount of Hours Requested:",True,2220,255,0,795,3600,True,0,"Arial",8,-2147483633,0)
 Gui.frmPTO.cmdSubmit.Create(Button)
 Gui.frmPTO.cmdSubmit.Size(1740,375)
-Gui.frmPTO.cmdSubmit.Position(1020,6930)
+Gui.frmPTO.cmdSubmit.Position(1020,7230)
 Gui.frmPTO.cmdSubmit.Caption("Submit")
 Gui.frmPTO.cmdSubmit.Event(Click,cmdSubmitPTO)
 Gui.frmPTO.cmdSubmit.TabStop(True)
@@ -37,7 +37,7 @@ Gui.frmPTO.cmdSubmit.TabIndex(7)
 Gui.frmPTO.cmdSubmit.FontStyle(True,False,False,False,False)
 Gui.frmPTO.ddlReason.Create(DropDownList)
 Gui.frmPTO.ddlReason.Size(1785,330)
-Gui.frmPTO.ddlReason.Position(990,5040)
+Gui.frmPTO.ddlReason.Position(990,5340)
 Gui.frmPTO.ddlReason.TabStop(True)
 Gui.frmPTO.ddlReason.TabIndex(6)
 Gui.frmPTO.ddlReason.AddItem("Vacation")
@@ -46,7 +46,7 @@ Gui.frmPTO.ddlReason.AddItem("Funeral")
 Gui.frmPTO.ddlReason.AddItem("Arrived Late")
 Gui.frmPTO.ddlReason.AddItem("Left Early")
 Gui.frmPTO.ddlReason.AddItem("Other")
-Gui.frmPTO.lblReason.Create(Label,"Reason for Time Off:",True,1695,255,0,1050,4770,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.lblReason.Create(Label,"Reason for Time Off:",True,1695,255,0,1050,5070,True,0,"Arial",8,-2147483633,0)
 Gui.frmPTO.chkFill.Create(CheckBox)
 Gui.frmPTO.chkFill.Size(1005,360)
 Gui.frmPTO.chkFill.Position(1365,4245)
@@ -60,9 +60,9 @@ Gui.frmPTO.lblAvail.DefaultValue("PTO Available: ")
 Gui.frmPTO.lblAvail.FontStyle(True,False,False,False,False)
 Gui.frmPTO.txtExplanation.Create(TextboxM)
 Gui.frmPTO.txtExplanation.Size(2895,915)
-Gui.frmPTO.txtExplanation.Position(450,5865)
+Gui.frmPTO.txtExplanation.Position(450,6165)
 Gui.frmPTO.txtExplanation.MaxLength(300)
-Gui.frmPTO.lbl1.Create(Label,"Explanation for Time Off",True,1890,255,0,945,5595,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.lbl1.Create(Label,"Explanation for Time Off",True,1890,255,0,945,5895,True,0,"Arial",8,-2147483633,0)
 Gui.frmPTO.lblMax.Create(Label,"Max PTO:",True,1935,255,0,1020,1890,True,2,"Arial",9,-2147483633,0)
 Gui.frmPTO.lblMax.DefaultValue("Max PTO:")
 Gui.frmPTO.lblMax.FontStyle(True,False,False,False,False)
@@ -71,6 +71,12 @@ Gui.frmPTO.cmdBrowse.Size(1920,375)
 Gui.frmPTO.cmdBrowse.Position(1020,405)
 Gui.frmPTO.cmdBrowse.Caption("Browse Employees")
 Gui.frmPTO.cmdBrowse.Event(Click,BrowseEmps)
+Gui.frmPTO.chkExcused.Create(CheckBox)
+Gui.frmPTO.chkExcused.Size(1245,360)
+Gui.frmPTO.chkExcused.Position(1365,4620)
+Gui.frmPTO.chkExcused.TabStop(True)
+Gui.frmPTO.chkExcused.TabIndex(5)
+Gui.frmPTO.chkExcused.Caption("Excused")
 Gui.frmLogin..Create
 Gui.frmLogin..Caption("Login")
 Gui.frmLogin..Size(3675,2490)
@@ -119,6 +125,7 @@ V.Global.sSup.Set("")
 
 V.Global.sEmpID.Declare
 
+V.Global.fAvail.Declare
 
 Program.Sub.Preflight.End
 
@@ -130,7 +137,6 @@ gui.frmLogin..Show()
 Program.Sub.Main.End
 
 Program.Sub.loadDT.Start
-
 F.Data.DataTable.CreateFromSQL("dtEmpMstr","con","SELECT EMPLOYEE, NAME FROM EMPLOYEE_MSTR WHERE DATE_TERMINATION = '000000';",True)
 
 F.Data.DataTable.CreateFromSQL("dtPTO","con","SELECT * FROM ZZ_PTO_EMPLOYEES;",True)
@@ -227,6 +233,8 @@ F.Intrinsic.Control.If(V.Local.lRowLoc,"=","***NORETURN***")
 F.Intrinsic.Control.EndIf
 
 F.Intrinsic.String.Build("PTO Available: {0}",V.DataTable.dtPTO(V.Local.lRowLoc).AVAILABLE!FieldVal,V.Local.sHours)
+
+V.Global.fAvail.Set(V.DataTable.dtPTO(V.Local.lRowLoc).AVAILABLE!FieldVal)
 
 F.Intrinsic.Math.Add(V.DataTable.dtPTO(V.Local.lRowLoc).AVAILABLE!FieldVal,20,V.Local.fMaxClose)
 F.Intrinsic.Control.If(V.Local.fMaxClose,>=,V.Global.fMax)
@@ -367,6 +375,8 @@ V.Local.sExplanation.Declare
 V.Local.lRet.Declare
 V.Local.sEmSender.Declare
 V.Local.sEmRecipient.Declare
+V.Local.lExcused.Declare
+V.Local.sSupInsName.Declare
 
 V.Local.lEmDayCount.Set(-1)
 V.Local.sEmDays.Set("")
@@ -501,6 +511,9 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.dPTODays.UBound,1)
 	F.Intrinsic.Control.If(V.Local.sRet,"<>","")
 		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
 		V.Local.sSupervsr.Set(V.Local.sRet(3))
+		F.Intrinsic.String.Split(V.Local.sRet(4),",",V.Local.sSupInsName)
+		F.Intrinsic.String.Trim(V.Local.sSupInsName(1),V.Local.sSupInsName(1))
+		F.Intrinsic.String.Build("{0} {1}",V.Local.sSupInsName(1),V.Local.sSupInsName(0),V.Local.sSupInsName)
 	F.Intrinsic.Control.EndIf
 	
 	V.Local.sExplanation.Set(V.Screen.frmPTO!txtExplanation.Value)
@@ -510,7 +523,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.dPTODays.UBound,1)
 		F.Intrinsic.String.Replace(V.Local.sExplanation,"'","''",V.Local.sExplanation)
 	F.Intrinsic.Control.EndIf
 
-	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_APPROVAL (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');",V.Local.sUniqID,V.Global.sEmpID,V.Screen.frmPTO!lblName.Value,V.Local.sDate,V.Local.fHourSplit,V.Screen.frmPTO!ddlReason.Value,V.Screen.frmPTO!chkFill.Value,V.Local.sSupervsr,V.Local.sExplanation,V.Local.sSQL)
+	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_HR_APPROVED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, EXCUSED, SUPERVSR, EXPLANATION, AVAILABLE) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');",V.Local.sUniqID,V.Global.sEmpID,V.Screen.frmPTO!lblName.Value,V.Local.sDate,V.Local.fHourSplit,V.Screen.frmPTO!ddlReason.Value,V.Screen.frmPTO!chkFill.Value,V.Screen.frmPTO!chkExcused.Value,V.Local.sSupInsName,V.Local.sExplanation,V.Global.fAvail,V.Local.sSQL)
 	
 	F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
