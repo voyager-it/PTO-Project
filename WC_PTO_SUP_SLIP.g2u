@@ -70,19 +70,7 @@ Gui.frmPTO.cmdBrowse.Create(Button)
 Gui.frmPTO.cmdBrowse.Size(1920,375)
 Gui.frmPTO.cmdBrowse.Position(1020,405)
 Gui.frmPTO.cmdBrowse.Caption("Browse Employees")
-Gui.frmPTO.cmdBrowse.Event(Click,cmdBrowse_Click)
-Gui.frmAll..Create
-Gui.frmAll..Caption("All Requests")
-Gui.frmAll..Size(9795,8115)
-Gui.frmAll..MinX(0)
-Gui.frmAll..MinY(0)
-Gui.frmAll..Position(0,0)
-Gui.frmAll..BackColor(-2147483633)
-Gui.frmAll..MousePointer(0)
-Gui.frmAll..Event(UnLoad,frmAll_UnLoad)
-Gui.frmAll.gsgcAll.Create(GsGridControl)
-Gui.frmAll.gsgcAll.Size(9225,7230)
-Gui.frmAll.gsgcAll.Position(180,150)
+Gui.frmPTO.cmdBrowse.Event(Click,BrowseEmps)
 Gui.frmLogin..Create
 Gui.frmLogin..Caption("Login")
 Gui.frmLogin..Size(3675,2490)
@@ -126,21 +114,85 @@ V.Global.fMax.Set(0)
 V.Global.bAll.Declare
 V.Global.bAll.Set(False)
 
+V.Global.sSup.Declare
+V.Global.sSup.Set("")
+
 V.Global.sEmpID.Declare
 
 Program.Sub.Preflight.End
 
 Program.Sub.Main.Start
-
 gui.frmLogin..Show()
 
 Program.Sub.Main.End
 
-Program.Sub.cmdBrowse_Click.Start
-Program.Sub.cmdBrowse_Click.End
-
 Program.Sub.cmdSubmitLogin.Start
+V.Local.sSQL.Declare
+V.Local.sRet.Declare
+V.Local.sDecPwd.Declare
+V.Local.sFull.Declare
+V.Local.bExit.Declare
+V.Local.lArrayLen.Declare
+
+F.Intrinsic.Control.If(V.Screen.frmLogin!txtUser.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter a username.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.ElseIf(V.Screen.frmLogin!txtPwd.Value,"=","")
+	F.Intrinsic.UI.Msgbox("Please enter a password.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_LOGIN WHERE USERNAME = '{0}';",V.Screen.frmLogin!txtUser.Value,V.Local.sSQL)
+F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,"<>","")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	
+	F.Intrinsic.String.WeakDecryption(V.Local.sRet(1),V.Local.sDecPwd)
+	
+	F.Intrinsic.Control.If(V.Screen.frmLogin!txtPwd.Value,"<>",V.Local.sDecPwd)
+		F.Intrinsic.UI.Msgbox("The entered username or password does not match anything in the system. Please try again.")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.Else
+		
+		V.Global.sSup.Set(V.Local.sRet(2))
+		
+		gui.frmLogin..Visible(False)
+		
+		gui.frmPTO..Show()
+		
+	F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("The entered username or password does not match anything in the system. Please try again.")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
 Program.Sub.cmdSubmitLogin.End
+
+Program.Sub.BrowseEmps.Start
+V.Local.sTitles.Declare
+V.Local.sSQL.Declare
+V.Local.iWidths.Declare
+V.Local.sReturn.Declare
+
+
+F.Intrinsic.String.Split("Employee*!*Name","*!*",V.Local.sTitles)
+F.Intrinsic.String.Split("600*!*1600","*!*",V.Local.iWidths)
+F.Intrinsic.String.Build("SELECT EMPLOYEE, NAME FROM ZZ_PTO_EMPLOYEES WHERE SUP_ID = '{0}';",V.Global.sSup,V.Local.sSQL)
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+
+F.Intrinsic.UI.Browser("Select an Employee","con",V.Local.sSQL,V.Local.sTitles,V.Local.iWidths,5000,8000,V.Local.sReturn)
+
+F.Intrinsic.Control.If(V.Local.sReturn,=,"***CANCEL***")
+	F.Intrinsic.UI.Msgbox("No Employee was Selected!")
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Split(V.Local.sReturn,"*!*",V.Local.sReturn)
+	V.Global.sEmpID.Set(V.Local.sReturn(0))
+F.Intrinsic.Control.EndIf
+
+
+Program.Sub.BrowseEmps.End
 
 Program.Sub.cmdSubmitPTO.Start
 Program.Sub.cmdSubmitPTO.End
@@ -153,10 +205,20 @@ Program.Sub.frmPTO_UnLoad.Start
 F.Intrinsic.Control.End
 Program.Sub.frmPTO_UnLoad.End
 
+Program.Sub.dtpStart_Change.Start
+gui.frmPTO.dtpEnd.Value(V.Screen.frmPTO!dtpStart.Value)
 
+Program.Sub.dtpStart_Change.End
 
+Program.Sub.chkFill_Click.Start
+F.Intrinsic.Control.If(V.Screen.frmPTO!chkFill.Value,"=",1)
 
+	Gui.frmPTO.txtHours.Enabled(False)
 
+F.Intrinsic.Control.Else
 
+	Gui.frmPTO.txtHours.Enabled(True)
 
+F.Intrinsic.Control.EndIf
 
+Program.Sub.chkFill_Click.End
