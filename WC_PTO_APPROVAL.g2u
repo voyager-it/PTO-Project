@@ -420,7 +420,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	F.Intrinsic.String.Trim(V.Local.sSupervsr(1),V.Local.sSupervsr(1))
 	F.Intrinsic.String.Build("{0} {1}",V.Local.sSupervsr(1),V.Local.sSupervsr(0),V.Local.sSupervsr)
 	
-	V.Local.sExplanation.Set(V.Screen.frmPTO!txtExplanation.Value)
+	V.Local.sExplanation.Set(V.DataTable.dtApproved(V.Local.lCount).EXPLANATION!FieldVal)
 	
 	F.Intrinsic.String.Occurs(V.Local.sExplanation,"'",V.Local.lRet)
 	F.Intrinsic.Control.If(V.Local.lRet,>,0)
@@ -501,7 +501,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	F.Intrinsic.String.Split(V.Local.sRet(1),",",V.Local.sSupervsr)
 	F.Intrinsic.String.Build("{0} {1}",V.Local.sSupervsr(1),V.Local.sSupervsr(0),V.Local.sSupervsr)
 	
-	V.Local.sExplanation.Set(V.Screen.frmPTO!txtExplanation.Value)
+	V.Local.sExplanation.Set(V.DataTable.dtDenied(V.Local.lCount).EXPLANATION!FieldVal)
 	
 	F.Intrinsic.String.Occurs(V.Local.sExplanation,"'",V.Local.lRet)
 	F.Intrinsic.Control.If(V.Local.lRet,>,0)

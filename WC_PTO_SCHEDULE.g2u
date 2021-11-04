@@ -419,9 +419,6 @@ V.Local.sYear.Declare
 V.Local.sCrit.Declare
 V.Local.sRowLoc.Declare
 
-Function.Intrinsic.Debug.InvokeDebugger
-Function.Intrinsic.Debug.Stop
-
 V.Local.sEmpID.Set(V.DataTable.dtSched(V.Args.RowIndex).ID!FieldVal)
 
 F.Intrinsic.String.Left(V.Args.Column,2,V.Local.sMonth)

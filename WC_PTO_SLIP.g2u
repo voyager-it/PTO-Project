@@ -543,6 +543,10 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lDayRange,1)
 	
 F.Intrinsic.Control.Next(V.Local.lCount)
 
+F.Intrinsic.Control.If(V.Local.sPTODays,=,"")
+	F.Intrinsic.UI.Msgbox("Looks like something is wrong with your request. Please contact IT and give them this error number along with what days you were trying to request: ERR100")
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndIf
 
 F.Intrinsic.String.Split(V.Local.sPTODays,"*!*",V.Local.dPTODays)
 F.Intrinsic.Math.Div(V.Screen.frmPTO!txtHours.Value,V.Local.lDayCount,V.Local.fHourSplit)
