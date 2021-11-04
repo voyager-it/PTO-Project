@@ -1,0 +1,162 @@
+Program.Sub.ScreenSU.Start
+Gui.frmPTO..Create
+Gui.frmPTO..Caption("Submit PTO Request")
+Gui.frmPTO..Size(4140,8130)
+Gui.frmPTO..MinX(0)
+Gui.frmPTO..MinY(0)
+Gui.frmPTO..Position(0,0)
+Gui.frmPTO..BackColor(-2147483633)
+Gui.frmPTO..MousePointer(0)
+Gui.frmPTO..Event(UnLoad,frmPTO_UnLoad)
+Gui.frmPTO.lblCard.Create(Label,"Choose an Employee",True,2355,255,0,810,150,True,2,"Arial",9,-2147483633,0)
+Gui.frmPTO.lblCard.FontStyle(True,False,False,False,False)
+Gui.frmPTO.dtpStart.Create(DatePicker)
+Gui.frmPTO.dtpStart.Size(1935,285)
+Gui.frmPTO.dtpStart.Position(1020,2490)
+Gui.frmPTO.dtpStart.Event(Change,dtpStart_Change)
+Gui.frmPTO.dtpStart.TabStop(True)
+Gui.frmPTO.dtpStart.TabIndex(2)
+Gui.frmPTO.dtpEnd.Create(DatePicker)
+Gui.frmPTO.dtpEnd.Size(1935,285)
+Gui.frmPTO.dtpEnd.Position(1020,2970)
+Gui.frmPTO.dtpEnd.TabStop(True)
+Gui.frmPTO.dtpEnd.TabIndex(3)
+Gui.frmPTO.lblRange.Create(Label,"Requested Date Range",True,1935,255,0,1020,2220,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.txtHours.Create(TextBox,"",True,1770,300,0,1020,3855,True,0,"Arial",8,-2147483643,1)
+Gui.frmPTO.txtHours.TabStop(True)
+Gui.frmPTO.txtHours.TabIndex(4)
+Gui.frmPTO.txtHours.ToolTip("For the date range selected, enter the total number of hours for which you would like to request PTO.")
+Gui.frmPTO.lblHours.Create(Label,"Amount of Hours Requested:",True,2220,255,0,795,3600,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.cmdSubmit.Create(Button)
+Gui.frmPTO.cmdSubmit.Size(1740,375)
+Gui.frmPTO.cmdSubmit.Position(1020,6930)
+Gui.frmPTO.cmdSubmit.Caption("Submit")
+Gui.frmPTO.cmdSubmit.Event(Click,cmdSubmitPTO)
+Gui.frmPTO.cmdSubmit.TabStop(True)
+Gui.frmPTO.cmdSubmit.TabIndex(7)
+Gui.frmPTO.cmdSubmit.FontStyle(True,False,False,False,False)
+Gui.frmPTO.ddlReason.Create(DropDownList)
+Gui.frmPTO.ddlReason.Size(1785,330)
+Gui.frmPTO.ddlReason.Position(990,5040)
+Gui.frmPTO.ddlReason.TabStop(True)
+Gui.frmPTO.ddlReason.TabIndex(6)
+Gui.frmPTO.ddlReason.AddItem("Vacation")
+Gui.frmPTO.ddlReason.AddItem("Sick")
+Gui.frmPTO.ddlReason.AddItem("Funeral")
+Gui.frmPTO.ddlReason.AddItem("Arrived Late")
+Gui.frmPTO.ddlReason.AddItem("Left Early")
+Gui.frmPTO.ddlReason.AddItem("Other")
+Gui.frmPTO.lblReason.Create(Label,"Reason for Time Off:",True,1695,255,0,1050,4770,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.chkFill.Create(CheckBox)
+Gui.frmPTO.chkFill.Size(1005,360)
+Gui.frmPTO.chkFill.Position(1365,4245)
+Gui.frmPTO.chkFill.Caption("Fill to 40")
+Gui.frmPTO.chkFill.Event(Click,chkFill_Click)
+Gui.frmPTO.chkFill.TabStop(True)
+Gui.frmPTO.chkFill.TabIndex(5)
+Gui.frmPTO.lblName.Create(Label,"",True,3045,405,0,450,945,True,2,"Arial",12,-2147483633,0)
+Gui.frmPTO.lblAvail.Create(Label,"PTO Available: ",True,2595,255,0,690,1530,True,2,"Arial",9,-2147483633,0)
+Gui.frmPTO.lblAvail.DefaultValue("PTO Available: ")
+Gui.frmPTO.lblAvail.FontStyle(True,False,False,False,False)
+Gui.frmPTO.txtExplanation.Create(TextboxM)
+Gui.frmPTO.txtExplanation.Size(2895,915)
+Gui.frmPTO.txtExplanation.Position(450,5865)
+Gui.frmPTO.txtExplanation.MaxLength(300)
+Gui.frmPTO.lbl1.Create(Label,"Explanation for Time Off",True,1890,255,0,945,5595,True,0,"Arial",8,-2147483633,0)
+Gui.frmPTO.lblMax.Create(Label,"Max PTO:",True,1935,255,0,1020,1890,True,2,"Arial",9,-2147483633,0)
+Gui.frmPTO.lblMax.DefaultValue("Max PTO:")
+Gui.frmPTO.lblMax.FontStyle(True,False,False,False,False)
+Gui.frmPTO.cmdBrowse.Create(Button)
+Gui.frmPTO.cmdBrowse.Size(1920,375)
+Gui.frmPTO.cmdBrowse.Position(1020,405)
+Gui.frmPTO.cmdBrowse.Caption("Browse Employees")
+Gui.frmPTO.cmdBrowse.Event(Click,cmdBrowse_Click)
+Gui.frmAll..Create
+Gui.frmAll..Caption("All Requests")
+Gui.frmAll..Size(9795,8115)
+Gui.frmAll..MinX(0)
+Gui.frmAll..MinY(0)
+Gui.frmAll..Position(0,0)
+Gui.frmAll..BackColor(-2147483633)
+Gui.frmAll..MousePointer(0)
+Gui.frmAll..Event(UnLoad,frmAll_UnLoad)
+Gui.frmAll.gsgcAll.Create(GsGridControl)
+Gui.frmAll.gsgcAll.Size(9225,7230)
+Gui.frmAll.gsgcAll.Position(180,150)
+Gui.frmLogin..Create
+Gui.frmLogin..Caption("Login")
+Gui.frmLogin..Size(3675,2490)
+Gui.frmLogin..MinX(0)
+Gui.frmLogin..MinY(0)
+Gui.frmLogin..Position(0,0)
+Gui.frmLogin..BackColor(-2147483633)
+Gui.frmLogin..MousePointer(0)
+Gui.frmLogin..Event(UnLoad,frmLogin_UnLoad)
+Gui.frmLogin.lblUser.Create(Label,"Username: ",True,1335,255,0,0,525,True,1,"Arial",8,-2147483633,0)
+Gui.frmLogin.lblPassword.Create(Label,"Password: ",True,1320,255,0,0,900,True,1,"Arial",8,-2147483633,0)
+Gui.frmLogin.txtUser.Create(TextBox,"",True,1650,300,0,1440,450,True,0,"Arial",8,-2147483643,1)
+Gui.frmLogin.txtUser.TabStop(True)
+Gui.frmLogin.txtUser.TabIndex(1)
+Gui.frmLogin.txtPwd.Create(TextBox,"",True,1650,300,0,1440,825,True,0,"Arial",8,-2147483643,1)
+Gui.frmLogin.txtPwd.PasswordChar("*")
+Gui.frmLogin.txtPwd.TabStop(True)
+Gui.frmLogin.txtPwd.TabIndex(2)
+Gui.frmLogin.cmdSubmit.Create(Button)
+Gui.frmLogin.cmdSubmit.Size(1230,375)
+Gui.frmLogin.cmdSubmit.Position(315,1260)
+Gui.frmLogin.cmdSubmit.Caption("Login")
+Gui.frmLogin.cmdSubmit.TabStop(True)
+Gui.frmLogin.cmdSubmit.TabIndex(3)
+Gui.frmLogin.cmdSubmit.Event(Click,cmdSubmitLogin)
+Gui.frmLogin.cmdCancel.Create(Button)
+Gui.frmLogin.cmdCancel.Size(1185,375)
+Gui.frmLogin.cmdCancel.Position(1815,1245)
+Gui.frmLogin.cmdCancel.Caption("Cancel")
+Gui.frmLogin.cmdCancel.Event(Click,frmLogin_UnLoad)
+Gui.frmLogin.cmdCancel.TabStop(True)
+Gui.frmLogin.cmdCancel.TabIndex(4)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+F.ODBC.Connection!con.OpenCompanyConnection
+
+V.Global.fMax.Declare
+V.Global.fMax.Set(0)
+
+V.Global.bAll.Declare
+V.Global.bAll.Set(False)
+
+V.Global.sEmpID.Declare
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+
+gui.frmLogin..Show()
+
+Program.Sub.Main.End
+
+Program.Sub.cmdBrowse_Click.Start
+Program.Sub.cmdBrowse_Click.End
+
+Program.Sub.cmdSubmitLogin.Start
+Program.Sub.cmdSubmitLogin.End
+
+Program.Sub.cmdSubmitPTO.Start
+Program.Sub.cmdSubmitPTO.End
+
+Program.Sub.frmLogin_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.frmLogin_UnLoad.End
+
+Program.Sub.frmPTO_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.frmPTO_UnLoad.End
+
+
+
+
+
+
+
+
