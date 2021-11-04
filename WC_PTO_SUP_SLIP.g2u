@@ -119,12 +119,23 @@ V.Global.sSup.Set("")
 
 V.Global.sEmpID.Declare
 
+
 Program.Sub.Preflight.End
 
 Program.Sub.Main.Start
+F.Intrinsic.Control.CallSub("loadDT")
+
 gui.frmLogin..Show()
 
 Program.Sub.Main.End
+
+Program.Sub.loadDT.Start
+
+F.Data.DataTable.CreateFromSQL("dtEmpMstr","con","SELECT EMPLOYEE, NAME FROM EMPLOYEE_MSTR WHERE DATE_TERMINATION = '000000';",True)
+
+F.Data.DataTable.CreateFromSQL("dtPTO","con","SELECT * FROM ZZ_PTO_EMPLOYEES;",True)
+
+Program.Sub.loadDT.End
 
 Program.Sub.cmdSubmitLogin.Start
 V.Local.sSQL.Declare
@@ -189,10 +200,106 @@ F.Intrinsic.Control.If(V.Local.sReturn,=,"***CANCEL***")
 F.Intrinsic.Control.Else
 	F.Intrinsic.String.Split(V.Local.sReturn,"*!*",V.Local.sReturn)
 	V.Global.sEmpID.Set(V.Local.sReturn(0))
+	
+	F.Intrinsic.Control.CallSub("popHours")
+	F.Intrinsic.Control.CallSub("popName")
 F.Intrinsic.Control.EndIf
 
-
 Program.Sub.BrowseEmps.End
+
+Program.Sub.popHours.Start
+V.Local.sID.Declare
+V.Local.sCriteria.Declare
+V.Local.sHours.Declare
+V.Local.lRowLoc.Declare
+V.Local.fMaxClose.Declare
+
+V.Local.sID.Set(V.Global.sEmpID)
+
+F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.Local.sID,V.Local.sCriteria)
+F.Data.DataTable.Select("dtPTO",V.Local.sCriteria,V.Local.lRowLoc)
+
+F.Intrinsic.Control.If(V.Local.lRowLoc,"=","***NORETURN***")
+	F.Intrinsic.UI.Msgbox("Uh oh")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("PTO Available: {0}",V.DataTable.dtPTO(V.Local.lRowLoc).AVAILABLE!FieldVal,V.Local.sHours)
+
+F.Intrinsic.Math.Add(V.DataTable.dtPTO(V.Local.lRowLoc).AVAILABLE!FieldVal,20,V.Local.fMaxClose)
+F.Intrinsic.Control.If(V.Local.fMaxClose,>=,V.Global.fMax)
+	gui.frmPTO.lblMax.ForeColor("red")
+F.Intrinsic.Control.Else
+	gui.frmPTO.lblMax.ForeColor("black")
+F.Intrinsic.Control.EndIf
+
+gui.frmPTO.lblAvail.Caption(V.Local.sHours)
+
+Program.Sub.popHours.End
+
+Program.Sub.popName.Start
+'F.Intrinsic.Control.Try
+
+V.Local.sID.Declare
+V.Local.sCriteria.Declare
+V.Local.sName.Declare
+V.Local.lRowLoc.Declare
+V.Local.sRChar.Declare
+V.Local.sType.Declare
+V.Local.sCaption.Declare
+V.Local.sSQL.Declare
+V.Local.sRet.Declare
+
+V.Local.sID.Set(V.Global.sEmpID)
+
+gui.frmPTO.dtpStart.SetFocus
+
+gui.frmPTO.txtID.Text(" ")
+
+F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.Local.sID,V.Local.sCriteria)
+F.Data.DataTable.Select("dtEmpMstr",V.Local.sCriteria,V.Local.lRowLoc)
+
+F.Intrinsic.Control.If(V.Local.lRowLoc,"=","***NORETURN***")
+	F.Intrinsic.UI.Msgbox("Please contact IT and note down this error code: ERR103")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Split(V.DataTable.dtEmpMstr(V.Local.lRowLoc).NAME!FieldVal,",",V.Local.sName)
+F.Intrinsic.String.Trim(V.Local.sName(0),V.Local.sName(0))
+F.Intrinsic.String.Trim(V.Local.sName(1),V.Local.sName(1))
+
+F.Intrinsic.String.Build("{0} {1}",V.Local.sName(1),V.Local.sName(0),V.Local.sName)
+
+gui.frmPTO.lblName.Caption(V.Local.sName)
+
+F.Data.DataTable.Select("dtPTO",V.Local.sCriteria,V.Local.lRowLoc)
+
+F.Intrinsic.Control.If(V.Local.lRowLoc,"=","***NORETURN***")
+	F.Intrinsic.UI.Msgbox("Please contact IT and note down this error code: ERR104")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.DataTable.dtPTO(V.Local.lRowLoc).PAY_TYPE!FieldVal,=,"H")
+	V.Local.sType.Set("HOURLY")
+F.Intrinsic.Control.Else
+	V.Local.sType.Set("SALARY")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("SELECT MAX_PTO FROM ZZ_PTO_ACCRUAL_STEPS WHERE PTO_STEP = '{0}' AND TYPE = '{1}';",V.DataTable.dtPTO(V.Local.lRowLoc).PTO_STEP!FieldVal,V.Local.sType,V.Local.sSQL)
+F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+
+F.Intrinsic.String.Build("Max PTO: {0}",V.Local.sRet,V.Local.sCaption)
+V.Global.fMax.Set(V.Local.sRet)
+
+gui.frmPTO.lblMax.Caption(V.Local.sCaption)
+
+'F.Intrinsic.Control.Catch
+'	F.Intrinsic.UI.Msgbox("Please try scanning your card again")
+'	gui.frmPTO.txtID.Text(" ")
+'	F.Intrinsic.Control.ExitSub
+'F.Intrinsic.Control.EndTry
+
+Program.Sub.popName.End
 
 Program.Sub.cmdSubmitPTO.Start
 Program.Sub.cmdSubmitPTO.End
