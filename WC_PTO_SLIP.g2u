@@ -552,7 +552,7 @@ F.Intrinsic.String.Split(V.Local.sPTODays,"*!*",V.Local.dPTODays)
 F.Intrinsic.Math.Div(V.Screen.frmPTO!txtHours.Value,V.Local.lDayCount,V.Local.fHourSplit)
 F.Intrinsic.Math.Round(V.Local.fHourSplit,1,V.Local.fHourSplit)
 
-F.Intrinsic.Control.If(V.Local.fHourSplit,">",8)
+F.Intrinsic.Control.If(V.Local.fHourSplit,">",10)
 	F.Intrinsic.UI.Msgbox("Please make sure you have the right amount of hours, it looks like you have requested more hours than you need for the date range selected.")
 	F.Intrinsic.Control.ExitSub
 F.Intrinsic.Control.EndIf
