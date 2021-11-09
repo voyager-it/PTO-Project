@@ -1,4 +1,4 @@
-Program.Sub.ScreenSU.Start
+﻿Program.Sub.ScreenSU.Start
 Gui.frmApproved..Create
 Gui.frmApproved..Caption("Approved PTO")
 Gui.frmApproved..Size(20895,12435)
@@ -3494,6 +3494,9 @@ F.ODBC.Connection!con.Execute(V.Local.sSQL)
 F.Intrinsic.String.Build("UPDATE TIME_ATTENDANCE SET EXCUSED = '{0}', HOURS_HH = '{1}', HOURS_MM = '{2}' WHERE EMPLOYEE LIKE '%{3}%' AND DATE_IN LIKE '%{4}%' AND REC_TYPE = 'A';",V.Local.sExcused,V.Local.lFloorHr,V.Local.fFloorMin,V.Screen.frmDetail!txtIDNo.Value,V.Local.sReqDate,V.Local.sSQL)
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
 
+F.Intrinsic.String.Build("UPDATE TAQ SET EXCUSED = '{0}', HOURS_HH = '{1}', HOURS_MM = '{2}' WHERE EMPLOYEE LIKE '%{3}%' AND DATE_IN LIKE '%{4}%' AND REC_TYPE = 'A';",V.Local.sExcused,V.Local.lFloorHr,V.Local.fFloorMin,V.Screen.frmDetail!txtIDNo.Value,V.Local.sReqDate,V.Local.sSQL)
+F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
 F.Intrinsic.UI.Msgbox("Record Changes Saved!")
 
 Program.Sub.cmdSaveSchedEdit_Click.End
@@ -4501,117 +4504,6 @@ gui.frmApproved..Visible(True)
 Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
-TODO:: Add menu item to check for new employees in timeclock table to add to ZZ_PTO_EMPLOYEES
-TODO:: Add menu item to update an Employee's accrual rate or manually adjust current PTO amount
-
-TODO:: Time and Attendance automation for creating new PTO records
-TODO:: Payroll report automation
-
-TODO:: Find an easy way for office people to use this.
-	Ambient?
-
-TODO:: Use Task scheduler for accrual (weekly)
-	Add table that holds the last day ran so that it doesn't run every week, just every other week.
-	Update the ZZ_PTO_EMPLOYEES table to more accurately reflect the PTO report given by Naomi
-	
-HOLD:: TODO: Insert into ZZ_PTO_Schedule (High level things to think about)
-	 Easier said than done at this point
-	 Build array or dictionary of all employees (Probably needs to be done variably every time this script is loaded in case of new employees)
-	 Add date range pickers at top of screen to define date range
-	 Test Adding and dropping new columns based on date range listed in top of screen if necessary
-		 For each added column, populate with each row (employee based on row index vs array index) with pertinant data for that date/employee combo
-			 Just realized this method may not work, because if we're only adding data every time a new date is added, then we won't catch when new data is added to an already existing date.
-	 Add horizontal scroll bar (I don't have good memories of this one)
-	 Populate gridview with selected date range and data
-	 Set up drilldown events with rowcellclick and Selecting based off the column title and row index
-	
-	 Big questions with Schedule - 
-		 When do we check for new data, and how do we do it efficently without looping through the entire table every time?
-		 Is there some way we could map over the data in ZZ_PTO_CONFIRMED to export it into excel for an easier time viewing? 
-			 If so, we lose any drill down information which becomes more of a pain.
-			 We also lose any ability to edit this information
-		 How do we not clog up the table royally by just continuing to add columns? Do we have a certain time period in the past that gets purged to a history table or is only available in ZZ_PTO_CONFIRMED?
-		 How do we even style this thing?
-		
-		 More big questions to come, but my general concern is loading performance, creating a gargantuan table, and styling. 
-		
-Brainstorm:: 
-	If we store all the data in PTO confirmed, could we just build a table everytime in GAB that takes the range of dates and creates a column for each? 
-	It might take a little longer to generate, but it might be cleaner than actually dealing with an SQL table and dropping/adding columns all the time.
-	What are the issues with this?
-		Possibly longer load times? Not sure if it would be shorter or longer.
-	
-	
-	Load confirmed datatable
-	Filter by current logged in supervisor and by next two months or something
-	Sort confirmed Datatable by date
-	Grab first and last date
-	Create new table called "schedule"
-	Add first column, called "employeenum" (Hidden)
-	Add Second Column, called "Employee"
-		Fill with All employee first and last names
-	Figure out a way to freeze this column to the left while scrolling horizontally
-	For each date in between
-		Add column to the table representing date
-	End For
-	For each row in confirmed
-		Add info (Maybe uniqid?) to table based on employee number and the date (Use column name but find row based on select maybe?) Double clicking would open up a dialog box used to see details.
-		Alternative: Color background of cell, but also color the uniqid the same. Double clicking would open up a dialog box used to see details.
-		Alternative: Color background of cell, but show the hours requested in a different color. Double clicking would open up a dialog box used to see details.
-	End For
-	
-	Display
-	
-	
-	
-	
-//DONE:: Figure out why fill needed on fill to 40 table seems to be different numbers for the same week sometimes. 
-//DONE:: Subtract half an hour from worked time and fill to 40 calculations (lunches)
-	Calculate holidays into fill to 40 calculations
-
-//DONE:: Figure out why it crashes on gsgvOtherLoad or whatever's mainview command when reloading.
-
-//DONE:: In LoadDT, make three lines of code for loading the DT - callsubs
-	In each DT subroutine, check if DT exists, if exist close it
-	 format gridview and load
-	
-//DONE:: Fill to 40
-	 Set up Gridview for Fill to 40 screen in separate subroutine
-	 Only show fill to 40 requests for current week
-	 Call Fill to 40 gridview / datatable load on initial load
-	 Call all datatable loads and gridview stuff anytime changes are applied
-	 Add loading bar to all this to make sure people wait the proper amount of time
-
-//DONE:: dtDenied
-	 Add check boxes or something to save changes in dtDenied that will eventually dismiss/delete these items from the table (Mark as reviewed)
-		 Add check boxes
-		 Add Save Changes Button
-		 Upon save changes button click, delete from ZZ_PTO_HR_DENIED where uniqid = uniqid
-		 Reload tables
-		
-//DONE:: Header labels showing how many items are in each different queue for review
-	 Get length of each table that needs reviewing upon load
-	 Display each table's length in text boxes or something upon load/reload
-	 Probably put this in a separate subroutine but still tied to loading for cleanliness
-	
-//DONE:: Insert into ZZ_PTO_CONFIRMED
-	 Anytime changes are made on the approved PTO screen,
-		 If not Fill_To_40,
-			 Insert into ZZ_PTO_CONFIRMED	
-			 Delete from ZZ_PTO_HR_APPROVED
-			 Math here to update ZZ_PTO_EMPLOYEES
-	 Move the math for subtracting hours out of ZZ_PTO_EMPLOYEES to only happen if the request is not Fill_To_40
-//DONE:: Insert into ZZ_PTO_CONFIRMED
-	Check if Fill_To_40 (Already Done)
-	
-
-
-//DONE:: Save button on Fill to 40
-	Needs to update PTO_Confirmed with actual final PTO amount
-	Subtract from ZZ_Employees
-	Delete from Fill_to_40
-	
-//DONE:: add columns for in and out times
-	Split Shift Notification: Add checkbox to depict if there are more than one set of in/out times on a certain day (To prompt further investigation)
-
+${$5$}$2.0.0.0$}$2
+${$6$}$lukep$}$20211109122714213$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS04C38JrZVFMsRNopAZjFWxWzSdFKNa2x993drKpvFGi0=
 Program.Sub.Comments.End
