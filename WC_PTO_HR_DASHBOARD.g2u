@@ -4484,6 +4484,9 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		F.Intrinsic.String.Build("DELETE FROM TIME_ATTENDANCE WHERE EMPLOYEE LIKE '%{0}%' AND DATE_IN = '{1}' AND REC_TYPE = 'A' AND HOURS_HH = '{2}' AND HOURS_MM = '{3}';",V.DataTable.dtFiltered(V.Local.lCount).ID!FieldVal,V.Local.sDate,V.Local.lFloorHr,V.Local.fFloorMin,V.Local.sSQL)
 		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
+		F.Intrinsic.String.Build("DELETE FROM ZZ_PTO_TAQ WHERE EMPLOYEE LIKE '%{0}%' AND DATE_IN = '{1}' AND REC_TYPE = 'A' AND HOURS_HH = '{2}' AND HOURS_MM = '{3}';",V.DataTable.dtFiltered(V.Local.lCount).ID!FieldVal,V.Local.sDate,V.Local.lFloorHr,V.Local.fFloorMin,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+		
 		F.Intrinsic.String.Build("{0}'s request for {1} has been deleted.",V.DataTable.dtFiltered(V.Local.lCount).Name!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).Request_Date!FieldVal,V.Local.sMsg)
 		F.Intrinsic.UI.Msgbox(V.Local.sMsg,"Request Deleted")
 		
@@ -4505,5 +4508,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211109122714213$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS04C38JrZVFMsRNopAZjFWxWzSdFKNa2x993drKpvFGi0=
+${$6$}$lukep$}$20211110091934583$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbiZaAnEDnw9sfZlu5gZ4HdnSz14oNSrMq0=
 Program.Sub.Comments.End
