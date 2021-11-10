@@ -804,6 +804,10 @@ Program.Sub.frmAll_UnLoad.Start
 gui.frmAll..Visible(False)
 gui.frmPTO..Visible(True)
 Program.Sub.frmAll_UnLoad.End
+Program.Sub.ddlReason_Change.Start
+F.Intrinsic.Control.If(V.Screen.frmPTO!ddlReason.Value,=,"Funeral")
+	F.Intrinsic.UI.Msgbox("Please make sure to list your familial relation in the explanation box")
+F.Intrinsic.Control.EndIf
 
 Program.Sub.ddlReason_Change.Start
 
