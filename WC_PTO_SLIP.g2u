@@ -173,8 +173,6 @@ V.Global.bAll.Declare
 V.Global.bAll.Set(False)
 
 V.Global.sEmpID.Declare
-
-External.Include.Web.Reference("http://example.com","username","password","WebReference0")
 Program.Sub.Preflight.End
 
 Program.Sub.Main.Start
@@ -804,13 +802,8 @@ Program.Sub.frmAll_UnLoad.Start
 gui.frmAll..Visible(False)
 gui.frmPTO..Visible(True)
 Program.Sub.frmAll_UnLoad.End
-Program.Sub.ddlReason_Change.Start
-F.Intrinsic.Control.If(V.Screen.frmPTO!ddlReason.Value,=,"Funeral")
-	F.Intrinsic.UI.Msgbox("Please make sure to list your familial relation in the explanation box")
-F.Intrinsic.Control.EndIf
 
 Program.Sub.ddlReason_Change.Start
-
 F.Intrinsic.Control.If(V.Screen.frmPTO!ddlReason.Value,=,"Funeral")
 	F.Intrinsic.UI.Msgbox("Please make sure to list your familial relation in the explanation box")
 F.Intrinsic.Control.EndIf
@@ -819,5 +812,5 @@ Program.Sub.ddlReason_Change.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211109095305839$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS04C38JrZVFMulNHOKK1iRrrza3/a1z7qzcfiPLkt7GJM=
+${$6$}$lukep$}$20211110121351945$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbh4ddTMW8dwCW6nz9ZqZYc0/8oEjpyBjdw=
 Program.Sub.Comments.End
