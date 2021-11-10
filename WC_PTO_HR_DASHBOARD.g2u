@@ -820,6 +820,8 @@ V.Global.bDetail.Set(False)
 V.Global.bSched.Declare
 V.Global.bSched.Set(False)
 
+V.Global.sCode.Declare
+V.Global.sCode.Set("05")
 
 V.Global.sPayType.Declare
 
@@ -1864,6 +1866,7 @@ V.Local.sReason.Declare
 V.Local.sTADate.Declare
 V.Local.bSkip.Declare
 V.Local.sInsTADate.Declare
+V.Local.bFuneral.Declare
 
 ' This is the save button script for the Approved Gridcontrol Screen
 
@@ -1939,6 +1942,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		F.Intrinsic.Control.CallSub("TAUpdate","lCount",V.Local.lCount)
 		
 		F.Intrinsic.Variable.ArgToVar("bSkip",V.Local.bSkip)
+		F.Intrinsic.Variable.ArgToVar("bFuneral",V.Local.bFuneral)
 		
 		F.Intrinsic.Control.If(V.Local.bSkip)
 		
@@ -1946,20 +1950,26 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 		F.Intrinsic.Control.Else
 		
-			'Find the employee in the employees table to access their current PTO amount
-			F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sCriteria)
-			F.Data.DataTable.Select("dtEmployees",V.Local.sCriteria,V.Local.sRet)
+			F.Intrinsic.Control.If(V.Local.bFuneral)
 			
-			'Takes their currently available PTO, subtracts it by the confirmed and scheduled amount, and then puts it back into the employee table.
-			F.Intrinsic.Control.If(V.Local.sRet,"<>","***NORETURN***")
-				F.Intrinsic.Math.Sub(V.DataTable.dtEmployees(V.Local.sRet).AVAILABLE!FieldVal,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),V.Local.fNewHours)
-				
-				F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'",V.Local.fNewHours,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
-				F.ODBC.Connection!con.Execute(V.Local.sSQL)
-				
-				F.Data.DataTable.SetValue("dtEmployees",V.Local.sRet,"AVAILABLE",V.Local.fNewHours)
 			F.Intrinsic.Control.Else
-				F.Intrinsic.UI.Msgbox("There was an error updating the Available PTO on the Employees table. Please contact IT and make sure to note down the information you were trying to apply. ERR101")
+			
+				'Find the employee in the employees table to access their current PTO amount
+				F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sCriteria)
+				F.Data.DataTable.Select("dtEmployees",V.Local.sCriteria,V.Local.sRet)
+				
+				'Takes their currently available PTO, subtracts it by the confirmed and scheduled amount, and then puts it back into the employee table.
+				F.Intrinsic.Control.If(V.Local.sRet,"<>","***NORETURN***")
+					F.Intrinsic.Math.Sub(V.DataTable.dtEmployees(V.Local.sRet).AVAILABLE!FieldVal,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),V.Local.fNewHours)
+					
+					F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'",V.Local.fNewHours,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
+					F.ODBC.Connection!con.Execute(V.Local.sSQL)
+					
+					F.Data.DataTable.SetValue("dtEmployees",V.Local.sRet,"AVAILABLE",V.Local.fNewHours)
+				F.Intrinsic.Control.Else
+					F.Intrinsic.UI.Msgbox("There was an error updating the Available PTO on the Employees table. Please contact IT and make sure to note down the information you were trying to apply. ERR101")
+				F.Intrinsic.Control.EndIf
+			
 			F.Intrinsic.Control.EndIf
 			
 			'Builds and executes the query to ZZ_PTO_CONFIRMED to be used in the schedule matrix
@@ -2027,10 +2037,30 @@ V.Local.sRetReg.Declare
 V.Local.bTimeForm.Declare
 V.Local.sInsTADate.Declare
 V.Local.sExcused.Declare
+V.Local.sFuneralStr.Declare
+V.Local.sMsgRet.Declare
+V.Local.bFuneral.Declare
 
 V.Local.bSkip.Set(False)
+V.Local.bFuneral.Set(False)
 
 F.Intrinsic.Variable.ArgToVar("lCount",V.Local.lCount)
+
+'Checks if the current record is for a funeral and whether or not funeral hours should be applied instead.
+F.Intrinsic.Control.If(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),=,"Funeral")
+	F.Intrinsic.String.Build("Should {0}'s request for {1} use funeral hours instead of PTO hours?",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",2,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",3,V.Local.lCount),V.Local.sFuneralStr)
+	F.Intrinsic.UI.Msgbox(V.Local.sFuneralStr,"Funeral or PTO hours?",3,V.Local.sMsgRet)
+	F.Intrinsic.Control.If(V.Local.sMsgRet,=,2)
+		V.Local.bSkip.Set(True)
+		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.ElseIf(V.Local.sMsgRet,=,7)
+		V.Global.sCode.Set("05")
+	F.Intrinsic.Control.Else
+		V.Global.sCode.Set("07")
+		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
 
 F.Intrinsic.Date.Year(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sYear)
 F.Intrinsic.Date.Month(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sMonth)
@@ -2096,9 +2126,11 @@ F.Intrinsic.Control.Else
 	V.Local.sExcused.Set("N")
 F.Intrinsic.Control.EndIf
 
-F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '05', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount), V.Local.sTADate, V.DataTable.dtEmpMstr(V.Local.sReturn).NAME!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.fFloorMin,V.Local.sInsTADate, V.Local.sSQL)
+F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '{12}', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",1,V.Local.lCount), V.Local.sTADate, V.DataTable.dtEmpMstr(V.Local.sReturn).NAME!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.fFloorMin,V.Local.sInsTADate,V.Global.sCode, V.Local.sSQL)
 			
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+V.Global.sCode.Set("05")
 
 Program.Sub.TAUpdate.End
 
@@ -2136,10 +2168,30 @@ V.Local.lMLen.Declare
 V.Local.sInsTADate.Declare
 V.Local.sTestVar.Declare
 V.Local.sExcused.Declare
+V.Local.sFuneralStr.Declare
+V.Local.sMsgRet.Declare
+V.Local.bFuneral.Declare
 
 V.Local.bSkip.Set(False)
+V.Local.bFuneral.Set(False)
 
 F.Intrinsic.Variable.ArgToVar("lCount",V.Local.lCount)
+
+'Checks if the current record is for a funeral and whether or not funeral hours should be applied instead.
+F.Intrinsic.Control.If(gui.frm40Queue.gsgcApproved.GetCellValue("gsgvFill",5,V.Local.lCount),=,"Funeral")
+	F.Intrinsic.String.Build("Should {0}'s request for {1} use funeral hours instead of PTO hours?",gui.frm40Queue.gsgcApproved.GetCellValue("gsgvFill",2,V.Local.lCount),gui.frm40Queue.gsgcApproved.GetCellValue("gsgvFill",3,V.Local.lCount),V.Local.sFuneralStr)
+	F.Intrinsic.UI.Msgbox(V.Local.sFuneralStr,"Funeral or PTO hours?",3,V.Local.sMsgRet)
+	F.Intrinsic.Control.If(V.Local.sMsgRet,=,2)
+		V.Local.bSkip.Set(True)
+		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.ElseIf(V.Local.sMsgRet,=,7)
+		V.Global.sCode.Set("05")
+	F.Intrinsic.Control.Else
+		V.Global.sCode.Set("07")
+		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
 
 F.Intrinsic.Date.Year(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sYear)
 F.Intrinsic.Date.Month(V.DataTable.dtFiltered(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sMonth)
@@ -2201,9 +2253,11 @@ F.Intrinsic.Control.Else
 	V.Local.sExcused.Set("N")
 F.Intrinsic.Control.EndIf
 
-F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '05', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",1,V.Local.lCount), V.Local.sTADate, V.DataTable.dtEmpMstr(V.Local.sReturn).NAME!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.lOutMin,V.Local.sInsTADate, V.Local.sSQL)
+F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '{12}', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",1,V.Local.lCount), V.Local.sTADate, V.DataTable.dtEmpMstr(V.Local.sReturn).NAME!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.lOutMin,V.Local.sInsTADate,V.Global.sCode, V.Local.sSQL)
 
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+V.Global.sCode.Set("05")
 
 Program.Sub.40TAUpdate.End
 
@@ -2216,6 +2270,7 @@ V.Local.sCriteria.Declare
 V.Local.sRet.Declare
 V.Local.fNewHours.Declare
 V.Local.bSkip.Declare
+V.Local.bFuneral.Declare
 
 'Closes the filtered and employees datatables if it exists
 F.Intrinsic.Control.If(V.DataTable.dtFiltered.Exists)
@@ -2249,31 +2304,38 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	F.Intrinsic.Control.CallSub("40TAUpdate","lCount",V.Local.lCount)
 		
 	F.Intrinsic.Variable.ArgToVar("bSkip",V.Local.bSkip)
+	F.Intrinsic.Variable.ArgToVar("bFuneral",V.Local.bFuneral)
 	
 	F.Intrinsic.Control.If(V.Local.bSkip)
 	
 		F.Intrinsic.Control.Next(V.Local.lCount)
 		
 	F.Intrinsic.Control.Else
-
-		'Find the employee in the employees table to access their current PTO amount
-		F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sCriteria)
-		F.Data.DataTable.Select("dtEmployees",V.Local.sCriteria,V.Local.sRet)
-		
-		'Takes their currently available PTO, subtracts it by the confirmed and scheduled amount, and then puts it back into the employee table.
-		F.Intrinsic.Control.If(V.Local.sRet,"<>","***NORETURN***")
-		
-			F.Intrinsic.Math.Sub(V.DataTable.dtEmployees(V.Local.sRet).AVAILABLE!FieldVal,gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",11,V.Local.lCount),V.Local.fNewHours)
-			
-			F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'",V.Local.fNewHours,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
-			
-			F.Data.DataTable.SetValue("dtEmployees",V.Local.sRet,"AVAILABLE",V.Local.fNewHours)
-			
-		F.Intrinsic.Control.Else
-			F.Intrinsic.UI.Msgbox("There was an error updating the Available PTO on the Employees table. Please contact IT and make sure to note down the information you were trying to apply. ERR101")
-		F.Intrinsic.Control.EndIf
 	
+		F.Intrinsic.Control.If(V.Local.bFuneral)
+		
+		F.Intrinsic.Control.Else
+		
+			'Find the employee in the employees table to access their current PTO amount
+			F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sCriteria)
+			F.Data.DataTable.Select("dtEmployees",V.Local.sCriteria,V.Local.sRet)
+			
+			'Takes their currently available PTO, subtracts it by the confirmed and scheduled amount, and then puts it back into the employee table.
+			F.Intrinsic.Control.If(V.Local.sRet,"<>","***NORETURN***")
+			
+				F.Intrinsic.Math.Sub(V.DataTable.dtEmployees(V.Local.sRet).AVAILABLE!FieldVal,gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",11,V.Local.lCount),V.Local.fNewHours)
+				
+				F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'",V.Local.fNewHours,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
+				F.ODBC.Connection!con.Execute(V.Local.sSQL)
+				
+				F.Data.DataTable.SetValue("dtEmployees",V.Local.sRet,"AVAILABLE",V.Local.fNewHours)
+				
+			F.Intrinsic.Control.Else
+				F.Intrinsic.UI.Msgbox("There was an error updating the Available PTO on the Employees table. Please contact IT and make sure to note down the information you were trying to apply. ERR101")
+			F.Intrinsic.Control.EndIf
+		
+		F.Intrinsic.Control.EndIf
+
 		'Converts the approved boolean to binary for the database query
 		F.Intrinsic.Control.If(gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",6,V.Local.lCount))
 			V.Local.lExcused.Set(1)
@@ -3005,9 +3067,12 @@ V.Local.sEmployee.Declare
 V.Local.sName.Declare
 V.Local.sEmSender.Declare
 V.Local.sEmRecipient.Declare
-
+V.Local.sMsgRet.Declare
+V.Local.sFuneralStr.Declare
 V.Local.lEmDayCount.Set(-1)
 V.Local.sEmDays.Set("")
+V.Local.bFuneral.Declare
+V.Local.bFuneral.Set(False)
 
 F.Intrinsic.Control.If(V.Screen.frmManual!txtEmployee.Value,"=","")
 	F.Intrinsic.UI.Msgbox("Please select an Employee.")
@@ -3018,6 +3083,23 @@ F.Intrinsic.Control.ElseIf(V.Screen.frmManual!txtHours.Value,"=","")
 F.Intrinsic.Control.ElseIf(V.Screen.frmManual!ddlReason.Value,"=","")
 	F.Intrinsic.UI.Msgbox("Please select a reason for your request.")
 	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.If(V.Screen.frmManual!ddlReason.Value,=,"Funeral")
+	F.Intrinsic.Control.If(V.Screen.frmManual!txtExplanation.Value,=,"")
+		F.Intrinsic.UI.Msgbox("Please describe your familial relation for the funeral")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("Should this request use funeral hours instead of normal PTO?{0}{0}WARNING: If you select yes, funeral hours will be applied to ALL days in this request. Consider splitting them up if some are funeral and some are PTO.",V.Ambient.NewLine,V.Local.sFuneralStr)
+		F.Intrinsic.UI.Msgbox(V.Local.sFuneralStr,"Funeral or PTO hours?",3,V.Local.sMsgRet)
+		F.Intrinsic.Control.If(V.Local.sMsgRet,=,2)
+			F.Intrinsic.Control.ExitSub
+		F.Intrinsic.Control.ElseIf(V.Local.sMsgRet,=,7)
+			V.Global.sCode.Set("05")
+		F.Intrinsic.Control.Else
+			V.Global.sCode.Set("07")
+			V.Local.bFuneral.Set(False)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
 F.Intrinsic.Control.EndIf
 
 F.Intrinsic.Control.CallSub("buildHoliday")
@@ -3178,11 +3260,6 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.dPTODays.UBound,1)
 	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.Local.sUniqID,V.Screen.frmManual!txtEmployee.Value,V.Local.sEmpName,V.Local.sDate,V.Local.fHourSplit,V.Screen.frmManual!ddlReason.Value,0,V.Local.sSupName,V.Screen.frmManual!chkExcused.Value,"",V.Local.sSQL)
 	F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
-	F.Intrinsic.Math.Sub(V.Local.sRet(2),V.Local.fHourSplit,V.Local.fAvail)
-	
-	F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'", V.Local.fAvail,V.Screen.frmManual!txtEmployee.Value,V.Local.sSQL)
-	F.ODBC.Connection!con.Execute(V.Local.sSQL)
-	
 	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_HISTORY (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, AVAILABLE) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.Local.sUniqID,V.Screen.frmManual!txtEmployee.Value,V.Local.sEmpName,V.Local.sDate,V.Local.fHourSplit,V.Screen.frmManual!ddlReason.Value,0,V.Local.sSupName,V.Screen.frmManual!chkExcused.Value,V.Local.fAvail,V.Local.sSQL)
 	F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
@@ -3196,6 +3273,15 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.dPTODays.UBound,1)
 	V.Local.sEmployee.Set(V.Screen.frmManual!txtEmployee.Value)
 	V.Local.sName.Set(V.Screen.frmManual!txtName.Value)
 	F.Intrinsic.Control.CallSub("TAManual","sDate",V.Local.sDate,"sEmployee",V.Local.sEmployee,"fHours",V.Local.fHourSplit,"lExcused",V.Local.lExcused,"sName",V.Local.sName)
+	
+	F.Intrinsic.Control.If(V.Local.bFuneral)
+	
+	F.Intrinsic.Control.Else
+		F.Intrinsic.Math.Sub(V.Local.sRet(2),V.Local.fHourSplit,V.Local.fAvail)
+	
+		F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'", V.Local.fAvail,V.Screen.frmManual!txtEmployee.Value,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	F.Intrinsic.Control.EndIf
 	
 F.Intrinsic.Control.Next(V.Local.lCount)
 
@@ -3340,9 +3426,11 @@ F.Intrinsic.Control.Else
 	V.Local.sExcused.Set("N")
 F.Intrinsic.Control.EndIf
 
-F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '05', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",V.Local.sEmployee, V.Local.sSelDate,V.Local.sName, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.fFloorMin,V.Local.sDate, V.Local.sSQL)
+F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_TAQ (EMPLOYEE, CHARGE_DATE, DATE_IN, DATE_OUT, NAME, DEPT, SHIFT, REC_GROUP, REC_TYPE, EARNINGS_CODE, PAID, EXCUSED, BAL_AS_DATE, DATE_LAST_CHG, TIME_LAST_CHG, LAST_CHG_BY, LAST_CHG_PROG, HOURS_HH, HOURS_MM, DOLLAR_AMT, ACTUAL_DATE, PAYROLL_LOCK) VALUES ('{0}', '{1}', '{1}', '{1}', '{2}', '{3}', '{4}', '{3}', 'A', '{12}', 'Y', '{5}', '00000000', '{6}', '{7}', '{8}', 'ZZPTOHR', '{9}', '{10}', '0', '{11}', '0')",V.Local.sEmployee, V.Local.sSelDate,V.Local.sName, V.DataTable.dtEmpMstr(V.Local.sReturn).DEPT_EMPLOYEE!FieldVal, V.DataTable.dtEmpMstr(V.Local.sReturn).SHIFT!FieldVal, V.Local.sExcused, V.Local.sChgDate, V.Local.sChgTime, V.Caller.User, V.Local.lFloorHr, V.Local.fFloorMin,V.Local.sDate,V.Global.sCode, V.Local.sSQL)
 
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+V.Global.sCode.Set("05")
 
 Program.Sub.TAManual.End
 
@@ -4502,5 +4590,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211110092326955$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbj2/mh5ozByEOFtUwmLQbu91oy1UaROaSE=
+${$6$}$lukep$}$20211110102323724$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbhbj+AeqB6yq/JauA1td5WodJ8mK3dV5OE=
 Program.Sub.Comments.End
