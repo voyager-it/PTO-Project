@@ -870,11 +870,13 @@ F.Intrinsic.Control.If(V.Global.bApproved)
 	gui.frmDenied..Visible(False)
 	gui.frmApproved..Visible(True)
 	gui.frmLoading..Visible(False)
+	gui.frmApproval..Visible(False)
 F.Intrinsic.Control.Else
 	V.Global.bApproved.Set(True)
 	gui.frmDenied..Visible(False)
 	gui.frm40Queue..Visible(False)
 	gui.frmLoading..Visible(False)
+	gui.frmApproval..Visible(False)
 	gui.frmApproved..Show
 F.Intrinsic.Control.EndIf
 
@@ -1946,7 +1948,12 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		
 		F.Intrinsic.Control.If(V.Local.bSkip)
 		
-			F.Intrinsic.Control.Next(V.Local.lCount)
+			F.Intrinsic.UI.Msgbox("Skipping record!","Skipping")
+			F.Intrinsic.Control.If(V.Local.lCount,=,V.Local.lRowCount)
+				F.Intrinsic.Control.ExitFor(V.Local.lCount)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.Control.Next(V.Local.lCount)
+			F.Intrinsic.Control.EndIf
 			
 		F.Intrinsic.Control.Else
 		
@@ -2040,6 +2047,7 @@ V.Local.sExcused.Declare
 V.Local.sFuneralStr.Declare
 V.Local.sMsgRet.Declare
 V.Local.bFuneral.Declare
+V.Local.sFuneralName.Declare
 
 V.Local.bSkip.Set(False)
 V.Local.bFuneral.Set(False)
@@ -2047,18 +2055,29 @@ V.Local.bFuneral.Set(False)
 F.Intrinsic.Variable.ArgToVar("lCount",V.Local.lCount)
 
 'Checks if the current record is for a funeral and whether or not funeral hours should be applied instead.
-F.Intrinsic.Control.If(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),=,"Funeral")
-	F.Intrinsic.String.Build("Should {0}'s request for {1} use funeral hours instead of PTO hours?",gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",2,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",3,V.Local.lCount),V.Local.sFuneralStr)
+F.Intrinsic.String.Trim(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),V.Local.sFuneralStr)
+F.Intrinsic.String.Trim(gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",2,V.Local.lCount),V.Local.sFuneralName)
+F.Intrinsic.Control.If(V.Local.sFuneralStr,=,"Funeral")
+	F.Intrinsic.String.Build("Should {0}'s request for {1} use funeral hours instead of PTO hours?",V.Local.sFuneralName,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",3,V.Local.lCount),V.Local.sFuneralStr)
 	F.Intrinsic.UI.Msgbox(V.Local.sFuneralStr,"Funeral or PTO hours?",3,V.Local.sMsgRet)
 	F.Intrinsic.Control.If(V.Local.sMsgRet,=,2)
 		V.Local.bSkip.Set(True)
+		V.Local.bFuneral.Set(False)
+		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
 		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
 		F.Intrinsic.Control.ExitSub
 	F.Intrinsic.Control.ElseIf(V.Local.sMsgRet,=,7)
 		V.Global.sCode.Set("05")
+		V.Local.bSkip.Set(False)
+		V.Local.bFuneral.Set(False)
+		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
+		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
 	F.Intrinsic.Control.Else
 		V.Global.sCode.Set("07")
+		V.Local.bFuneral.Set(True)
 		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
+		V.Local.bSkip.Set(False)
+		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
 	F.Intrinsic.Control.EndIf
 F.Intrinsic.Control.EndIf
 
@@ -2171,6 +2190,7 @@ V.Local.sExcused.Declare
 V.Local.sFuneralStr.Declare
 V.Local.sMsgRet.Declare
 V.Local.bFuneral.Declare
+V.Local.sFuneralName.Declare
 
 V.Local.bSkip.Set(False)
 V.Local.bFuneral.Set(False)
@@ -2178,18 +2198,29 @@ V.Local.bFuneral.Set(False)
 F.Intrinsic.Variable.ArgToVar("lCount",V.Local.lCount)
 
 'Checks if the current record is for a funeral and whether or not funeral hours should be applied instead.
-F.Intrinsic.Control.If(gui.frm40Queue.gsgcApproved.GetCellValue("gsgvFill",5,V.Local.lCount),=,"Funeral")
-	F.Intrinsic.String.Build("Should {0}'s request for {1} use funeral hours instead of PTO hours?",gui.frm40Queue.gsgcApproved.GetCellValue("gsgvFill",2,V.Local.lCount),gui.frm40Queue.gsgcApproved.GetCellValue("gsgvFill",3,V.Local.lCount),V.Local.sFuneralStr)
+F.Intrinsic.String.Trim(gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",4,V.Local.lCount),V.Local.sFuneralStr)
+F.Intrinsic.String.Trim(gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",2,V.Local.lCount),V.Local.sFuneralName)
+F.Intrinsic.Control.If(V.Local.sFuneralStr,=,"Funeral")
+	F.Intrinsic.String.Build("Should {0}'s request for {1} use funeral hours instead of PTO hours?",V.Local.sFuneralName,gui.frm40Queue.gsgcFill.GetCellValue("gsgvFill",3,V.Local.lCount),V.Local.sFuneralStr)
 	F.Intrinsic.UI.Msgbox(V.Local.sFuneralStr,"Funeral or PTO hours?",3,V.Local.sMsgRet)
 	F.Intrinsic.Control.If(V.Local.sMsgRet,=,2)
 		V.Local.bSkip.Set(True)
+		V.Local.bFuneral.Set(False)
+		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
 		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
 		F.Intrinsic.Control.ExitSub
 	F.Intrinsic.Control.ElseIf(V.Local.sMsgRet,=,7)
 		V.Global.sCode.Set("05")
+		V.Local.bSkip.Set(False)
+		V.Local.bFuneral.Set(False)
+		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
+		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
 	F.Intrinsic.Control.Else
 		V.Global.sCode.Set("07")
+		V.Local.bFuneral.Set(True)
 		F.Intrinsic.Variable.AddRV("bFuneral",V.Local.bFuneral)
+		V.Local.bSkip.Set(False)
+		F.Intrinsic.Variable.AddRV("bSkip",V.Local.bSkip)
 	F.Intrinsic.Control.EndIf
 F.Intrinsic.Control.EndIf
 
@@ -2307,8 +2338,13 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	F.Intrinsic.Variable.ArgToVar("bFuneral",V.Local.bFuneral)
 	
 	F.Intrinsic.Control.If(V.Local.bSkip)
-	
-		F.Intrinsic.Control.Next(V.Local.lCount)
+
+		F.Intrinsic.UI.Msgbox("Skipping record!","Skipping")
+		F.Intrinsic.Control.If(V.Local.lCount,=,V.Local.lRowCount)
+			F.Intrinsic.Control.ExitFor(V.Local.lCount)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Control.Next(V.Local.lCount)
+		F.Intrinsic.Control.EndIf
 		
 	F.Intrinsic.Control.Else
 	
@@ -3084,7 +3120,9 @@ F.Intrinsic.Control.ElseIf(V.Screen.frmManual!ddlReason.Value,"=","")
 	F.Intrinsic.UI.Msgbox("Please select a reason for your request.")
 	F.Intrinsic.Control.ExitSub
 F.Intrinsic.Control.EndIf
-F.Intrinsic.Control.If(V.Screen.frmManual!ddlReason.Value,=,"Funeral")
+
+F.Intrinsic.String.Trim(V.Screen.frmManual!ddlReason.Value,V.Local.sFuneralStr)
+F.Intrinsic.Control.If(V.Local.sFuneralStr,=,"Funeral")
 	F.Intrinsic.Control.If(V.Screen.frmManual!txtExplanation.Value,=,"")
 		F.Intrinsic.UI.Msgbox("Please describe your familial relation for the funeral")
 		F.Intrinsic.Control.ExitSub
@@ -4590,5 +4628,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211110102323724$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbhbj+AeqB6yq/JauA1td5WodJ8mK3dV5OE=
+${$6$}$lukep$}$20211110111157170$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbgf87ff2iqi6bjEr/0BWgQk94PdSs6OqYw=
 Program.Sub.Comments.End
