@@ -828,6 +828,7 @@ V.Global.sPayType.Declare
 Program.Sub.Preflight.End
 
 Program.Sub.Main.Start
+
 F.Intrinsic.Control.CallSub("loadDT")
 
 Program.Sub.Main.End
@@ -838,31 +839,43 @@ V.Local.sTable.Declare
 
 V.Local.sTable.Set("ZZ_PTO_HR_APPROVED")
 F.Intrinsic.Control.CallSub("updateDT","sTable",V.Local.sTable)
+
+
 V.Local.sTable.Set("ZZ_PTO_FILL")
 F.Intrinsic.Control.CallSub("updateDT","sTable",V.Local.sTable)
+
+
 V.Local.sTable.Set("ZZ_PTO_HR_DENIED")
 F.Intrinsic.Control.CallSub("updateDT","sTable",V.Local.sTable)
 
 'The lines in between the callsubs are to update the screens with accurate tallies of current requests.
 F.Intrinsic.Control.CallSub("loadApproved")
 
+
+
 gui.frm40Queue.lblAQty.Text(V.DataTable.dtApproved.RowCount)
 gui.frmApproved.lblAQty.Text(V.DataTable.dtApproved.RowCount)
 gui.frmDenied.lblAQty.Text(V.DataTable.dtApproved.RowCount)
 
 F.Intrinsic.Control.CallSub("loadFill")
+Function.Intrinsic.Debug.Stop
+
 
 gui.frm40Queue.lblFQty.Text(V.DataTable.dtFill.RowCount)
 gui.frmApproved.lblFQty.Text(V.DataTable.dtFill.RowCount)
 gui.frmDenied.lblFQty.Text(V.DataTable.dtFill.RowCount)
 
 F.Intrinsic.Control.CallSub("loadOthers")
+Function.Intrinsic.Debug.Stop
+
 
 gui.frm40Queue.lblDQty.Text(V.DataTable.dtDenied.RowCount)
 gui.frmApproved.lblDQty.Text(V.DataTable.dtDenied.RowCount)
 gui.frmDenied.lblDQty.Text(V.DataTable.dtDenied.RowCount)
 
 F.Intrinsic.Control.CallSub("loadSchedule")
+Function.Intrinsic.Debug.Stop
+
 
 'This checks whether or not the screen has been loaded before to choose between initializing the screen or just making the screen visible again
 F.Intrinsic.Control.If(V.Global.bApproved)
@@ -1678,6 +1691,7 @@ V.Local.sWorkedDay.Declare
 V.Local.dHolidays.Declare
 V.Local.lHolCount.Declare
 V.Local.fHolHours.Declare
+V.Local.lWorkedShifts.Declare
 
 'For each row in the approved datatable
 V.Local.lRowCount.Set(V.DataTable.dtApproved.RowCount)
@@ -1787,18 +1801,26 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	F.Intrinsic.String.Build("DATE_IN = '{0}'",V.Local.sWorkedDay,V.Local.sCriteria)
 	F.Data.DataTable.Select("dtDates",V.Local.sCriteria,V.Local.sRet)
 	F.Intrinsic.Control.If(V.Local.sRet,"<>","***NORETURN***")
-	
-		V.Local.fWorkedHours.Set(V.DataTable.dtDates(V.Local.sRet).HOURS_HH!FieldVal)
-		V.Local.fWorkedMinutes.Set(V.DataTable.dtDates(V.Local.sRet).HOURS_MM!FieldVal)
 		
-		F.Intrinsic.Math.Sub(V.Local.fWorkedMinutes,30,V.Local.fWorkedMinutes)
-		F.Intrinsic.Math.Div(V.Local.fWorkedMinutes,60,V.Local.fWorkedMinutes)
-		F.Intrinsic.Math.Round(V.Local.fWorkedMinutes,2,V.Local.fWorkedMinutes)
-		F.Intrinsic.Math.Add(V.Local.fWorkedMinutes,V.Local.fWorkedHours,V.Local.fWorkedHours)
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
 		
-		F.Intrinsic.Control.If(V.Local.fWorkedHours,<,0)
-			V.Local.fWorkedHours.Set(0)
-		F.Intrinsic.Control.EndIf
+		V.Local.fWorkedHours.Set(0)
+		
+		F.Intrinsic.Control.For(V.Local.lWorkedShifts,0,V.Local.sRet.UBound,1)
+		
+			F.Intrinsic.Math.Add(V.Local.fWorkedHours,V.DataTable.dtDates(V.Local.sRet(V.Local.lWorkedShifts)).HOURS_HH!FieldVal,V.Local.fWorkedHours)
+			V.Local.fWorkedMinutes.Set(V.DataTable.dtDates(V.Local.sRet(V.Local.lWorkedShifts)).HOURS_MM!FieldVal)
+			
+			F.Intrinsic.Math.Sub(V.Local.fWorkedMinutes,30,V.Local.fWorkedMinutes)
+			F.Intrinsic.Math.Div(V.Local.fWorkedMinutes,60,V.Local.fWorkedMinutes)
+			F.Intrinsic.Math.Round(V.Local.fWorkedMinutes,2,V.Local.fWorkedMinutes)
+			F.Intrinsic.Math.Add(V.Local.fWorkedMinutes,V.Local.fWorkedHours,V.Local.fWorkedHours)
+			
+			F.Intrinsic.Control.If(V.Local.fWorkedHours,<,0)
+				V.Local.fWorkedHours.Set(0)
+			F.Intrinsic.Control.EndIf
+		
+		F.Intrinsic.Control.Next(V.Local.lWorkedShifts)
 		
 		F.Data.DataTable.SetValue("dtApproved",V.Local.lCount,"HOURS_WORKED",V.Local.fWorkedHours)
 		
@@ -4634,5 +4656,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211110121410974$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbhgixNG0ORuZvEGL4S++f/PX+xDRusgjCc=
+${$6$}$lukep$}$20211112091556102$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pWtnTmm9I7+AV2WyGfbTHbsuZiE9vs4CM/w9zLC//TI=
 Program.Sub.Comments.End
