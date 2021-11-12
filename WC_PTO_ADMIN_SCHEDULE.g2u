@@ -1,0 +1,472 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.frmPTO..Create(BaseForm)
+Gui.frmPTO..Caption("PTO Schedule")
+Gui.frmPTO..Size(20475,11265)
+Gui.frmPTO..MinX(0)
+Gui.frmPTO..MinY(0)
+Gui.frmPTO..Position(0,0)
+Gui.frmPTO..BackColor(-2147483633)
+Gui.frmPTO..MousePointer(0)
+Gui.frmPTO..Event(UnLoad,frmPTO_UnLoad)
+Gui.frmPTO..AlwaysOnTop(False)
+Gui.frmPTO..FontName("Tahoma")
+Gui.frmPTO..FontSize(8.25)
+Gui.frmPTO..ControlBox(True)
+Gui.frmPTO..MaxButton(True)
+Gui.frmPTO..MinButton(True)
+Gui.frmPTO..Moveable(True)
+Gui.frmPTO..Sizeable(True)
+Gui.frmPTO..ShowInTaskBar(True)
+Gui.frmPTO..TitleBar(True)
+Gui.frmPTO.gsgcPTO.Create(GsGridControl)
+Gui.frmPTO.gsgcPTO.Size(19650,10155)
+Gui.frmPTO.gsgcPTO.Position(315,315)
+Gui.frmPTO.gsgcPTO.Anchor(15)
+Gui.frmPTO.gsgcPTO.Event(RowCellClick,gsgcPTO_RowCellClick)
+Gui.frmPTO.gsgcPTO.Enabled(True)
+Gui.frmPTO.gsgcPTO.Visible(True)
+Gui.frmPTO.gsgcPTO.Zorder(0)
+Gui.frmDetail..Create(BaseForm)
+Gui.frmDetail..Caption("PTO Details")
+Gui.frmDetail..Size(4395,7095)
+Gui.frmDetail..MinX(0)
+Gui.frmDetail..MinY(0)
+Gui.frmDetail..Position(0,0)
+Gui.frmDetail..BackColor(-2147483633)
+Gui.frmDetail..MousePointer(0)
+Gui.frmDetail..Event(UnLoad,frmDetail_UnLoad)
+Gui.frmDetail..AlwaysOnTop(False)
+Gui.frmDetail..FontName("Tahoma")
+Gui.frmDetail..FontSize(8.25)
+Gui.frmDetail..ControlBox(True)
+Gui.frmDetail..MaxButton(True)
+Gui.frmDetail..MinButton(True)
+Gui.frmDetail..Moveable(True)
+Gui.frmDetail..Sizeable(True)
+Gui.frmDetail..ShowInTaskBar(True)
+Gui.frmDetail..TitleBar(True)
+Gui.frmDetail.lblName.Create(Label,"Employee Name:",True,1710,255,0,-45,1320,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lblName.BorderStyle(0)
+Gui.frmDetail.txtName.Create(TextBox,"",True,1995,300,0,1875,1230,True,0,"Arial",8,-2147483643,1)
+Gui.frmDetail.txtName.Locked(True)
+Gui.frmDetail.txtName.TabStop(True)
+Gui.frmDetail.txtName.TabIndex(3)
+Gui.frmDetail.lblID.Create(Label,"ID Number:",True,1170,255,0,495,360,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lblID.BorderStyle(0)
+Gui.frmDetail.txtIDNo.Create(TextBox,"",True,1215,300,0,1875,270,True,0,"Arial",8,-2147483643,1)
+Gui.frmDetail.txtIDNo.Locked(True)
+Gui.frmDetail.txtIDNo.TabStop(True)
+Gui.frmDetail.txtIDNo.TabIndex(1)
+Gui.frmDetail.lblReqDt.Create(Label,"Request Date:",True,1515,255,0,150,840,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lblReqDt.BorderStyle(0)
+Gui.frmDetail.txtPTOAmt.Create(TextBox,"",True,1215,300,0,1875,1710,True,0,"Arial",8,-2147483643,1)
+Gui.frmDetail.txtPTOAmt.TabStop(True)
+Gui.frmDetail.txtPTOAmt.TabIndex(4)
+Gui.frmDetail.lbl1.Create(Label,"PTO Amount:",True,1380,255,0,285,1800,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lbl1.BorderStyle(0)
+Gui.frmDetail.txtReason.Create(TextBox,"",True,1215,300,0,1875,2190,True,0,"Arial",8,-2147483643,1)
+Gui.frmDetail.txtReason.TabStop(True)
+Gui.frmDetail.txtReason.TabIndex(5)
+Gui.frmDetail.lbl2.Create(Label,"Reason:",True,930,255,0,735,2280,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lbl2.BorderStyle(0)
+Gui.frmDetail.txtSup.Create(TextBox,"",True,1995,300,0,1875,2670,True,0,"Arial",8,-2147483643,1)
+Gui.frmDetail.txtSup.Locked(True)
+Gui.frmDetail.txtSup.TabStop(True)
+Gui.frmDetail.txtSup.TabIndex(6)
+Gui.frmDetail.lblSup.Create(Label,"Supervisor:",True,1245,255,0,420,2760,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lblSup.BorderStyle(0)
+Gui.frmDetail.lbl3.Create(Label,"Fill to 40:",True,1020,255,0,645,3240,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lbl3.BorderStyle(0)
+Gui.frmDetail.lbl4.Create(Label,"Excused:",True,1020,255,0,645,3720,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lbl4.BorderStyle(0)
+Gui.frmDetail.chkFill.Create(CheckBox)
+Gui.frmDetail.chkFill.Size(1560,300)
+Gui.frmDetail.chkFill.Position(1875,3120)
+Gui.frmDetail.chkFill.TabStop(True)
+Gui.frmDetail.chkFill.TabIndex(7)
+Gui.frmDetail.chkFill.Enabled(True)
+Gui.frmDetail.chkFill.Visible(True)
+Gui.frmDetail.chkFill.Zorder(0)
+Gui.frmDetail.chkFill.Caption("")
+Gui.frmDetail.chkFill.FontName("Tahoma")
+Gui.frmDetail.chkFill.FontSize(8.25)
+Gui.frmDetail.chkExc.Create(CheckBox)
+Gui.frmDetail.chkExc.Size(1560,300)
+Gui.frmDetail.chkExc.Position(1875,3600)
+Gui.frmDetail.chkExc.TabStop(True)
+Gui.frmDetail.chkExc.TabIndex(8)
+Gui.frmDetail.chkExc.Enabled(True)
+Gui.frmDetail.chkExc.Visible(True)
+Gui.frmDetail.chkExc.Zorder(0)
+Gui.frmDetail.chkExc.Caption("")
+Gui.frmDetail.chkExc.FontName("Tahoma")
+Gui.frmDetail.chkExc.FontSize(8.25)
+Gui.frmDetail.dtpReqDt.Create(DatePicker)
+Gui.frmDetail.dtpReqDt.Size(1935,285)
+Gui.frmDetail.dtpReqDt.Position(1875,750)
+Gui.frmDetail.dtpReqDt.Enabled(False)
+Gui.frmDetail.dtpReqDt.Visible(True)
+Gui.frmDetail.dtpReqDt.Zorder(0)
+Gui.frmDetail.dtpReqDt.CheckBox(False)
+Gui.frmDetail.dtpReqDt.FontName("Tahoma")
+Gui.frmDetail.dtpReqDt.FontSize(8.25)
+Gui.frmDetail.lbl5.Create(Label,"Explanation:",True,1305,255,0,360,4860,True,1,"Arial",8,-2147483633,0,0)
+Gui.frmDetail.lbl5.BorderStyle(0)
+Gui.frmDetail.txtExplanation.Create(TextboxM)
+Gui.frmDetail.txtExplanation.Size(1995,1515)
+Gui.frmDetail.txtExplanation.Position(1890,4170)
+Gui.frmDetail.txtExplanation.Enabled(True)
+Gui.frmDetail.txtExplanation.Visible(True)
+Gui.frmDetail.txtExplanation.Zorder(0)
+Gui.frmDetail.txtExplanation.FontName("Tahoma")
+Gui.frmDetail.txtExplanation.FontSize(8.25)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+F.ODBC.Connection!con.OpenCompanyConnection
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.CallSub("loadSchedule")
+
+F.Intrinsic.Control.CallSub("oldDates")
+
+F.Intrinsic.Control.CallSub("loadTable")
+
+F.Intrinsic.Control.CallSub("popTable")
+
+F.Intrinsic.Control.CallSub("buildGrid")
+Program.Sub.Main.End
+
+Program.Sub.loadSchedule.Start
+F.Intrinsic.Control.If(V.DataTable.dtPTO.Exists)
+	F.Data.DataTable.Close("dtPTO")
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.If(V.DataTable.dtFltEmp.Exists)
+	F.Data.DataTable.Close("dtFltEmp")
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.CreateFromSQL("dtPTO","con","SELECT * FROM ZZ_PTO_CONFIRMED;",True)
+
+F.Data.DataTable.CreateFromSQL("dtFltEmp","con","SELECT * FROM ZZ_PTO_EMPLOYEES;",True)
+Program.Sub.loadSchedule.End
+
+Program.Sub.updateDT.Start
+V.Local.sRet.Declare
+V.Local.lRowCount.Declare
+V.Local.lCount.Declare
+V.Local.sCurArr.Declare
+V.Local.sSQL.Declare
+V.Local.sHrRet.Declare
+V.Local.sEmpArr.Declare
+V.Local.sTable.Declare
+
+'This sub updates all the tables with current available amounts instead of whatever the amount was upon entry.
+'Takes a passed table variable for doing most of the work so that it can be used for any table necessary.
+
+'Takes the variable table and loads it in.
+F.Intrinsic.Variable.ArgToVar("sTable",V.Local.sTable)
+F.Intrinsic.String.Build("SELECT * FROM {0};",V.Local.sTable,V.Local.sSQL)
+F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+
+
+F.Intrinsic.Control.If(V.Local.sRet,"<>","***NORETURN***")
+
+	'Splits out the rows into an array
+	F.Intrinsic.String.Split(V.Local.sRet,"#$#",V.Local.sRet)
+
+	V.Local.lRowCount.Set(V.Local.sRet.UBound)
+	
+	'For each row in the table
+	F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
+	
+		'Split out the columns and add the employee ID to a new array
+		F.Intrinsic.String.Split(V.Local.sRet(V.Local.lCount),"*!*",V.Local.sCurArr)
+		F.Intrinsic.Variable.AddToArray(V.Local.sEmpArr,V.Local.sCurArr(1))
+	
+	F.Intrinsic.Control.Next(V.Local.lCount)
+	
+	'Removes duplicated employee IDs to reduce processing time
+	F.Intrinsic.String.RemoveArrayDuplicates(V.Local.sEmpArr,V.Local.sEmpArr)
+	
+	V.Local.lRowCount.Set(V.Local.sEmpArr.UBound)
+	V.Local.lCount.Set(0)
+	
+	'For each in employee ID array
+	F.Intrinsic.Control.For(V.Local.lCount,1,V.Local.lRowCount,1)
+	
+		'Queries the ZZ_PTO_EMPLOYEES table and returns the current available amount to update the variable table
+		F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE EMPLOYEE = '{0}'",V.Local.sEmpArr(V.Local.lCount),V.Local.sSQL)
+		F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sHrRet)
+		
+		F.Intrinsic.String.Split(V.Local.sHrRet,"*!*",V.Local.sHrRet)
+		F.Intrinsic.String.Build("UPDATE {0} SET AVAILABLE = '{1}' WHERE EMPLOYEE = '{2}'",V.Local.sTable,V.Local.sHrRet(2),V.Local.sHrRet(0),V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.Control.EndIf
+
+Program.Sub.updateDT.End
+
+Program.Sub.oldDates.Start
+V.Local.lRowCount.Declare
+V.Local.lCount.Declare
+V.Local.sSQL.Declare
+V.Local.dCutOffDate.Declare
+
+V.Local.lRowCount.Set(V.DataTable.dtPTO.RowCount)
+F.Intrinsic.Math.Sub(V.Local.lRowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Date.DateAdd("d",-14,V.Ambient.Date,V.Local.dCutOffDate)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
+
+	F.Intrinsic.Control.If(V.DataTable.dtPTO(V.Local.lCount).REQUEST_DATE!FieldVal,<,V.Local.dCutOffDate)
+	
+		F.Intrinsic.String.Build("DELETE FROM ZZ_PTO_CONFIRMED WHERE UNIQID = '{0}';",V.DataTable.dtPTO(V.Local.lCount).UNIQID!FieldVal,V.Local.sSQL)
+		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Data.DataTable.Close("dtPTO")
+F.Data.DataTable.CreateFromSQL("dtPTO","con","SELECT * FROM ZZ_PTO_CONFIRMED;",True)
+
+Program.Sub.oldDates.End
+
+Program.Sub.loadTable.Start
+V.Local.lRowCount.Declare
+V.Local.lCount.Declare
+V.Local.dFDate.Declare
+V.Local.dLDate.Declare
+V.Local.sRet.Declare
+V.Local.lDays.Declare
+V.Local.sDate.Declare
+V.Local.sDay.Declare
+V.Local.sMonth.Declare
+V.Local.sYear.Declare
+V.Local.dCurDay.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+V.Local.lWkday.Declare
+
+F.Intrinsic.Control.If(V.DataView.dtPTO!dvPTO.Exists)
+	F.Data.DataView.Close("dtPTO","dvPTO")
+F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.If(V.DataTable.dtSPTO.Exists)
+	F.Data.DataTable.Close("dtSPTO")
+F.Intrinsic.Control.EndIf
+
+F.Data.DataView.Create("dtPTO","dvPTO")
+F.Data.DataView.SetSort("dtPTO","dvPTO","REQUEST_DATE ASC")
+F.Data.DataView.ToDataTable("dtPTO","dvPTO","dtSPTO",True)
+
+V.Local.lRowCount.Set(V.DataTable.dtSPTO.RowCount)
+F.Intrinsic.Math.Sub(V.Local.lRowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.If(V.Local.lRowCount,<=,-1)
+	F.Intrinsic.UI.Msgbox("There is currently no scheduled PTO for your employees")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+V.Local.dFDate.Set(V.DataTable.dtSPTO(0).REQUEST_DATE!FieldVal)
+V.Local.dLDate.Set(V.DataTable.dtSPTO(V.Local.lRowCount).REQUEST_DATE!FieldVal)
+
+F.Intrinsic.Date.DateDiff("D",V.Local.dFDate,V.Local.dLDate,V.Local.lDays)
+
+F.Intrinsic.Control.If(V.DataTable.dtSched.Exists)
+	F.Data.DataTable.Close("dtSched")
+F.Intrinsic.Control.EndIf
+
+F.Data.DataTable.Create("dtSched",True)
+
+F.Data.DataTable.AddColumn("dtSched","ID","string")
+F.Data.DataTable.AddColumn("dtSched","Employee","string")
+F.Data.DataTable.AddColumn("dtSched","Supervisor","string")
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lDays,1)
+
+	F.Intrinsic.Date.DateAdd("D",V.Local.lCount,V.Local.dFDate,V.Local.dCurDay)
+	
+	F.Intrinsic.Date.Weekday(V.Local.dCurDay,V.Local.lWkday)
+	
+	F.Intrinsic.Control.If(V.Local.lWkday,<>,1)
+	
+		F.Intrinsic.Control.If(V.Local.lWkday,<>,7)
+		
+			F.Intrinsic.Date.Day(V.Local.dCurDay,V.Local.sDay)
+			F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+			F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+				F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.Date.Month(V.Local.dCurDay,V.Local.sMonth)
+			F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+			F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+				F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.Date.Year(V.Local.dCurDay,V.Local.sYear)
+			
+			F.Intrinsic.String.Build("{0}/{1}/{2}",V.Local.sMonth,V.Local.sDay,V.Local.sYear,V.Local.sDate)
+			
+			F.Data.DataTable.AddColumn("dtSched",V.Local.sDate,"string")
+		
+		F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+V.Local.lRowCount.Set(V.DataTable.dtFltEmp.RowCount)
+F.Intrinsic.Math.Sub(V.Local.lRowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
+
+	F.Data.DataTable.AddRow("dtSched","ID",V.DataTable.dtFltEmp(V.Local.lCount).EMPLOYEE!FieldVal,"Employee",V.DataTable.dtFltEmp(V.Local.lCount).NAME!FieldVal,"Supervisor",V.DataTable.dtFltEmp(V.Local.lCount).SUPERVSR!FIeldVal)
+
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+Program.Sub.loadTable.End
+
+Program.Sub.popTable.Start
+V.Local.lCount.Declare
+V.Local.lRowCount.Declare
+V.Local.sYear.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.sDate.Declare
+V.Local.sCrit.Declare
+V.Local.sRet.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+
+V.Local.lRowCount.Set(V.DataTable.dtPTO.RowCount)
+F.Intrinsic.Math.Sub(V.Local.lRowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.If(V.Local.lRowCount,<=,-1)
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)	
+
+	F.Intrinsic.Date.Year(V.DataTable.dtPTO(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sYear)
+	F.Intrinsic.Date.Month(V.DataTable.dtPTO(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sMonth)
+	V.Local.lMlen.Set(V.Local.sMonth.Length)
+	F.Intrinsic.Control.If(V.Local.lMLen,=,1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Date.Day(V.DataTable.dtPTO(V.Local.lCount).REQUEST_DATE!FieldVal,V.Local.sDay)
+	V.Local.lDLen.Set(V.Local.sDay.Length)
+	F.Intrinsic.Control.If(V.Local.lDLen,=,1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.Build("{0}/{1}/{2}",V.Local.sMonth,V.Local.sDay,V.Local.sYear,V.Local.sDate)
+	
+	F.Intrinsic.String.Build("ID = '{0}'",V.DataTable.dtPTO(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sCrit)
+	
+	F.Data.DataTable.Select("dtSched",V.Local.sCrit,V.Local.sRet)
+	
+	F.Data.DataTable.SetValue("dtSched",V.Local.sRet,V.Local.sDate,V.DataTable.dtPTO(V.Local.lCount).PTO_AMOUNT!FieldVal)
+
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+Program.Sub.popTable.End
+
+Program.Sub.buildGrid.Start
+V.Local.lCount.Declare
+V.Local.lColCount.Declare
+V.Local.sCurCol.Declare
+
+F.Data.DataView.Create("dtSched","dvSched")
+gui.frmPTO.gsgcPTO.AddGridviewFromDataview("gsgvSched","dtSched","dvSched")
+gui.frmPTO.gsgcPTO.SetGridviewProperty("gsgvSched","OptionsViewColumnAutoWidth",False)
+
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","ID","Fixed","Left")
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Employee","Fixed","Left")
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Supervisor","Fixed","Left")
+
+gui.frmPTO.gsgcPTO.GetColumnCount("gsgvSched",V.Local.lColCount)
+F.Intrinsic.Math.Sub(V.Local.lColCount,1,V.Local.lColCount)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lColCount,1)
+	gui.frmPTO.gsgcPTO.GetColumnNameByIndex("gsgvSched",V.Local.lCount,V.Local.sCurCol)
+	gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"HeaderFontBold",True)
+	gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"HeaderHAlignment","Center")
+	gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"CellHAlignment","Center")
+	gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"ReadOnly",True)
+	gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"AllowEdit",False)
+	
+	F.Intrinsic.Control.If(V.Local.lCount,>=,3)
+		gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"width",100)
+		gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"CellForeColor",V.Color.LtBlue)
+		gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"CellFontBold",True)
+		gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched",V.Local.sCurCol,"CellFontUnderline",True)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Employee","width",175)
+gui.frmPTO.gsgcPTO.SetColumnProperty("gsgvSched","Supervisor","width",175)
+
+gui.frmPTO.gsgcPTO.MainView("gsgvSched")
+gui.frmPTO..Show
+
+Program.Sub.buildGrid.End
+
+Program.Sub.frmPTO_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.frmPTO_UnLoad.End
+
+Program.Sub.gsgcPTO_RowCellClick.Start
+V.Local.sEmpID.Declare
+V.Local.sUniqID.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.sYear.Declare
+V.Local.sCrit.Declare
+V.Local.sRowLoc.Declare
+
+V.Local.sEmpID.Set(V.DataTable.dtSched(V.Args.RowIndex).ID!FieldVal)
+
+F.Intrinsic.String.Left(V.Args.Column,2,V.Local.sMonth)
+F.Intrinsic.String.Mid(V.Args.Column,4,2,V.Local.sDay)
+F.Intrinsic.String.Right(V.Args.Column,4,V.Local.sYear)
+
+F.Intrinsic.String.Build("{0}{1}{2}{3}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sEmpID,V.Local.sUniqID)
+
+F.Intrinsic.String.Build("UNIQID = '{0}'",V.Local.sUniqID,V.Local.sCrit)
+F.Data.DataTable.Select("dtPTO",V.Local.sCrit,V.Local.sRowLoc)
+F.Intrinsic.Control.If(V.Local.sRowLoc,=,"***NORETURN***")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.EndIf
+
+gui.frmDetail.txtIDNo.Text(V.DataTable.dtPTO(V.Local.sRowLoc).EMPLOYEE!FieldVal)
+gui.frmDetail.dtpReqDt.Value(V.DataTable.dtPTO(V.Local.sRowLoc).REQUEST_DATE!FieldVal)
+gui.frmDetail.txtName.Text(V.DataTable.dtPTO(V.Local.sRowLoc).NAME!FieldVal)
+gui.frmDetail.txtPTOAmt.Text(V.DataTable.dtPTO(V.Local.sRowLoc).PTO_AMOUNT!FieldVal)
+gui.frmDetail.txtReason.Text(V.DataTable.dtPTO(V.Local.sRowLoc).REASON!FieldVal)
+gui.frmDetail.txtSup.Text(V.DataTable.dtPTO(V.Local.sRowLoc).SUPERVSR!FieldVal)
+gui.frmDetail.chkFill.Value(V.DataTable.dtPTO(V.Local.sRowLoc).FILL_TO_40!FieldVal)
+gui.frmDetail.chkExc.Value(V.DataTable.dtPTO(V.Local.sRowLoc).EXCUSED!FieldVal)
+gui.frmDetail.txtExplanation.Text(V.DataTable.dtPTO(V.Local.sRowLoc).EXPLANATION!FieldVal)
+
+F.Intrinsic.Control.If(V.Global.bDetail)
+	gui.frmDetail..Visible(True)
+	gui.frmDetail..SetFocus
+F.Intrinsic.Control.Else
+	gui.frmDetail..Show
+	gui.frmDetail..SetFocus
+	V.Global.bDetail.Set(True)
+F.Intrinsic.Control.EndIf
+
+Program.Sub.gsgcPTO_RowCellClick.End
+
+Program.Sub.frmDetail_UnLoad.Start
+gui.frmDetail..Visible(False)
+gui.frmPTO..SetFocus
+Program.Sub.frmDetail_UnLoad.End
+
+Program.Sub.Comments.Start
+${$5$}$2.0.0.0$}$2
+${$6$}$lukep$}$20211112093321553$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pWtnTmm9I7/R1Z0O1+btx02HES/p6RhaQ6Uji3yclG4=
+Program.Sub.Comments.End
