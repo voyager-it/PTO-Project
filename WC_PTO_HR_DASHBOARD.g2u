@@ -858,24 +858,18 @@ gui.frmApproved.lblAQty.Text(V.DataTable.dtApproved.RowCount)
 gui.frmDenied.lblAQty.Text(V.DataTable.dtApproved.RowCount)
 
 F.Intrinsic.Control.CallSub("loadFill")
-Function.Intrinsic.Debug.Stop
-
 
 gui.frm40Queue.lblFQty.Text(V.DataTable.dtFill.RowCount)
 gui.frmApproved.lblFQty.Text(V.DataTable.dtFill.RowCount)
 gui.frmDenied.lblFQty.Text(V.DataTable.dtFill.RowCount)
 
 F.Intrinsic.Control.CallSub("loadOthers")
-Function.Intrinsic.Debug.Stop
-
 
 gui.frm40Queue.lblDQty.Text(V.DataTable.dtDenied.RowCount)
 gui.frmApproved.lblDQty.Text(V.DataTable.dtDenied.RowCount)
 gui.frmDenied.lblDQty.Text(V.DataTable.dtDenied.RowCount)
 
 F.Intrinsic.Control.CallSub("loadSchedule")
-Function.Intrinsic.Debug.Stop
-
 
 'This checks whether or not the screen has been loaded before to choose between initializing the screen or just making the screen visible again
 F.Intrinsic.Control.If(V.Global.bApproved)
@@ -1483,6 +1477,7 @@ V.Local.lHolCount.Declare
 V.Local.fHolHrs.Declare
 V.Local.sHours.Declare
 V.Local.sMinutes.Declare
+V.Local.lWorkedShifts.Declare
 V.Local.sTime.Declare
 
 V.Local.lRowCount.Set(V.DataTable.dtFill.RowCount)
@@ -1596,9 +1591,24 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	F.Intrinsic.Control.If(V.Local.sRet,"<>","***NORETURN***")
 		
 		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+
+		'Calculates the hours/minutes into an hour with decimal amount to match normal formatting
+		V.Local.fWorkedHours.Set(0)
+		F.Intrinsic.Control.For(V.Local.lWorkedShifts,0,V.Local.sRet.UBound,1)
 		
-		V.Local.fWorkedHours.Set(V.DataTable.dtDates(V.Local.sRet(0)).HOURS_HH!FieldVal)
-		V.Local.fWorkedMinutes.Set(V.DataTable.dtDates(V.Local.sRet(0)).HOURS_MM!FieldVal)
+			F.Intrinsic.Math.Add(V.Local.fWorkedHours,V.DataTable.dtDates(V.Local.sRet(V.Local.lWorkedShifts)).HOURS_HH!FieldVal,V.Local.fWorkedHours)
+			V.Local.fWorkedMinutes.Set(V.DataTable.dtDates(V.Local.sRet(V.Local.lWorkedShifts)).HOURS_MM!FieldVal)
+			
+			F.Intrinsic.Math.Sub(V.Local.fWorkedMinutes,30,V.Local.fWorkedMinutes)
+			F.Intrinsic.Math.Div(V.Local.fWorkedMinutes,60,V.Local.fWorkedMinutes)
+			F.Intrinsic.Math.Round(V.Local.fWorkedMinutes,2,V.Local.fWorkedMinutes)
+			F.Intrinsic.Math.Add(V.Local.fWorkedMinutes,V.Local.fWorkedHours,V.Local.fWorkedHours)
+			
+			F.Intrinsic.Control.If(V.Local.fWorkedHours,<,0)
+				V.Local.fWorkedHours.Set(0)
+			F.Intrinsic.Control.EndIf
+		
+		F.Intrinsic.Control.Next(V.Local.lWorkedShifts)
 		
 		'Formats the Time In and Time Out to display on the Fill to 40 GSGV 
 		F.Intrinsic.String.Left(V.DataTable.dtDates(V.Local.sRet(0)).TIME_IN!FieldVal,2,V.Local.sHours)
@@ -1610,16 +1620,6 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		F.Intrinsic.String.Mid(V.DataTable.dtDates(V.Local.sRet(0)).TIME_OUT!FieldVal,3,2,V.Local.sMinutes)
 		F.Intrinsic.String.Build("{0}:{1}",V.Local.sHours,V.Local.sMinutes,V.Local.sTime)
 		F.Data.DataTable.SetValue("dtFill",V.Local.lCount,"CLOCK_OUT",V.Local.sTime)
-		
-		'Calculates the hours/minutes into an hour with decimal amount to match normal formatting
-		F.Intrinsic.Math.Sub(V.Local.fWorkedMinutes,30,V.Local.fWorkedMinutes)
-		F.Intrinsic.Math.Div(V.Local.fWorkedMinutes,60,V.Local.fWorkedMinutes)
-		F.Intrinsic.Math.Round(V.Local.fWorkedMinutes,2,V.Local.fWorkedMinutes)
-		F.Intrinsic.Math.Add(V.Local.fWorkedMinutes,V.Local.fWorkedHours,V.Local.fWorkedHours)
-		
-		F.Intrinsic.Control.If(V.Local.fWorkedHours,<=,0)
-			V.Local.fWorkedHours.Set(0)
-		F.Intrinsic.Control.EndIf
 		
 		F.Data.DataTable.SetValue("dtFill",V.Local.lCount,"HOURS_WORKED",V.Local.fWorkedHours)
 		
@@ -4656,5 +4656,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211112091556102$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pWtnTmm9I7+AV2WyGfbTHbsuZiE9vs4CM/w9zLC//TI=
+${$6$}$lukep$}$20211112092134195$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pWtnTmm9I796aSKKTKMuZh4OZsFMKJCVCJLkNZbGGkE=
 Program.Sub.Comments.End
