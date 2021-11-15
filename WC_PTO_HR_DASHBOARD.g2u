@@ -4218,8 +4218,6 @@ Program.Sub.loadAppQueueV.End
 
 Program.Sub.buildApprovalQueueV.Start
 gui.frmApproval.gsgcApproval.SetGridviewProperty("gsgvQueue","Enableappearanceoddrow",True)
-gui.frmApproval.gsgcAproval.SetGridviewProperty("gsgvQueue","ReadOnly",True)
-
 
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","UNIQID","Visible",False)
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","EMPLOYEE","Visible",False)
@@ -4656,5 +4654,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211112092134195$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pWtnTmm9I796aSKKTKMuZh4OZsFMKJCVCJLkNZbGGkE=
+${$6$}$lukep$}$20211115135224612$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0ba/kGLqzZ44HcFBkLlmERmwhPLolbVn219PRivrkqWg=
 Program.Sub.Comments.End
