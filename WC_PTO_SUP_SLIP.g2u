@@ -347,8 +347,6 @@ V.Local.sID.Set(V.Global.sEmpID)
 
 gui.frmPTO.dtpStart.SetFocus
 
-gui.frmPTO.txtID.Text(" ")
-
 F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.Local.sID,V.Local.sCriteria)
 F.Data.DataTable.Select("dtEmpMstr",V.Local.sCriteria,V.Local.lRowLoc)
 
@@ -730,5 +728,5 @@ Program.Sub.ddlReason_Change.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211110093207395$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbgoARMc0vQIlPPDOprWmfN33oBSiFN6/Zg=
+${$6$}$lukep$}$20211115132902970$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0ba/kGLqzZ44MgNuan1M4U7Hms142UPu/q22TGrHtEYY=
 Program.Sub.Comments.End
