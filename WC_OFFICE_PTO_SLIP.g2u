@@ -41,7 +41,7 @@ Gui.frmPTO.dtpEnd.Zorder(0)
 Gui.frmPTO.dtpEnd.CheckBox(False)
 Gui.frmPTO.dtpEnd.FontName("Tahoma")
 Gui.frmPTO.dtpEnd.FontSize(8.25)
-Gui.frmPTO.lblRange.Create(Label,"Requested Date Range",True,1935,255,0,930,1545,True,2,"Arial",8,-2147483633,0,0)
+Gui.frmPTO.lblRange.Create(Label,"Requested Date Range",True,1665,210,0,930,1545,True,2,"Arial",8,-2147483633,0,0)
 Gui.frmPTO.lblRange.BorderStyle(0)
 Gui.frmPTO.txtHours.Create(TextBox,"",True,1770,300,0,1020,3180,True,0,"Arial",8,-2147483643,1)
 Gui.frmPTO.txtHours.TabStop(True)
@@ -93,12 +93,6 @@ Gui.frmPTO.chkFill.Visible(True)
 Gui.frmPTO.chkFill.Zorder(0)
 Gui.frmPTO.chkFill.FontName("Tahoma")
 Gui.frmPTO.chkFill.FontSize(8.25)
-Gui.frmPTO.lblName.Create(Label,"",True,3015,405,0,390,285,True,2,"Arial",12,-2147483633,0,0)
-Gui.frmPTO.lblName.BorderStyle(0)
-Gui.frmPTO.lblAvail.Create(Label,"PTO Available: ",True,2385,255,0,690,870,True,2,"Arial",9,-2147483633,0,0)
-Gui.frmPTO.lblAvail.DefaultValue("PTO Available: ")
-Gui.frmPTO.lblAvail.FontStyle(True,False,False,False,False)
-Gui.frmPTO.lblAvail.BorderStyle(0)
 Gui.frmPTO.gsgcSched.Create(GsGridControl)
 Gui.frmPTO.gsgcSched.Size(3165,5820)
 Gui.frmPTO.gsgcSched.Position(3480,375)
@@ -126,10 +120,14 @@ Gui.frmPTO.cmdViewAll.Visible(True)
 Gui.frmPTO.cmdViewAll.Zorder(0)
 Gui.frmPTO.cmdViewAll.FontName("Tahoma")
 Gui.frmPTO.cmdViewAll.FontSize(8.25)
-Gui.frmPTO.lblMax.Create(Label,"Max PTO:",True,1935,255,0,930,1170,True,2,"Arial",9,-2147483633,0,0)
-Gui.frmPTO.lblMax.DefaultValue("Max PTO:")
-Gui.frmPTO.lblMax.FontStyle(True,False,False,False,False)
+Gui.frmPTO.lblName.Create(Label,"Name",True,615,285,0,930,315,True,2,"Tahoma",12,,0,0)
+Gui.frmPTO.lblName.BorderStyle(0)
+Gui.frmPTO.lblAvail.Create(Label,"PTO Available: ",True,1350,210,0,930,795,True,2,"Tahoma",9,,0,0)
+Gui.frmPTO.lblAvail.BorderStyle(0)
+Gui.frmPTO.lblAvail.FontStyle(True,False,False,False,False)
+Gui.frmPTO.lblMax.Create(Label,"Max PTO:",True,855,210,0,930,1170,True,2,"Tahoma",9,,0,0)
 Gui.frmPTO.lblMax.BorderStyle(0)
+Gui.frmPTO.lblMax.FontStyle(True,False,False,False,False)
 Gui.frmAll..Create(BaseForm)
 Gui.frmAll..Caption("All Requests")
 Gui.frmAll..Size(9795,8115)
@@ -265,7 +263,7 @@ V.Local.sID.Set(V.Args.ID)
 
 gui.frmPTO.dtpStart.SetFocus
 
-gui.frmPTO.txtID.Text(" ")
+'gui.frmPTO.txtID.Text(" ")
 
 F.Intrinsic.String.Build("EMPLOYEE = '{0}'",V.Local.sID,V.Local.sCriteria)
 F.Data.DataTable.Select("dtEmpMstr",V.Local.sCriteria,V.Local.lRowLoc)
@@ -767,5 +765,5 @@ Program.Sub.ddlReason_Change.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211110093107197$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbi/XmuN9gtWZQNri8iIJqe115aCJHXAt5Q=
+${$6$}$lukep$}$20211115094507176$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0ba/kGLqzZ4489DIz7a7UNkn/U2S3ppqaadN92i2vcGw=
 Program.Sub.Comments.End
