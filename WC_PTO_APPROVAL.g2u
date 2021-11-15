@@ -1,4 +1,4 @@
-Program.Sub.ScreenSU.Start
+﻿Program.Sub.ScreenSU.Start
 Gui.frmLogin..Create
 Gui.frmLogin..Caption("Login")
 Gui.frmLogin..Size(3765,2730)
@@ -256,8 +256,9 @@ F.Intrinsic.Control.End
 Program.Sub.frmApproval_UnLoad.End
 
 Program.Sub.formatGrid.Start
+
 gui.frmApproval.gsgcApproval.SetGridviewProperty("gsgvQueue","Enableappearanceoddrow",True)
-gui.frmApproval.gsgcAproval.SetGridviewProperty("gsgvQueue","ReadOnly",True)
+gui.frmApproval.gsgcApproval.SetGridviewProperty("gsgvQueue","ReadOnly",True)
 
 
 gui.frmApproval.gsgcApproval.SetColumnProperty("gsgvQueue","UNIQID","Visible",False)
@@ -547,3 +548,8 @@ gui.frmApproval.gsgcApproval.MainView("gsgvQueue")
 gui.frmApproval..Visible(True)
 
 Program.Sub.ReloadTable.End
+
+Program.Sub.Comments.Start
+${$5$}$2.0.0.0$}$2
+${$6$}$lukep$}$20211115105901158$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0ba/kGLqzZ44Jd5tqbfEO4eVoCbYRrrekmFxGNDQD8Vs=
+Program.Sub.Comments.End
