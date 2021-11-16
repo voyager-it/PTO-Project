@@ -227,6 +227,7 @@ Program.Sub.buildHoliday.End
 Program.Sub.cmdID_Click.Start
 V.Local.lIDLen.Declare
 V.Local.sID.Declare
+V.Local.bQuit.Declare
 
 F.Intrinsic.String.Len(V.Screen.frmPTO!txtID.Value,V.Local.lIDLen)
 
@@ -248,6 +249,12 @@ F.Intrinsic.Control.ElseIf(V.Local.lIDLen,">=",7)
 		
 		F.Intrinsic.Control.CallSub("popName","ID",V.Local.sID)
 		
+		F.Intrinsic.Variable.ArgToVar("bQuit",V.Local.bQuit)
+		
+		F.Intrinsic.Control.If(V.Local.bQuit)
+			F.Intrinsic.Control.ExitSub
+		F.Intrinsic.Control.EndIf
+		
 		F.Intrinsic.Control.CallSub("popHours","ID",V.Local.sID)
 		
 		F.Intrinsic.Control.CallSub("popSched","ID",V.Local.sID)
@@ -263,6 +270,12 @@ F.Intrinsic.Control.ElseIf(V.Local.lIDLen,">=",7)
 		V.Global.sEmpID.Set(V.Local.sID)
 		
 		F.Intrinsic.Control.CallSub("popName","ID",V.Local.sID)
+		
+		F.Intrinsic.Variable.ArgToVar("bQuit",V.Local.bQuit)
+		
+		F.Intrinsic.Control.If(V.Local.bQuit)
+			F.Intrinsic.Control.ExitSub
+		F.Intrinsic.Control.EndIf
 		
 		F.Intrinsic.Control.CallSub("popHours","ID",V.Local.sID)
 		
@@ -359,7 +372,9 @@ V.Local.sType.Declare
 V.Local.sCaption.Declare
 V.Local.sSQL.Declare
 V.Local.sRet.Declare
+V.Local.bQuit.Declare
 
+V.Local.bQuit.Set(False)
 V.Local.sID.Set(V.Args.ID)
 
 gui.frmPTO.dtpStart.SetFocus
@@ -404,8 +419,10 @@ V.Global.fMax.Set(V.Local.sRet)
 gui.frmPTO.lblMax.Caption(V.Local.sCaption)
 
 F.Intrinsic.Control.Catch
-	F.Intrinsic.UI.Msgbox("Please try scanning your card again")
+	F.Intrinsic.UI.Msgbox("Please try scanning your card again. If you have received this message more than once, please contact HR or IT to see if you have been properly set up in the PTO system.")
 	gui.frmPTO.txtID.Text(" ")
+	V.Local.bQuit.Set(True)
+	F.Intrinsic.Variable.AddRV("bQuit",V.Local.bQuit)
 	F.Intrinsic.Control.ExitSub
 F.Intrinsic.Control.EndTry
 
@@ -812,5 +829,5 @@ Program.Sub.ddlReason_Change.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211110121351945$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pT2dcsfSxbh4ddTMW8dwCW6nz9ZqZYc0/8oEjpyBjdw=
+${$6$}$lukep$}$20211116123933055$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pIh4QAfZ2GuFH407pcGvSyEKfIHH/UEU/20vWaGZGOU=
 Program.Sub.Comments.End
