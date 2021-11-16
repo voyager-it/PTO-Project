@@ -1891,6 +1891,8 @@ V.Local.sTADate.Declare
 V.Local.bSkip.Declare
 V.Local.sInsTADate.Declare
 V.Local.bFuneral.Declare
+V.Local.sExplanation.Declare
+V.Local.lRet.Declare
 
 ' This is the save button script for the Approved Gridcontrol Screen
 
@@ -1955,8 +1957,15 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		
 		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
+		V.Local.sExplanation.Set(V.DataTable.dtFiltered(V.Local.lCount).EXPLANATION!FieldVal)
+	
+		F.Intrinsic.String.Occurs(V.Local.sExplanation,"'",V.Local.lRet)
+		F.Intrinsic.Control.If(V.Local.lRet,>,0)
+			F.Intrinsic.String.Replace(V.Local.sExplanation,"'","''",V.Local.sExplanation)
+		F.Intrinsic.Control.EndIf
+		
 		'Builds and executes the query to ZZ_PTO_CONFIRMED to be used in the schedule matrix.
-		F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),1,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.DataTable.dtFiltered(V.Local.lCount).EXPLANATION!FieldVal,V.Local.sSQL)
+		F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),1,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.Local.sExplanation,V.Local.sSQL)
 		
 		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
@@ -2001,8 +2010,15 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 			F.Intrinsic.Control.EndIf
 			
+			V.Local.sExplanation.Set(V.DataTable.dtFiltered(V.Local.lCount).EXPLANATION!FieldVal)
+	
+			F.Intrinsic.String.Occurs(V.Local.sExplanation,"'",V.Local.lRet)
+			F.Intrinsic.Control.If(V.Local.lRet,>,0)
+				F.Intrinsic.String.Replace(V.Local.sExplanation,"'","''",V.Local.sExplanation)
+			F.Intrinsic.Control.EndIf
+			
 			'Builds and executes the query to ZZ_PTO_CONFIRMED to be used in the schedule matrix
-			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),0,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.DataTable.dtFiltered(V.Local.lCount).EXPLANATION!FieldVal,V.Local.sSQL)
+			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CONFIRMED (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, EXPLANATION) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",V.DataTable.dtFiltered(V.Local.lCount).UNIQID!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).NAME!FieldVal,V.Local.sDate,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",13,V.Local.lCount),gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",5,V.Local.lCount),0,gui.frmApproved.gsgcApproved.GetCellValue("gsgvApproved",7,V.Local.lCount),V.Local.lExcused,V.Local.sExplanation,V.Local.sSQL)
 
 			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
@@ -4654,5 +4670,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211115135224612$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0ba/kGLqzZ44HcFBkLlmERmwhPLolbVn219PRivrkqWg=
+${$6$}$lukep$}$20211116104450342$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pIh4QAfZ2Gs1Tf0rDXf0TaNx4reiaygGsdrmxAGUwsI=
 Program.Sub.Comments.End
