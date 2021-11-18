@@ -1,4 +1,4 @@
-Program.Sub.ScreenSU.Start
+﻿Program.Sub.ScreenSU.Start
 Gui.frmPTO..Create
 Gui.frmPTO..Caption("PTO Schedule")
 Gui.frmPTO..Size(20475,11265)
@@ -111,6 +111,8 @@ V.Global.sLastSup.Declare
 V.Global.sLastSup.Set("")
 V.Global.bDetail.Declare
 V.Global.bDetail.Set(False)
+V.Global.sConSQL.Declare
+V.Global.sEmpSQL.Declare
 
 Program.Sub.Preflight.End
 
@@ -121,12 +123,71 @@ Program.Sub.Main.End
 
 Program.Sub.loadDT.Start
 V.Local.sSQL.Declare
+V.Local.lCount.Declare
+V.Local.lRowCount.Declare
+V.Local.sRet.Declare
+V.Local.sFull.Declare
+V.Local.lArrayLen.Declare
+V.Local.sSup.Declare
+V.Local.sLastSup.Declare
 
-F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_CONFIRMED WHERE SUPERVSR = '{0}' OR NAME = '{0}' OR SUPERVSR = '{1}';",V.Global.sSup,V.Global.sLastSup,V.Local.sSQL)
-F.Data.DataTable.CreateFromSQL("dtPTO","con",V.Local.sSQL,True)
+'F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE SUPERVSR = '{0}' OR NAME = '{0}' OR SUPERVSR = '{1}';",V.Global.sLastSup,V.Global.sSup,V.Local.sSQL)
+'F.Data.DataTable.CreateFromSQL("dtFltEmp","con",V.Local.sSQL,True)
 
-F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE SUPERVSR = '{0}' OR NAME = '{0}' OR SUPERVSR = '{1}';",V.Global.sLastSup,V.Global.sSup,V.Local.sSQL)
-F.Data.DataTable.CreateFromSQL("dtFltEmp","con",V.Local.sSQL,True)
+'F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_CONFIRMED WHERE SUPERVSR = '{0}' OR NAME = '{0}' OR SUPERVSR = '{1}';",V.Global.sSup,V.Global.sLastSup,V.Local.sSQL)
+'F.Data.DataTable.CreateFromSQL("dtPTO","con",V.Local.sSQL,True)
+
+F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE SUPERVSR = '{0}' OR SUPERVSR = '{1}';",V.Global.sLastSup,V.Global.sSup,V.Local.sSQL)
+F.Data.DataTable.CreateFromSQL("dtTempEmp","con",V.Local.sSQL,True)
+
+F.Intrinsic.Math.Sub(V.DataTable.dtTempEmp.RowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
+	F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_LOGIN WHERE SUP_ID = '{0}'",V.DataTable.dtTempEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
+	F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet,<>,"***NORETURN***")
+		
+		F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE EMPLOYEE = '{0}';",V.DataTable.dtTempEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
+		F.ODBC.Connection!con.ExecuteAndReturn(V.Local.sSQL,V.Local.sRet)
+		F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	
+		F.Intrinsic.Control.If(V.Global.sConSQL,=,"")
+		
+			V.Local.sLastSup.Set(V.Local.sRet(1))
+			F.Intrinsic.String.Split(V.Local.sRet(1)," ",V.Local.sFull)
+			F.Intrinsic.String.TrimChar(V.Local.sFull(0),",",V.Local.sFull(0))
+			F.Intrinsic.Variable.UBound(V.Local.sFull,V.Local.lArrayLen)
+			F.Intrinsic.Control.If(V.Local.lArrayLen,>,1)
+				F.Intrinsic.String.Build("{0} {1} {2}",V.Local.sFull(1),V.Local.sFull(2),V.Local.sFull(0),V.Local.sSup)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.String.Build("{0} {1}",V.Local.sFull(1),V.Local.sFull(0),V.Local.sSup)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_CONFIRMED WHERE SUPERVSR = '{0}' OR SUPERVSR = '{1}'",V.Local.sSup,V.Local.sLastSup,V.Global.sConSQL)
+			F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_EMPLOYEES WHERE SUPERVSR = '{0}' OR SUPERVSR = '{1}'",V.Local.sSup,V.Local.sLastSup,V.Global.sEmpSQL)
+			
+		F.Intrinsic.Control.Else
+		
+			V.Local.sLastSup.Set(V.Local.sRet(1))
+			F.Intrinsic.String.Split(V.Local.sRet(1)," ",V.Local.sFull)
+			F.Intrinsic.String.TrimChar(V.Local.sFull(0),",",V.Local.sFull(0))
+			F.Intrinsic.Variable.UBound(V.Local.sFull,V.Local.lArrayLen)
+			F.Intrinsic.Control.If(V.Local.lArrayLen,>,1)
+				F.Intrinsic.String.Build("{0} {1} {2}",V.Local.sFull(1),V.Local.sFull(2),V.Local.sFull(0),V.Local.sSup)
+			F.Intrinsic.Control.Else
+				F.Intrinsic.String.Build("{0} {1}",V.Local.sFull(1),V.Local.sFull(0),V.Local.sSup)
+			F.Intrinsic.Control.EndIf
+			F.Intrinsic.String.Build("{0} OR SUPERVSR = '{1}' OR SUPERVSR = '{2}'",V.Global.sConSQL,V.Local.sSup,V.Local.sLastSup,V.Global.sConSQL)
+			F.Intrinsic.String.Build("{0} OR SUPERVSR = '{1}' OR SUPERVSR = '{2}'",V.Global.sEmpSQL,V.Local.sSup,V.Local.sLastSup,V.Global.sEmpSQL)
+		
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.String.Build("{0} OR SUPERVSR = '{1}' OR NAME = '{1}' OR SUPERVSR = '{2}';",V.Global.sConSQL,V.Global.sLastSup,V.Global.sSup,V.Global.sConSQL)
+F.Data.DataTable.CreateFromSQL("dtPTO","con",V.Global.sConSQL,True)
+
+F.Intrinsic.String.Build("{0} OR SUPERVSR = '{1}' OR NAME = '{1}' OR SUPERVSR = '{2}';",V.Global.sEmpSQL,V.Global.sLastSup,V.Global.sSup,V.Global.sEmpSQL)
+F.Data.DataTable.CreateFromSQL("dtFltEmp","con",V.Global.sEmpSQL,True)
 
 Program.Sub.loadDT.End
 
@@ -153,8 +214,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 F.Intrinsic.Control.Next(V.Local.lCount)
 
 F.Data.DataTable.Close("dtPTO")
-F.Intrinsic.String.Build("SELECT * FROM ZZ_PTO_CONFIRMED WHERE SUPERVSR = '{0}' OR NAME = '{0}' OR SUPERVSR = '{1}';",V.Global.sSup,V.Global.sLastSup,V.Local.sSQL)
-F.Data.DataTable.CreateFromSQL("dtPTO","con",V.Local.sSQL,True)
+F.Data.DataTable.CreateFromSQL("dtPTO","con",V.Global.sConSQL,True)
 
 Program.Sub.oldDates.End
 
@@ -460,19 +520,6 @@ gui.frmPTO..SetFocus
 Program.Sub.frmDetail_UnLoad.End
 
 Program.Sub.Comments.Start
-//DONE:: Limit view by supervisor login
-	Login screen
-
-
-HOLD||TODO:: Limit date range to three months? Six months maybe?
-
-//DONE:: Delete from confirmed when date has passed already
-
-//DONE:: Build Gridview
-	Format so that the requested days are different color (Easier to pick out)
-	Add click event that finds details of the clicked cell
-	Freeze panes
-
-//DONE:: Catch if there isn't anything in the table
-
+${$5$}$2.0.0.0$}$2
+${$6$}$lukep$}$20211118134055053$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0hXB4Xkb1VBF8AN27dqkYW7klCjdgMszj5XGhodQjRI4=
 Program.Sub.Comments.End
