@@ -3658,7 +3658,7 @@ F.ODBC.Connection!con.Execute(V.Local.sSQL)
 F.Intrinsic.String.Build("UPDATE TIME_ATTENDANCE SET EXCUSED = '{0}', HOURS_HH = '{1}', HOURS_MM = '{2}' WHERE EMPLOYEE LIKE '%{3}%' AND DATE_IN LIKE '%{4}%' AND REC_TYPE = 'A';",V.Local.sExcused,V.Local.lFloorHr,V.Local.fFloorMin,V.Screen.frmDetail!txtIDNo.Value,V.Local.sReqDate,V.Local.sSQL)
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
 
-F.Intrinsic.String.Build("UPDATE TAQ SET EXCUSED = '{0}', HOURS_HH = '{1}', HOURS_MM = '{2}' WHERE EMPLOYEE LIKE '%{3}%' AND DATE_IN LIKE '%{4}%' AND REC_TYPE = 'A';",V.Local.sExcused,V.Local.lFloorHr,V.Local.fFloorMin,V.Screen.frmDetail!txtIDNo.Value,V.Local.sReqDate,V.Local.sSQL)
+F.Intrinsic.String.Build("UPDATE ZZ_PTO_TAQ SET EXCUSED = '{0}', HOURS_HH = '{1}', HOURS_MM = '{2}' WHERE EMPLOYEE LIKE '%{3}%' AND DATE_IN LIKE '%{4}%' AND REC_TYPE = 'A';",V.Local.sExcused,V.Local.lFloorHr,V.Local.fFloorMin,V.Screen.frmDetail!txtIDNo.Value,V.Local.sReqDate,V.Local.sSQL)
 F.ODBC.Connection!con.Execute(V.Local.sSQL)
 
 F.Intrinsic.UI.Msgbox("Record Changes Saved!")
@@ -4670,5 +4670,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211116104450342$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0pIh4QAfZ2Gs1Tf0rDXf0TaNx4reiaygGsdrmxAGUwsI=
+${$6$}$lukep$}$20211118084250961$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0hXB4Xkb1VBFQ6C1DCkzrV9fulwCzPfhJpT61PrLmAiI=
 Program.Sub.Comments.End
