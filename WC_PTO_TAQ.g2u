@@ -64,6 +64,7 @@ V.Local.sInsTADate.Declare
 V.Local.lOutMin.Declare
 V.Local.sReqStr.Declare
 V.Local.sName.Declare
+V.Local.dOutDate.Declare
 
 F.Intrinsic.Math.Sub(V.DataTable.dtTAQ.RowCount,1,V.Local.lRowCount)
 
@@ -97,6 +98,19 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 			'TIME_OUT
 			F.Intrinsic.Math.Add(V.Local.lPTOInHr,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.Local.lOutHr)
+			
+			F.Intrinsic.Control.If(V.Local.lOutHr,>=,24)
+			
+				F.Intrinsic.Math.Sub(V.Local.lOutHr,24,V.Local.lOutHr)
+				
+				F.Intrinsic.Date.DateAdd("D",1,V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.dOutDate)
+				
+			F.Intrinsic.Control.Else
+			
+				V.Local.dOutDate.Set(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal)
+			
+			F.Intrinsic.Control.EndIf
+			
 			F.Intrinsic.String.ConvertToString(V.Local.lOutHr,V.Local.sOutHr)
 			F.Intrinsic.String.ConvertToString(V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sOutMin)
 			F.Intrinsic.Control.If(V.Local.sOutHr.Length,=,1)
@@ -108,9 +122,9 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			F.Intrinsic.String.Build("{0}{1}00",V.Local.sOutHr,V.Local.sOutMin,V.Local.sTimeOut)
 			
 			'CONVERT ACTUAL DATE BECAUSE PERVASIVE IS A WHINY LITTLE BABY
-			F.Intrinsic.Date.Year(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sYear)
-			F.Intrinsic.Date.Month(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sMonth)
-			F.Intrinsic.Date.Day(V.DataTable.dtTAQ(V.Local.lCount).ACTUAL_DATE!FieldVal,V.Local.sDay)
+			F.Intrinsic.Date.Year(V.Local.dOutDate,V.Local.sYear)
+			F.Intrinsic.Date.Month(V.Local.dOutDate,V.Local.sMonth)
+			F.Intrinsic.Date.Day(V.Local.dOutDate,V.Local.sDay)
 			
 			F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
 			F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
@@ -254,5 +268,5 @@ Program.Sub.SendReport.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211122075317805$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0y9ieo2GVcPwCLz6kVZ9+VWy0v+HorIQGjKvOvgubt28=
+${$6$}$lukep$}$20211201144705205$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0D5m55WwHquQfYdPkJ483gb0Rp5MfxPKULueKVjXOliE=
 Program.Sub.Comments.End

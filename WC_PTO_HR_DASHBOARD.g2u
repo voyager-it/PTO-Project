@@ -4614,9 +4614,6 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		F.Intrinsic.Math.Add(V.Local.sRet,V.DataTable.dtFiltered(V.Local.lCount).PTO_Amount!FieldVal,V.Local.fNewAvail)
 		F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'",V.Local.fNewAvail,V.DataTable.dtFiltered(V.Local.lCount).ID!FieldVal,V.Local.sSQL)
 		F.ODBC.Connection!con.Execute(V.Local.sSQL)
-	
-		F.Intrinsic.String.Build("UPDATE ZZ_PTO_HISTORY SET EXPLANATION = 'DELETED FROM {0}', PTO_AMOUNT = '0' WHERE UNIQID = '{1}';",V.DataTable.dtFiltered(V.Local.lCount).Table!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).Uniqid!FieldVal,V.Local.sSQL)
-		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
 		F.Intrinsic.Control.For(V.Local.lTCount,0,4,1)
 			F.Intrinsic.String.Build("DELETE FROM {0} WHERE UNIQID = '{1}';",V.Local.sTables(V.Local.lTCount),V.DataTable.dtFiltered(V.Local.lCount).Uniqid!FieldVal,V.Local.sSQL)
@@ -4670,5 +4667,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211201124941209$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0D5m55WwHquQrdMy59irgZqdVuLafs6l8MdMX5W2r5HE=
+${$6$}$lukep$}$20211201142754801$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0D5m55WwHquQuvVx77VZ43BXHOfqAkjR4y2EsAm9fm9A=
 Program.Sub.Comments.End
