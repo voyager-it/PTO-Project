@@ -1,4 +1,4 @@
-Program.Sub.Preflight.Start
+﻿Program.Sub.Preflight.Start
 F.ODBC.Connection!con.OpenCompanyConnection
 
 V.Global.sSuccess.Declare
@@ -251,3 +251,8 @@ F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sName,V.Local.sEmail,V.Local.sRecip
 F.Global.Messaging.QueueMessage("VSF","05008","ZZ_PTO_TAQ","DAILY TAQ REPORT",V.Local.sSender,V.Local.sRecipient,V.Local.sMsg)
 
 Program.Sub.SendReport.End
+
+Program.Sub.Comments.Start
+${$5$}$2.0.0.0$}$2
+${$6$}$lukep$}$20211122075317805$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0y9ieo2GVcPwCLz6kVZ9+VWy0v+HorIQGjKvOvgubt28=
+Program.Sub.Comments.End

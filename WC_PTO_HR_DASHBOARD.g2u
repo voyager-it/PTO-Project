@@ -4571,7 +4571,7 @@ F.Intrinsic.Control.If(V.DataTable.dtFiltered.Exists)
 	F.Data.DataTable.Close("dtFiltered")
 F.Intrinsic.Control.EndIf
 
-F.Intrinsic.String.Split("ZZ_PTO_APPROVAL*!*ZZ_PTO_HR_APPROVED*!*ZZ_PTO_CONFIRMED*!*ZZ_PTO_FILL","*!*",V.Local.sTables)
+F.Intrinsic.String.Split("ZZ_PTO_APPROVAL*!*ZZ_PTO_HR_APPROVED*!*ZZ_PTO_CONFIRMED*!*ZZ_PTO_FILL*!*ZZ_PTO_HISTORY","*!*",V.Local.sTables)
 
 'Sets a filter on the dataview and then creates a new table from it.	
 F.Data.DataView.SetFilter("dtDelete","dvDelete","Apply = TRUE")
@@ -4618,7 +4618,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		F.Intrinsic.String.Build("UPDATE ZZ_PTO_HISTORY SET EXPLANATION = 'DELETED FROM {0}', PTO_AMOUNT = '0' WHERE UNIQID = '{1}';",V.DataTable.dtFiltered(V.Local.lCount).Table!FieldVal,V.DataTable.dtFiltered(V.Local.lCount).Uniqid!FieldVal,V.Local.sSQL)
 		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
-		F.Intrinsic.Control.For(V.Local.lTCount,0,3,1)
+		F.Intrinsic.Control.For(V.Local.lTCount,0,4,1)
 			F.Intrinsic.String.Build("DELETE FROM {0} WHERE UNIQID = '{1}';",V.Local.sTables(V.Local.lTCount),V.DataTable.dtFiltered(V.Local.lCount).Uniqid!FieldVal,V.Local.sSQL)
 			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		F.Intrinsic.Control.Next(V.Local.lTCount)
@@ -4670,5 +4670,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211118084250961$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0hXB4Xkb1VBFQ6C1DCkzrV9fulwCzPfhJpT61PrLmAiI=
+${$6$}$lukep$}$20211201124941209$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0D5m55WwHquQrdMy59irgZqdVuLafs6l8MdMX5W2r5HE=
 Program.Sub.Comments.End
