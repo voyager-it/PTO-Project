@@ -851,8 +851,6 @@ F.Intrinsic.Control.CallSub("updateDT","sTable",V.Local.sTable)
 'The lines in between the callsubs are to update the screens with accurate tallies of current requests.
 F.Intrinsic.Control.CallSub("loadApproved")
 
-
-
 gui.frm40Queue.lblAQty.Text(V.DataTable.dtApproved.RowCount)
 gui.frmApproved.lblAQty.Text(V.DataTable.dtApproved.RowCount)
 gui.frmDenied.lblAQty.Text(V.DataTable.dtApproved.RowCount)
@@ -1903,7 +1901,7 @@ F.Intrinsic.Control.If(V.DataTable.dtFiltered.Exists)
 F.Intrinsic.Control.EndIf
 
 'Sets a filter on the dataview and then creates a new table from it.	
-F.Data.DataView.SetFilter("dtApproved ","dvApproved","APPLY = TRUE")
+F.Data.DataView.SetFilter("dtApproved","dvApproved","APPLY = TRUE")
 F.Data.DataView.ToDataTable("dtApproved","dvApproved","dtFiltered",True)
 
 F.Data.DataView.Create("dtFiltered","dvFiltered")
@@ -4667,5 +4665,5 @@ Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211201142754801$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0D5m55WwHquQuvVx77VZ43BXHOfqAkjR4y2EsAm9fm9A=
+${$6$}$lukep$}$20211207094923008$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS06LrzrYhf7w46SzTG34IopJdK+PxLt8tQJo2+gX7jKlk=
 Program.Sub.Comments.End
