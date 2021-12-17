@@ -38,11 +38,6 @@ V.Local.sEmployee.Declare
 V.Local.sUNIQID.Declare
 V.Local.sInsToday.Declare
 
-Function.Intrinsic.Debug.InvokeDebugger
-Function.Intrinsic.Debug.Stop
-
-
-
 F.Intrinsic.Date.DateSubtractWorkdays(V.Ambient.Now,7,127,V.Local.dEndDate)
 F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dEndDate,6,127,V.Local.dStartDate)
 F.Intrinsic.Math.Sub(V.DataTable.dtEmp.RowCount,1,V.Local.lRowCount)
@@ -296,5 +291,5 @@ Program.Sub.upgradeStep.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211210094541595$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0A63rBswhv6IOIzV7s1KGE5F/MTB/k/64kTZdFBAuPI4=
+${$6$}$lukep$}$20211210102542859$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0A63rBswhv6KQBDFkQPu1Ak8CnyzvF5dOcmw/PJlKT/Q=
 Program.Sub.Comments.End
