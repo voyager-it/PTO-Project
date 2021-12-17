@@ -1502,6 +1502,7 @@ Gui.frmCash..Moveable(True)
 Gui.frmCash..Sizeable(True)
 Gui.frmCash..ShowInTaskBar(True)
 Gui.frmCash..TitleBar(True)
+Gui.frmCash..Event(UnLoad,cmdCashCancel_Click)
 Gui.frmCash.txtEmployee.Create(TextBox,"",True,1500,300,0,990,540,True,0,"Tahoma",8.25,,1)
 Gui.frmCash.txtName.Create(TextBox,"",True,2535,300,0,480,1215,True,0,"Tahoma",8.25,,1)
 Gui.frmCash.cmdCashEmp.Create(Button)
@@ -5429,15 +5430,53 @@ Program.Sub.cmdSubCash_Click.Start
 Program.Sub.cmdSubCash_Click.End
 
 Program.Sub.cmdCashOutPTO_Click.Start
+
+gui.frmApproved..Visible(False)
+gui.frmDenied..Visible(False)
+gui.frm40Queue..Visible(False)
+
+F.Intrinsic.Control.Try
+	gui.frmCash..Show()
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.ClearErrors
+	gui.frmCash..Visible(True)
+F.Intrinsic.Control.EndTry
+
 Program.Sub.cmdCashOutPTO_Click.End
 
 Program.Sub.cmdCashCancel_Click.Start
+
+gui.frmCash..Visible(False)
+gui.frmApproved..Visible(True)
+
 Program.Sub.cmdCashCancel_Click.End
 
 Program.Sub.cmdCashEmp_Click.Start
+
+V.Local.sTitles.Declare
+V.Local.sSQL.Declare
+V.Local.iWidths.Declare
+V.Local.sReturn.Declare
+
+F.Intrinsic.String.Split("Employee*!*Name*!*Available","*!*",V.Local.sTitles)
+F.Intrinsic.String.Split("600*!*1600*!*600","*!*",V.Local.iWidths)
+
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+
+F.Intrinsic.UI.Browser("Select an Employee","con","SELECT EMPLOYEE, NAME, AVAILABLE FROM ZZ_PTO_EMPLOYEES ORDER BY NAME ASC",V.Local.sTitles,V.Local.iWidths,8000,12000,V.Local.sReturn)
+
+F.Intrinsic.Control.If(V.Local.sReturn,=,"***CANCEL***")
+	F.Intrinsic.UI.Msgbox("No Employee was Selected!")
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Split(V.Local.sReturn,"*!*",V.Local.sReturn)
+	gui.frmCash.txtEmployee.Text(V.Local.sReturn(0))
+	gui.frmCash.txtName.Text(V.Local.sReturn(1))
+	gui.frmCash.txtCashAvail.Text(V.Local.sReturn(2))
+F.Intrinsic.Control.EndIf
+
 Program.Sub.cmdCashEmp_Click.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211217104954062$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0fKCkvoLKcDCO0MnWbuS5WC78QCSGXpWT6FzsPJg4t8E=
+${$6$}$lukep$}$20211217110135107$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0fKCkvoLKcDB1/teru4RBXBJnsw0DmA98Sxf4xOa5c/c=
 Program.Sub.Comments.End
