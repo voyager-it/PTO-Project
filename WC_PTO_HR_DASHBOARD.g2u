@@ -5427,6 +5427,32 @@ gui.frmApproved..Visible(True)
 Program.Sub.frmDelReq_UnLoad.End
 
 Program.Sub.cmdSubCash_Click.Start
+V.Local.sMsg.Declare
+V.Local.sRet.Declare
+V.Local.sSQL.Declare
+V.Local.fCashHrs.Declare
+
+F.Intrinsic.String.Build("Are you sure you want to cash out {0} for {1}?",V.Screen.frmCash!txtCashOut.Value,V.Screen.frmCash!txtName.Value,V.Local.sMsg)
+
+F.Intrinsic.UI.Msgbox(V.Local.sMsg,"Cash Out PTO?",4,V.Local.sRet)
+
+F.Intrinsic.Control.If(V.Local.sRet,=,6)
+
+	F.Intrinsic.Math.Sub(V.Screen.frmCash!txtCashAvail.Value,V.Screen.frmCash!txtCashOut.Value,V.Local.fCashHrs)
+
+	F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'",V.Local.fCashHrs,V.Screen.frmCash!txtEmployee.Value,V.Local.sSQL)
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.String.Build("SELECT ")
+	
+'	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_HISTORY (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, AVAILABLE) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",)
+
+F.Intrinsic.Control.Else
+
+
+
+F.Intrinsic.Control.EndIf
+
 Program.Sub.cmdSubCash_Click.End
 
 Program.Sub.cmdCashOutPTO_Click.Start
@@ -5478,5 +5504,5 @@ Program.Sub.cmdCashEmp_Click.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211217110135107$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0fKCkvoLKcDB1/teru4RBXBJnsw0DmA98Sxf4xOa5c/c=
+${$6$}$lukep$}$20211217133212302$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0fKCkvoLKcDA9rndJTpEt4Y36uBtoTPhUPwocM91nSss=
 Program.Sub.Comments.End
