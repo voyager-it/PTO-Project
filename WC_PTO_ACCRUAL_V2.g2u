@@ -37,8 +37,11 @@ V.Local.fMinutes.Declare
 V.Local.sEmployee.Declare
 V.Local.sUNIQID.Declare
 V.Local.sInsToday.Declare
+V.Local.dTodayDate.Declare
 
-F.Intrinsic.Date.DateSubtractWorkdays(V.Ambient.Now,7,127,V.Local.dEndDate)
+F.Intrinsic.Date.ConvertDString("12202021","MMDDYYYY",V.Local.dTodayDate)
+F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dTodayDate,7,127,V.Local.dEndDate)
+'F.Intrinsic.Date.DateSubtractWorkdays(V.Ambient.Now,7,127,V.Local.dEndDate)
 F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dEndDate,6,127,V.Local.dStartDate)
 F.Intrinsic.Math.Sub(V.DataTable.dtEmp.RowCount,1,V.Local.lRowCount)
 
@@ -102,7 +105,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 			F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}';",V.DataTable.dtAcc(V.Local.sRet).MAX_PTO!FieldVal,V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
 			
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
 			F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.lCount).AVAILABLE!FieldVal,V.DataTable.dtAcc(V.Local.sRet).MAX_PTO!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sInsToday,V.Local.sUNIQID,0,V.Local.sSQL)
@@ -112,15 +115,19 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		
 			F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}';",V.Local.fHours,V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
 			
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
 			F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.lCount).AVAILABLE!FieldVal,V.Local.fHours,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sInsToday,V.Local.sUNIQID,0,V.Local.sSQL)
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
 		F.Intrinsic.Control.EndIf
 		
 	F.Intrinsic.Control.Else
+	
+		Function.Intrinsic.Debug.InvokeDebugger
+		Function.Intrinsic.Debug.Stop
+		
 	
 		F.Intrinsic.Control.If(V.DataTable.dtJD.Exists)
 			F.Data.DataTable.Close("dtJD")
@@ -209,7 +216,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 			F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.lCount).AVAILABLE!FieldVal,V.DataTable.dtAcc(V.Local.sRet).MAX_PTO!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sInsToday,V.Local.sUNIQID,V.Local.fHours,V.Local.sSQL)
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
 		F.Intrinsic.Control.Else
 		
@@ -219,7 +226,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 			F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.lCount).AVAILABLE!FieldVal,V.Local.fNewPTOHrs,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sInsToday,V.Local.sUNIQID,V.Local.fHours,V.Local.sSQL)
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
 		F.Intrinsic.Control.EndIf
 	
@@ -276,11 +283,11 @@ F.Intrinsic.Control.If(V.DataTable.dtEmp(V.Local.sRet).PTO_STEP!FieldVal,<,10)
 		F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sNewDate)
 		
 		F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET PTO_STEP = '{0}', PTO_STEP_DATE = '{1}' WHERE EMPLOYEE = '{2}'",V.Local.lStep,V.Local.sNewDate,V.Local.sEmp,V.Local.sSQL)
-		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 		
 		F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.sRet).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 		F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.sRet).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.sRet).AVAILABLE!FieldVal,V.DataTable.dtEmp(V.Local.sRet).AVAILABLE!FieldVal,V.DataTable.dtEmp(V.Local.sRet).PTO_STEP!FieldVal,V.Local.lStep,V.Local.sInsToday,V.Local.sUNIQID,0,V.Local.sSQL)
-		F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'		F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
 	F.Intrinsic.Control.EndIf
 
@@ -291,5 +298,5 @@ Program.Sub.upgradeStep.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211210102542859$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0A63rBswhv6KQBDFkQPu1Ak8CnyzvF5dOcmw/PJlKT/Q=
+${$6$}$lukep$}$20211223150502905$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0SIpvy4RQyzQyybetZtHU6NgWTluu7EG2KCOT0HmjFlw=
 Program.Sub.Comments.End
