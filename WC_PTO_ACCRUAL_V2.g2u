@@ -91,6 +91,11 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	
 	V.Local.sEmployee.Set(V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal)
 	
+	F.Intrinsic.Control.If(V.Local.sEmployee,=,"05040")
+		Function.Intrinsic.Debug.InvokeDebugger
+		Function.Intrinsic.Debug.Stop
+	F.Intrinsic.Control.EndIf
+	
 	F.Intrinsic.Control.CallSub("upgradeStep", "dEndDate", V.Local.dEndDate, "sEmployee", V.Local.sEmployee, "sInsToday", V.Local.sInsToday)
 	
 	F.Intrinsic.Control.If(V.DataTable.dtEmp(V.Local.lCount).PAY_TYPE!FieldVal,=,"S")
@@ -109,7 +114,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 			F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.lCount).AVAILABLE!FieldVal,V.DataTable.dtAcc(V.Local.sRet).MAX_PTO!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sInsToday,V.Local.sUNIQID,0,V.Local.sSQL)
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
 		F.Intrinsic.Control.Else
 		
@@ -212,7 +217,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			
 			F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}';",V.DataTable.dtAcc(V.Local.sRet).MAX_PTO!FieldVal,V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
 			
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
 			F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.lCount).AVAILABLE!FieldVal,V.DataTable.dtAcc(V.Local.sRet).MAX_PTO!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sInsToday,V.Local.sUNIQID,V.Local.fHours,V.Local.sSQL)
@@ -222,7 +227,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		
 			F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}';",V.Local.fNewPTOHrs,V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sSQL)
 			
-			F.ODBC.Connection!con.Execute(V.Local.sSQL)
+'			F.ODBC.Connection!con.Execute(V.Local.sSQL)
 			
 			F.Intrinsic.String.Build("{0}{1}",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.Local.sInsToday,V.Local.sUNIQID)
 			F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_ACC_HIST (EMPLOYEE, PREVIOUS_PTO, NEW_PTO, PREVIOUS_STEP, NEW_STEP, DATE_CHANGED, UNIQID, HOURS_WORKED) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal,V.DataTable.dtEmp(V.Local.lCount).AVAILABLE!FieldVal,V.Local.fNewPTOHrs,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sInsToday,V.Local.sUNIQID,V.Local.fHours,V.Local.sSQL)
@@ -298,5 +303,5 @@ Program.Sub.upgradeStep.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211223150502905$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0SIpvy4RQyzQyybetZtHU6NgWTluu7EG2KCOT0HmjFlw=
+${$6$}$lukep$}$20211227075827718$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0YxuyaW5MjEDqJvFUIr9eG4p6WsplBAhold86X72k1fQ=
 Program.Sub.Comments.End
