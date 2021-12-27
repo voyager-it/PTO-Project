@@ -40,8 +40,8 @@ V.Local.sInsToday.Declare
 V.Local.dTodayDate.Declare
 
 'F.Intrinsic.Date.ConvertDString("12132021","MMDDYYYY",V.Local.dTodayDate)
-F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dTodayDate,8,127,V.Local.dEndDate)
-F.Intrinsic.Date.DateSubtractWorkdays(V.Ambient.Now,7,127,V.Local.dEndDate)
+'F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dTodayDate,8,127,V.Local.dEndDate)
+F.Intrinsic.Date.DateSubtractWorkdays(V.Ambient.Now,8,127,V.Local.dEndDate)
 F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dEndDate,6,127,V.Local.dStartDate)
 F.Intrinsic.Math.Sub(V.DataTable.dtEmp.RowCount,1,V.Local.lRowCount)
 
@@ -297,5 +297,5 @@ Program.Sub.upgradeStep.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$administrator$}$20211227092920138$}$ekloCF3xl04NqzG1qficpmAL8BPeM26OXK1Jt1fXVaWe1vTOOK4nzcsGf5IjAcHVVUPvhlzGLochcYKKpdcbx3J/wgvxMXh6
+${$6$}$administrator$}$20211227093153644$}$ekloCF3xl04NqzG1qficpmAL8BPeM26OXK1Jt1fXVaWe1vTOOK4nzcsGf5IjAcHVl3UpTQzWV/BmON0Yeo4won8LhxkKlGm1
 Program.Sub.Comments.End
