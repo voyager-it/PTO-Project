@@ -1520,6 +1520,7 @@ Gui.frmCash.lblEmployee.BorderStyle(0)
 Gui.frmCash.lblName.Create(Label,"Name",True,405,195,0,1530,930,True,0,"Tahoma",8.25,,0,0)
 Gui.frmCash.lblName.BorderStyle(0)
 Gui.frmCash.txtCashAvail.Create(TextBox,"",True,990,300,0,1245,1950,True,0,"Tahoma",8.25,,1)
+Gui.frmCash.txtCashAvail.Locked(True)
 Gui.frmCash.lblAvail.Create(Label,"Available PTO",True,990,195,0,1245,1650,True,0,"Tahoma",8.25,,0,0)
 Gui.frmCash.lblAvail.BorderStyle(0)
 Gui.frmCash.lblCashOut.Create(Label,"Amount to Cash Out",True,1470,195,0,1005,2460,True,0,"Tahoma",8.25,,0,0)
@@ -5425,12 +5426,18 @@ gui.frmDelReq..Visible(False)
 gui.frmApproved..Visible(True)
 
 Program.Sub.frmDelReq_UnLoad.End
-
 Program.Sub.cmdSubCash_Click.Start
 V.Local.sMsg.Declare
 V.Local.sRet.Declare
 V.Local.sSQL.Declare
 V.Local.fCashHrs.Declare
+V.Local.sYear.Declare
+V.Local.sMonth.Declare
+V.Local.sDay.Declare
+V.Local.sToday.Declare
+V.Local.lDLen.Declare
+V.Local.lMLen.Declare
+V.Local.sName.Declare
 
 F.Intrinsic.String.Build("Are you sure you want to cash out {0} for {1}?",V.Screen.frmCash!txtCashOut.Value,V.Screen.frmCash!txtName.Value,V.Local.sMsg)
 
@@ -5443,20 +5450,36 @@ F.Intrinsic.Control.If(V.Local.sRet,=,6)
 	F.Intrinsic.String.Build("UPDATE ZZ_PTO_EMPLOYEES SET AVAILABLE = '{0}' WHERE EMPLOYEE = '{1}'",V.Local.fCashHrs,V.Screen.frmCash!txtEmployee.Value,V.Local.sSQL)
 	F.ODBC.Connection!con.Execute(V.Local.sSQL)
 	
-	F.Intrinsic.String.Build("SELECT ")
+	F.Intrinsic.Date.Day(V.Ambient.Now,V.Local.sDay)
+	F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
+	F.Intrinsic.Control.If(V.Local.lDLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sDay,V.Local.sDay)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Date.Month(V.Ambient.Now,V.Local.sMonth)
+	F.Intrinsic.String.Len(V.Local.sMonth,V.Local.lMLen)
+	F.Intrinsic.Control.If(V.Local.lMLen,"=",1)
+		F.Intrinsic.String.Build("0{0}",V.Local.sMonth,V.Local.sMonth)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.Date.Year(V.Ambient.Now,V.Local.sYear)
 	
-'	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_HISTORY (UNIQID, EMPLOYEE, NAME, REQUEST_DATE, PTO_AMOUNT, REASON, FILL_TO_40, SUPERVSR, EXCUSED, AVAILABLE) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}');",)
+	F.Intrinsic.String.Build("{0}-{1}-{2}",V.Local.sYear,V.Local.sMonth,V.Local.sDay,V.Local.sToday)
+	
+	F.Intrinsic.String.Build("INSERT INTO ZZ_PTO_CASH_OUT (EMPLOYEE, NAME, DATE, AMOUNT) VALUES ('{0}', '{1}', '{2}', '{3}');",V.Screen.frmCash!txtEmployee.Value,V.Screen.frmCash!txtName.Value,V.Local.sToday,V.Screen.frmCash!txtCashOut.Value,V.Local.sSQL)
+	F.ODBC.Connection!con.Execute(V.Local.sSQL)
+	
+	F.Intrinsic.UI.Msgbox("Cashed out!")
+	
+	gui.frmCash..Visible(False)
+	gui.frmApproved..Visible(True)
 
 F.Intrinsic.Control.Else
 
-
+	F.Intrinsic.Control.ExitSub
 
 F.Intrinsic.Control.EndIf
 
 Program.Sub.cmdSubCash_Click.End
-
 Program.Sub.cmdCashOutPTO_Click.Start
-
 gui.frmApproved..Visible(False)
 gui.frmDenied..Visible(False)
 gui.frm40Queue..Visible(False)
@@ -5469,20 +5492,17 @@ F.Intrinsic.Control.Catch
 F.Intrinsic.Control.EndTry
 
 Program.Sub.cmdCashOutPTO_Click.End
-
 Program.Sub.cmdCashCancel_Click.Start
-
 gui.frmCash..Visible(False)
 gui.frmApproved..Visible(True)
 
 Program.Sub.cmdCashCancel_Click.End
-
 Program.Sub.cmdCashEmp_Click.Start
-
 V.Local.sTitles.Declare
 V.Local.sSQL.Declare
 V.Local.iWidths.Declare
 V.Local.sReturn.Declare
+V.Local.sName.Declare
 
 F.Intrinsic.String.Split("Employee*!*Name*!*Available","*!*",V.Local.sTitles)
 F.Intrinsic.String.Split("600*!*1600*!*600","*!*",V.Local.iWidths)
@@ -5496,7 +5516,8 @@ F.Intrinsic.Control.If(V.Local.sReturn,=,"***CANCEL***")
 F.Intrinsic.Control.Else
 	F.Intrinsic.String.Split(V.Local.sReturn,"*!*",V.Local.sReturn)
 	gui.frmCash.txtEmployee.Text(V.Local.sReturn(0))
-	gui.frmCash.txtName.Text(V.Local.sReturn(1))
+	F.Intrinsic.String.Trim(V.Local.sReturn(1),V.Local.sName)
+	gui.frmCash.txtName.Text(V.Local.sName)
 	gui.frmCash.txtCashAvail.Text(V.Local.sReturn(2))
 F.Intrinsic.Control.EndIf
 
@@ -5504,5 +5525,5 @@ Program.Sub.cmdCashEmp_Click.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211217133212302$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0fKCkvoLKcDA9rndJTpEt4Y36uBtoTPhUPwocM91nSss=
+${$6$}$administrator$}$20211228125758822$}$ekloCF3xl04NqzG1qficpmAL8BPeM26OXK1Jt1fXVaWe1vTOOK4nzXorQEu2ecF7IIoKHRFkoaKNVn4JKRknYfbT85UKtZAQ
 Program.Sub.Comments.End
