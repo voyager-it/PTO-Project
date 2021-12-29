@@ -38,6 +38,10 @@ V.Local.sEmployee.Declare
 V.Local.sUNIQID.Declare
 V.Local.sInsToday.Declare
 V.Local.dTodayDate.Declare
+V.Local.sEmail.Declare
+V.Local.sName.Declare
+V.Local.sSender.Declare
+V.Local.sRecipient.Declare
 
 'F.Intrinsic.Date.ConvertDString("12132021","MMDDYYYY",V.Local.dTodayDate)
 'F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dTodayDate,8,127,V.Local.dEndDate)
@@ -233,6 +237,14 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 
 F.Intrinsic.Control.Next(V.Local.lCount)
 
+V.Local.sEmail.Set("it@voyager-industries.com")
+V.Local.sName.Set("PTO System")
+
+F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sEmail,V.Local.sName,V.Local.sSender)
+F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sName,V.Local.sEmail,V.Local.sRecipient)
+
+F.Global.Messaging.QueueMessage("VSF","05008","SELECT * FROM ZZ_PTO_ACCRUAL","ACCRUAL CONFIRMATION",V.Local.sSender,V.Local.sRecipient,"PTO ACCRUAL SUCCESSFULY RUN")
+
 Program.Sub.calcAcc.End
 
 Program.Sub.upgradeStep.Start
@@ -297,5 +309,5 @@ Program.Sub.upgradeStep.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211228104301313$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS03hVmWWqmV7lM+BQEQwubNmP981VhiLdTm53Lt2/oj4o=
+${$6$}$administrator$}$20211229082553471$}$ekloCF3xl04NqzG1qficpmAL8BPeM26OXK1Jt1fXVaWe1vTOOK4nzfAXKo3w1UtH9OhfS5FjKgARqg8a80TogWFNBCnf0JU5
 Program.Sub.Comments.End
