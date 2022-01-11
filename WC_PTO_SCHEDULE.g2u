@@ -180,6 +180,10 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 			F.Intrinsic.String.Build("{0} OR SUPERVSR = '{1}' OR SUPERVSR = '{2}'",V.Global.sEmpSQL,V.Local.sSup,V.Local.sLastSup,V.Global.sEmpSQL)
 		
 		F.Intrinsic.Control.EndIf
+		
+	F.Intrinsic.Control.Else
+		F.Intrinsic.UI.Msgbox("There is currently no scheduled PTO for your employees")
+		F.Intrinsic.Control.End
 	F.Intrinsic.Control.EndIf
 F.Intrinsic.Control.Next(V.Local.lCount)
 
@@ -521,5 +525,5 @@ Program.Sub.frmDetail_UnLoad.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211118134055053$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0hXB4Xkb1VBF8AN27dqkYW7klCjdgMszj5XGhodQjRI4=
+${$6$}$LUKEP$}$20220105091934502$}$9zHQK5SPr+5h+47i4JxYM/+0zeirv9m1oqlm5ujam81wQmj+q0gMNDcl4MbmbnxuvB5HJjaj81A=
 Program.Sub.Comments.End
