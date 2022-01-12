@@ -5,6 +5,7 @@ Program.Sub.Preflight.End
 Program.Sub.loadDT.Start
 F.Data.DataTable.CreateFromSQL("dtEmp","con","SELECT * FROM ZZ_PTO_EMPLOYEES",True)
 F.Data.DataTable.CreateFromSQL("dtAcc","con","SELECT * FROM ZZ_PTO_ACCRUAL_STEPS",True)
+F.Data.DataTable.CreateFromSQL("dtHol","con","SELECT * FROM V_HOLIDAY_SCHED",True)
 Program.Sub.loadDT.End
 
 Program.Sub.Main.Start
@@ -43,6 +44,16 @@ V.Local.sName.Declare
 V.Local.sSender.Declare
 V.Local.sRecipient.Declare
 V.Local.sRunDate.Declare
+V.Local.fHrMax.Declare
+V.Local.fHolMax.Declare
+V.Local.sConRet.Declare
+V.Local.lHolCount.Declare
+V.Local.lHolMatchCount.Declare
+V.Local.lHolQty.Declare
+V.Local.dCurDay.Declare
+
+V.Local.lHolQty.Set(0)
+
 
 F.Intrinsic.UI.Inputbox("Please enter a 'Run Date' (MMDDYYYY)","Choose Run Date","12312500",V.Local.sRunDate)
 
@@ -56,6 +67,24 @@ F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dTodayDate,8,127,V.Local.dEndDate)
 'F.Intrinsic.Date.DateSubtractWorkdays(V.Ambient.Now,9,127,V.Local.dEndDate)
 F.Intrinsic.Date.DateSubtractWorkdays(V.Local.dEndDate,6,127,V.Local.dStartDate)
 F.Intrinsic.Math.Sub(V.DataTable.dtEmp.RowCount,1,V.Local.lRowCount)
+
+F.Intrinsic.Control.CallSub("buildHoliday")
+
+F.Intrinsic.Control.For(V.Local.lHolCount,0,6,1)
+
+	F.Intrinsic.Date.DateAdd("dEndDate",V.Local.lHolCount,V.Local.dStartDate,V.Local.dCurDay)
+	
+	F.Intrinsic.Control.For(V.Local.lHolMatchCount,0,V.Global.dHolidays.UBound,1)
+	
+		F.Intrinsic.Control.If(V.Global.dHolidays(V.Local.lHolMatchCount),"=",V.Local.dCurDay)
+		
+			F.Intrinsic.Math.Add(V.Local.lHolQty,1,V.Local.lHolQty)
+		
+		F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.Next(V.Local.lHolMatchCount)
+
+F.Intrinsic.Control.Next(V.Local.lHolCount)
 
 F.Intrinsic.Date.Day(V.Local.dEndDate,V.Local.sDay)
 F.Intrinsic.String.Len(V.Local.sDay,V.Local.lDLen)
@@ -103,6 +132,9 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 
 	V.Local.fHours.Set(0)
 	V.Local.fMinutes.Set(0)
+	
+	F.Intrinsic.Math.Mult(V.DataTable.dtEmp(V.Local.lCount).SHIFT_HOURS!FieldVal,V.Local.lHolQty,V.Local.lHolQty)
+	F.Intrinsic.Math.Sub(40,V.Local.lHolQty,V.Local.fHrMax)
 	
 	V.Local.sEmployee.Set(V.DataTable.dtEmp(V.Local.lCount).EMPLOYEE!FieldVal)
 	
@@ -208,8 +240,8 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 		
 		F.Intrinsic.Control.Next(V.Local.lDayCount)
 		
-		F.Intrinsic.Control.If(V.Local.fHours,>,40)
-			V.Local.fHours.Set(40)
+		F.Intrinsic.Control.If(V.Local.fHours,>,V.Local.fHrMax)
+			V.Local.fHours.Set(V.Local.fHrMax)
 		F.Intrinsic.Control.EndIf
 		
 		F.Intrinsic.String.Build("PTO_STEP = '{0}' AND TYPE = 'HOURLY'",V.DataTable.dtEmp(V.Local.lCount).PTO_STEP!FieldVal,V.Local.sCrit)
@@ -315,7 +347,38 @@ F.Intrinsic.Control.EndIf
 
 Program.Sub.upgradeStep.End
 
+Program.Sub.buildHoliday.Start
+V.Local.sHolidayStr.Declare
+V.Local.sHolArr.Declare
+V.Local.lCount.Declare
+V.Local.lArrLen.Declare
+V.Local.sHolidays.Declare
+V.Global.dHolidays.Declare
+
+F.ODBC.Connection!con.ExecuteAndReturn("SELECT * FROM V_HOLIDAY_SCHED;",V.Local.sHolidayStr)
+F.Intrinsic.String.Split(V.Local.sHolidayStr,"*!*",V.Local.sHolArr)
+
+V.Local.lArrLen.Set(V.Local.sHolArr.UBound)
+
+F.Intrinsic.Control.For(V.Local.lCount,3,V.Local.lArrLen,1)
+
+	F.Intrinsic.Control.If(V.Local.sHolArr(V.Local.lCount),"<>","1/1/1900")
+	
+		F.Intrinsic.Control.If(V.Local.sHolidays,"=","")
+			V.Local.sHolidays.Set(V.Local.sHolArr(V.Local.lCount))
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sHolidays,V.Local.sHolArr(V.Local.lCount),V.Local.sHolidays)
+		F.Intrinsic.Control.EndIf
+		
+	F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.Next(V.Local.lCount)
+
+F.Intrinsic.String.Split(V.Local.sHolidays,"*!*",V.Global.dHolidays)
+
+Program.Sub.buildHoliday.End
+
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$administrator$}$20211229083318252$}$ekloCF3xl04NqzG1qficpmAL8BPeM26OXK1Jt1fXVaWe1vTOOK4nzfAXKo3w1UtHo5/PEIxcMdhA+CJqm4/rIpNYl30KnXAT
+${$6$}$LUKEP$}$20220112145904645$}$9zHQK5SPr+5h+47i4JxYM/+0zeirv9m1w3q5EY7jUkAKt91KlpAURCchyqQJdNZAdnjabxs/QhQ=
 Program.Sub.Comments.End
