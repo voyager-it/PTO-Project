@@ -4018,10 +4018,6 @@ F.Intrinsic.Control.Else
 	F.Intrinsic.Math.Div(V.Screen.frmManual!txtHours.Value,V.Local.lDayCount,V.Local.fHourSplit)
 	F.Intrinsic.Math.Round(V.Local.fHourSplit,1,V.Local.fHourSplit)
 	
-	F.Intrinsic.Control.If(V.Local.fHourSplit,">",8)
-		F.Intrinsic.UI.Msgbox("Please make sure you have the right amount of hours, it looks like you have requested more hours than you need for the date range selected.")
-		F.Intrinsic.Control.ExitSub
-	F.Intrinsic.Control.EndIf
 F.Intrinsic.Control.EndIf
 
 
@@ -5525,5 +5521,5 @@ Program.Sub.cmdCashEmp_Click.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$administrator$}$20211229101107511$}$ekloCF3xl04NqzG1qficpmAL8BPeM26OXK1Jt1fXVaWe1vTOOK4nzfAXKo3w1UtH2a6RR5Kj4odYH+8MQ0rzTcsLvZHzauem
+${$6$}$LUKEP$}$20220112143105571$}$9zHQK5SPr+5h+47i4JxYM/+0zeirv9m1w3q5EY7jUkCE5V9pj7jf4CgPxvTubtnSTfbADNkMXSE=
 Program.Sub.Comments.End
