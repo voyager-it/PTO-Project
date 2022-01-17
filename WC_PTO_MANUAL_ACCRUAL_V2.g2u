@@ -72,7 +72,7 @@ F.Intrinsic.Control.CallSub("buildHoliday")
 
 F.Intrinsic.Control.For(V.Local.lHolCount,0,6,1)
 
-	F.Intrinsic.Date.DateAdd("dEndDate",V.Local.lHolCount,V.Local.dStartDate,V.Local.dCurDay)
+	F.Intrinsic.Date.DateAdd("d",V.Local.lHolCount,V.Local.dStartDate,V.Local.dCurDay)
 	
 	F.Intrinsic.Control.For(V.Local.lHolMatchCount,0,V.Global.dHolidays.UBound,1)
 	
@@ -380,5 +380,5 @@ Program.Sub.buildHoliday.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$LUKEP$}$20220112145904645$}$9zHQK5SPr+5h+47i4JxYM/+0zeirv9m1w3q5EY7jUkAKt91KlpAURCchyqQJdNZAdnjabxs/QhQ=
+${$6$}$LUKEP$}$20220117100717823$}$9zHQK5SPr+5h+47i4JxYM/+0zeirv9m1u24xj0E1g43P3S0+savUnkmyjUvhd61KWdZf0+hxDgo=
 Program.Sub.Comments.End

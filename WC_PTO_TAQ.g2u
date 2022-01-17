@@ -209,7 +209,7 @@ F.Intrinsic.Control.For(V.Local.lCount,0,V.Local.lRowCount,1)
 	F.Intrinsic.Control.Catch
 		
 		'Add info of current record to failed global variable for email report
-		F.Intrinsic.String.Build("NAME: {0}, DATE: {1}, HOURS: {2}:{3}",V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Local.sReqStr)
+		F.Intrinsic.String.Build("NAME: {0}, DATE: {1}, HOURS: {2}:{3}, ERROR: {4}",V.DataTable.dtTAQ(V.Local.lCount).NAME!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).DATE_IN!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_HH!FieldVal,V.DataTable.dtTAQ(V.Local.lCount).HOURS_MM!FieldVal,V.Ambient.ErrorDescription,V.Local.sReqStr)
 	
 		F.Intrinsic.Control.If(V.Global.sFailure,=,"")
 			V.Global.sFailure.Set(V.Local.sReqStr)
@@ -268,5 +268,5 @@ Program.Sub.SendReport.End
 
 Program.Sub.Comments.Start
 ${$5$}$2.0.0.0$}$2
-${$6$}$lukep$}$20211201144705205$}$se77YAxmQviVSBRx6Dva+7hHQnhldcS0D5m55WwHquQfYdPkJ483gb0Rp5MfxPKULueKVjXOliE=
+${$6$}$LUKEP$}$20220114084935789$}$9zHQK5SPr+5h+47i4JxYM/+0zeirv9m1CSduCAgIT4HdrMP1P+Iv8DtfKzvkKjToNIi1JnJ3aTo=
 Program.Sub.Comments.End
