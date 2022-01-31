@@ -1,0 +1,12 @@
+-- Database: GLOBALVSF Metadata version: 2 Exported: Jan 31, 2022
+-- Begin Tables
+SET LEGACYTYPESALLOWED = ON;
+-- Begin Multi-Line Statement
+CREATE TABLE "ZZ_PTO_LOGIN" USING 'ZZ_PTO_LOGIN.mkd' PAGESIZE=4096 (
+ "USERNAME" CHAR(50) NOT NULL,
+ "PASSWD" CHAR(50) NOT NULL,
+ "SUP_ID" CHAR(5) NOT NULL,
+ "EMAIL" CHAR(50) NOT NULL );
+-- End Multi-Line Statement
+SET LEGACYTYPESALLOWED = OFF;
+-- End Tables

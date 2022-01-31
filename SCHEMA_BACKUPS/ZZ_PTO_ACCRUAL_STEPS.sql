@@ -1,0 +1,13 @@
+-- Database: GLOBALVSF Metadata version: 2 Exported: Jan 31, 2022
+-- Begin Tables
+SET LEGACYTYPESALLOWED = ON;
+-- Begin Multi-Line Statement
+CREATE TABLE "ZZ_PTO_ACCRUAL_STEPS" USING 'ZZ_PTO_ACCRUAL_STEPS.mkd' PAGESIZE=4096 (
+ "PTO_STEP" INTEGER,
+ "TYPE" CHAR(50),
+ "ANNUAL_PTO" DOUBLE,
+ "ACCRUAL_RATE" DOUBLE,
+ "MAX_PTO" DOUBLE );
+-- End Multi-Line Statement
+SET LEGACYTYPESALLOWED = OFF;
+-- End Tables
